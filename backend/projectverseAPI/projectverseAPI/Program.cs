@@ -1,6 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using projectverseAPI.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
-
+builder.Services.AddDbContext<ProjectVerseContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

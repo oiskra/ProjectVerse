@@ -7,8 +7,8 @@
         public Guid AuthorId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public Range Difficulty { get; set; }
-        public IList<string> Technologies { get; set; }
+        public int Difficulty { get; set; }
+        public IList<Technology> Technologies { get; set; }
         public IList<CollaborationPosition> CollaborationPositions { get; set; }
     }
 }
