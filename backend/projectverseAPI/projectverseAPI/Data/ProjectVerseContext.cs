@@ -14,11 +14,12 @@ namespace projectverseAPI.Data
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostComment> PostComments { get; set; }
         public DbSet<Collaboration> Collaborations { get; set; }
+        public DbSet<Technology> Technologies { get; set; }
 
 
         public ProjectVerseContext(DbContextOptions<ProjectVerseContext> options) : base(options)
         {
-
+            DbSeeder.Seed(this);
         }
 
     }
