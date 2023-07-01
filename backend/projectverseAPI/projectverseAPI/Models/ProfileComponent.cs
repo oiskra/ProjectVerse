@@ -8,5 +8,7 @@ namespace projectverseAPI.Models
         public Guid ComponentId { get; set; }
         public ComponentTheme Theme { get; set; }
         public Guid ThemeId { get; set; }
+        public int PositionX { get; set; }
+        public int PositionY { get; set; }
     }
 }
