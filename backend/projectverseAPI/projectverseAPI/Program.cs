@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using projectverseAPI.Data;
+using projectverseAPI.Interfaces;
+using projectverseAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,8 @@ builder.Services.AddDbContext<ProjectVerseContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<ICollaborationService, CollaborationService>();
  
 var app = builder.Build();
 
