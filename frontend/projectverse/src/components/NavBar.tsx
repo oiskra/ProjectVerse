@@ -8,7 +8,10 @@ export const NavBar = () => {
     <nav id="navBar" className="text-xl text-white flex items-center justify-around hover:text-accent">
       <div className='h-full flex gap-5 items-center'>
         <img className='h-full rounded-xl' src={logo} alt="" />
-        <strong className='text-2xl'>ProjectVerse</strong>
+        <div>
+          <strong className='text-2xl'>ProjectVerse</strong>
+          <div className='text-sm text-white/70'>Personal brand made easier</div>
+        </div>
       </div>
 
 
