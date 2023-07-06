@@ -9,6 +9,6 @@
         public string Description { get; set; }
         public int Difficulty { get; set; }
         public IList<Technology> Technologies { get; set; }
-        public IList<CollaborationPosition>? CollaborationPositions { get; set; }
+        public IList<CollaborationPosition> CollaborationPositions { get; set; }
     }
 }
