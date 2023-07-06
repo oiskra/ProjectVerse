@@ -1,7 +1,9 @@
 import React from 'react'
 import { ColabListing } from '../features/Collaborations/ColabListing'
+import { sampleCollaboration } from '../data/Collaboration'
+import { ColabDescCard } from '../features/Collaborations/ColabDescCard'
 
-export const CollaborationPage = () => {
+export const CollaborationPage : React.FC<{}> = () => {
 
 
   return (
@@ -24,15 +26,15 @@ export const CollaborationPage = () => {
             </div>
 
             <div className="neo w-full bg-background h-full rounded-xl p-3 flex flex-col gap-3">
-              <ColabListing />
-              <ColabListing />
+              <ColabListing colab={sampleCollaboration}/>
+              <ColabListing colab={sampleCollaboration}/>
             </div>
           <div>
 
           </div>
           </div>
           <div className='w-2/5 h-full neo bg-background rounded-md'>
-          {/* WYBRANA KOLABORACJA DEFAULT PIERWSZA */}
+              <ColabDescCard colab={sampleCollaboration} />
           </div>
         </div>
 
