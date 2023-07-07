@@ -49,7 +49,7 @@ export const ColabDescCard:React.FC<{colab:Collaboration}> = ({colab}) => {
 
         <div className='flex justify-start gap-3'>
           {colab.Technologies.map((tech:Technology)=>{
-              return <div className='neo p-3 rounded-xl'>{tech.Name}</div>
+              return <div className='neo p-3 text-sm rounded-xl'>{tech.Name}</div>
           })}
         </div>
 
@@ -58,7 +58,7 @@ export const ColabDescCard:React.FC<{colab:Collaboration}> = ({colab}) => {
       <div className='neo text-xl w-full p-5 rounded-xl flex flex-wrap gap-10'>
 
          
-        <div className='w-3/5 opacity-70 text-justify justify-between'>
+        <div className='w-3/5 text-justify justify-between'>
         <h2 className='w-full'>
             <span className='text-accent'>Who</span> we'll need
         </h2>  
@@ -69,7 +69,7 @@ export const ColabDescCard:React.FC<{colab:Collaboration}> = ({colab}) => {
 
         
 
-        <div className='flex justify-start gap-2 w-2/6 flex-col transition-all'>
+        <div className='flex justify-start gap-2 w-2/6 flex-col transition-all' style={{cursor:"pointer"}}>
           {colab.CollaborationPositions.map((pos:CollaborationPositions)=>{
               return pos.ID === targetDesc ? 
               <div 

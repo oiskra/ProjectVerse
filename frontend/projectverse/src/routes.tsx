@@ -11,8 +11,8 @@ const router = createBrowserRouter(
     createRoutesFromElements(
       <Route element={<MainLayout/>}>
         <Route index element={ <HomePage/> }></Route>
-        <Route path="Colabs" element={ <CollaborationPage/> }></Route>
-        <Route path="Feed" element={ <FeedPage/> }></Route>
+        <Route path="colabs" element={ <CollaborationPage/> }></Route>
+        <Route path="feed" element={ <FeedPage/> }></Route>
       </Route>
     )
 );

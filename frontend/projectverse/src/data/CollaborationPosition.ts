@@ -9,7 +9,7 @@ export default CollaborationPositions
 export const sampleColabPos1:CollaborationPositions = {
   ID: 0,
   Name: "React developer",
-  Description: "Here at mentor me we're looking for skilled developers that have amazing abilities at not creating an infinite loop that fucks everything up"
+  Description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate."
 }
 export const sampleColabPos2:CollaborationPositions = {
   ID: 1,
