@@ -7,17 +7,15 @@ namespace projectverseAPI.Services
     public class AuthenticationService : IAuthenticationService
     {
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
 
         public AuthenticationService(UserManager<User> userManager)
         {
             _userManager = userManager;
-            _roleManager.
         }
 
         public async Task<bool> RegisterUser(User user, string password)
         {
-            var userExists = _userManager.FindByEmailAsync(user.Email);
+            var userExists = await _userManager.FindByNameAsync(user.UserName);
 
             if (userExists is not null) return false;
 

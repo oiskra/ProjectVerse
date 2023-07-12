@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using projectverseAPI.DTOs.Authentication;
 using projectverseAPI.Interfaces;
-using projectverseAPI.Migrations;
 using projectverseAPI.Models;
-using System.Security.Cryptography;
 
 namespace projectverseAPI.Controllers
 {
@@ -14,31 +12,33 @@ namespace projectverseAPI.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AuthenticationController(IAuthenticationService authenticationService)
+        public AuthenticationController(IAuthenticationService authenticationService, RoleManager<IdentityRole> roleManager)
         {
             _authenticationService = authenticationService;
+            _roleManager = roleManager;
         }
 
         [HttpPost]
         [Route("register")]
         [AllowAnonymous]
-        public async Task<ActionResult<IdentityResult>> Register(UserRegisterDTO request)
+        public async Task<ActionResult<bool>> Register(UserRegisterDTO request)
         {
             var user = new User
             {
                 Id = Guid.NewGuid().ToString(),
                 UserName = request.UserName,
-                Email = request.Email,                
+                Email = request.Email, 
+                SecurityStamp = Guid.NewGuid().ToString(),
             };
 
-            var response = await _authenticationService.RegisterUser(user, request.Password);
+            var created = await _authenticationService.RegisterUser(user, request.Password);
 
-            if (!response.Succeeded) return BadRequest(response);
+            if (!created) return BadRequest();
 
-            return CreatedAtAction("register", response);
+            return CreatedAtAction("register", created);
         }
-
 
     }
 }
