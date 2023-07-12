@@ -10,7 +10,7 @@ namespace projectverseAPI.Controllers
         [HttpGet(Name = "GetTest")]
         public IActionResult Index()
         {
-            return Ok("Test");
+            return Ok("home");
         }
     }
 }

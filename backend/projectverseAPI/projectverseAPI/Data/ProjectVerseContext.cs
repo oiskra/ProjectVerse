@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using projectverseAPI.Models;
 
 namespace projectverseAPI.Data
 {
-    public class ProjectVerseContext : DbContext
+    public class ProjectVerseContext : IdentityDbContext<User>
     {
-        public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<ProfileComponent> ProfileComponents { get; set; }
