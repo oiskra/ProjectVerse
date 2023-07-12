@@ -12,12 +12,10 @@ namespace projectverseAPI.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
-        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AuthenticationController(IAuthenticationService authenticationService, RoleManager<IdentityRole> roleManager)
+        public AuthenticationController(IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
-            _roleManager = roleManager;
         }
 
         [HttpPost]
