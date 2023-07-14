@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using projectverseAPI.DTOs.Collaboration;
 using projectverseAPI.Interfaces;
@@ -9,6 +11,7 @@ namespace projectverseAPI.Controllers
     [ApiController]
     [Route("collaborations")]
     [Produces("application/json")]
+    [Authorize]
     public class CollaborationController : ControllerBase
     {
         private readonly ICollaborationService _collaborationService;

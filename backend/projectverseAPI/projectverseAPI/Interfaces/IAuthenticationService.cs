@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using projectverseAPI.DTOs.Authentication;
 using projectverseAPI.Models;
 
 namespace projectverseAPI.Interfaces
 {
     public interface IAuthenticationService
     {
-        Task<bool> RegisterUser(User user, string password);
+        Task<bool> RegisterUser(UserRegisterDTO userRegisterDTO);
+        Task<string?> LoginUser(UserLoginDTO userLoginDto);
+        Task Logout();
     }
 }
