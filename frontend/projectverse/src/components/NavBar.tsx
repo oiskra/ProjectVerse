@@ -14,18 +14,17 @@ export const NavBar = () => {
         </div>
       </div>
 
-
-      <a>
-        <NavLink to="/" >Home</NavLink>
-      </a>
+      <NavLink to="/" >Home</NavLink>
       <NavLink to="/feed" >Feed</NavLink>
       <NavLink to="/colabs" >Colab</NavLink>
+
       <input type="text" />
 
       <div className='h-full flex items-center gap-3'>
 
-      <span>v</span>
-      <img className='h-full p-5 rounded-full' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIH5efPMLE_yEELrFragrSk-6-gnwHI4qXyQ&usqp=CAU" alt="" />
+        <span>v</span>
+        
+        <img className='h-full p-5 rounded-full' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIH5efPMLE_yEELrFragrSk-6-gnwHI4qXyQ&usqp=CAU" alt="" />
 
       </div>
 

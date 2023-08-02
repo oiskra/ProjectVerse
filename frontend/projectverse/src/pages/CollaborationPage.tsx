@@ -3,13 +3,13 @@ import { ColabListing } from '../features/Collaborations/ColabListing'
 import { sampleCollaboration } from '../data/Collaboration'
 import { ColabDescCard } from '../features/Collaborations/ColabDescCard'
 
-export const CollaborationPage : React.FC<{}> = () => {
+export const CollaborationPage: React.FC<{}> = () => {
 
 
   return (
     <>
-    
-    <div className=" h-full  items-center mx-20">
+
+      <div className=" h-full  items-center mx-20">
 
 
         <div className='h-full w-full flex justify-center gap-10 items-center p-5'>
@@ -26,19 +26,17 @@ export const CollaborationPage : React.FC<{}> = () => {
             </div>
 
             <div className="neo w-full bg-background h-full rounded-xl p-3 flex flex-col gap-3">
-              <ColabListing colab={sampleCollaboration}/>
-              <ColabListing colab={sampleCollaboration}/>
+              <ColabListing colab={sampleCollaboration} />
+              <ColabListing colab={sampleCollaboration} />
             </div>
-          <div>
-
-          </div>
+            
           </div>
           <div className='w-2/5 h-full neo bg-background rounded-md'>
-              <ColabDescCard colab={sampleCollaboration} />
+            <ColabDescCard colab={sampleCollaboration} />
           </div>
         </div>
 
-    </div>
+      </div>
 
     </>
   )

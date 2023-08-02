@@ -10,7 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.0",
     "@reduxjs/toolkit": "^1.9.5",
+    "@types/joi": "^17.2.3",
+    "@types/yup": "^0.32.0",
+    "formik": "^2.4.2",
+    "joi": "^17.9.2",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "react": "^18.2.0",
@@ -18,7 +25,8 @@
     "react-redux": "^8.1.1",
     "react-router-dom": "^6.14.0",
     "redux": "^4.2.1",
-    "sort-by": "^1.2.0"
+    "sort-by": "^1.2.0",
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.37",
