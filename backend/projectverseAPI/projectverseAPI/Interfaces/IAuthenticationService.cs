@@ -8,6 +8,7 @@ namespace projectverseAPI.Interfaces
     {
         Task<bool> RegisterUser(UserRegisterDTO userRegisterDTO);
         Task<string?> LoginUser(UserLoginDTO userLoginDto);
+        Task<User?> GetCurrentUser();
         Task Logout();
     }
 }

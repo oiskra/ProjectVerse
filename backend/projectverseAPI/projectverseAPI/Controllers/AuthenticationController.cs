@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using projectverseAPI.DTOs;
 using projectverseAPI.DTOs.Authentication;
 using projectverseAPI.Interfaces;
 
@@ -22,11 +23,36 @@ namespace projectverseAPI.Controllers
         [Route("register")]
         public async Task<ActionResult<bool>> Register([FromBody] UserRegisterDTO request)
         {
-            var created = await _authenticationService.RegisterUser(request);
+            try
+            {
+                var created = await _authenticationService.RegisterUser(request);
 
-            if (!created) return BadRequest();
-
-            return CreatedAtAction("register", created);
+                return CreatedAtAction("register", created);
+            }
+            catch (ArgumentException argE)
+            {
+                var error = new Dictionary<string, object>();
+                if(argE.ParamName is not null)
+                    error.Add(argE.ParamName, new List<string> { argE.Message });
+                
+                return Conflict(new ErrorResponseDTO
+                {
+                    Title = "Conflict",
+                    Status = StatusCodes.Status409Conflict,
+                    Errors = error
+                });                
+            }
+            catch(Exception)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new ErrorResponseDTO
+                    {
+                        Title = "Internal Server Error",
+                        Status = StatusCodes.Status500InternalServerError,
+                        Errors = null
+                    });
+            }
         }
 
         [HttpPost]
@@ -35,7 +61,14 @@ namespace projectverseAPI.Controllers
         {
             var result = await _authenticationService.LoginUser(request);
 
-            return result is null ? Unauthorized("Invalid email or password") : Ok(result);
+            return result is null 
+                ? Unauthorized(new ErrorResponseDTO
+                    {
+                        Title = "Unauthorized",
+                        Status = StatusCodes.Status401Unauthorized,
+                        Errors = null
+                    }) 
+                : Ok(result);
         }
 
         [HttpPost]

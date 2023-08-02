@@ -1,4 +1,5 @@
-﻿using projectverseAPI.Models;
+﻿using projectverseAPI.DTOs.Collaboration;
+using projectverseAPI.Models;
 
 namespace projectverseAPI.Interfaces
 {
@@ -6,8 +7,8 @@ namespace projectverseAPI.Interfaces
     {
         Task<List<Collaboration>> GetAllCollaborations();
         Task<Collaboration?> GetCollaborationById(Guid collaborationId);
-        Task<Collaboration?> CreateCollaboration(Collaboration collaboration);
-        Task UpdateCollaboration(Collaboration collaboration);
-        Task DeleteCollaborationById(Guid collaborationId);
+        Task<Guid> CreateCollaboration(CreateCollaborationRequestDTO collaboration);
+        Task UpdateCollaboration(UpdateCollaborationRequestDTO collaboration);
+        Task<bool> DeleteCollaborationById(Guid collaborationId);
     }
 }

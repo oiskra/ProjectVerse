@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using projectverseAPI.DTOs.Authentication;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -15,6 +16,7 @@ namespace projectverseAPI.Services
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _contextAccessor;
         private readonly IMapper _mapper;
         private User? _user;
 
@@ -22,12 +24,14 @@ namespace projectverseAPI.Services
             UserManager<User> userManager,
             RoleManager<IdentityRole> roleManager,
             IConfiguration config,
-            IMapper mapper)
+            IMapper mapper,
+            IHttpContextAccessor contextAccessor)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = config;
             _mapper = mapper;
+            _contextAccessor = contextAccessor;
         }
 
         public async Task<string?> LoginUser(UserLoginDTO userLoginDTO)
@@ -49,10 +53,13 @@ namespace projectverseAPI.Services
 
         public async Task<bool> RegisterUser(UserRegisterDTO userRegisterDTO)
         {
-
             var userExists = await _userManager.FindByNameAsync(userRegisterDTO.UserName);
+            if (userExists is not null)
+                throw new ArgumentException("User with that username already exists.", "username");
 
-            if (userExists is not null) return false;
+            var emailExits = await _userManager.FindByEmailAsync(userRegisterDTO.Email);
+            if (emailExits is not null)
+                throw new ArgumentException("User with that email already exists.", "email");
 
             var user = _mapper.Map<User>(userRegisterDTO);
 
@@ -61,8 +68,18 @@ namespace projectverseAPI.Services
             if (await _roleManager.RoleExistsAsync(UserRoles.User))
                 await _userManager.AddToRoleAsync(user, UserRoles.User);
             
-
             return result.Succeeded;
+        }
+
+        public async Task<User?> GetCurrentUser()
+        {
+            var name = _contextAccessor.HttpContext?.User.Identity?.Name;
+
+            if (name is null)
+                return null;
+
+            var currentUser = await _userManager.FindByNameAsync(name);
+            return currentUser;
         }
 
         private async Task<string> CreateTokenAsync()
@@ -109,5 +126,7 @@ namespace projectverseAPI.Services
             );
             return tokenOptions;
         }
+
+
     }
 }

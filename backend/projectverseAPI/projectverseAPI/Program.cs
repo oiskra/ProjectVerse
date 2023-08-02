@@ -2,13 +2,17 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using projectverseAPI.Data;
 using projectverseAPI.Interfaces;
+using projectverseAPI.Mapping;
 using projectverseAPI.Models;
 using projectverseAPI.Services;
+using projectverseAPI.Validators;
 using projectverseAPI.Validators.Authentication;
 using projectverseAPI.Validators.Collaboration;
 using System.Text;
@@ -16,9 +20,14 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ProjectVerseContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")) 
-);
-builder.Services.AddControllers();
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddControllers(options =>
+    options.Filters.Add(typeof(ValidateModelStateAttribute)));
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+    options.SuppressModelStateInvalidFilter = true);
+
 builder.Services
     .AddIdentity<User, IdentityRole>(options =>
     {
@@ -68,11 +77,20 @@ builder.Services.AddAuthorization(options =>
 });
 
 ValidatorOptions.Global.LanguageManager.Enabled = false;
+ValidatorOptions.Global.PropertyNameResolver = (type, member, expression) =>
+{
+    if (member != null)
+    {
+        return char.ToLower(member.Name[0]) + member.Name[1..];
+    }
+    return null;
+};
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateCollaborationDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UpdateCollaborationDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UserRegisterDTOValidator>();
+
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -108,6 +126,7 @@ builder.Services.AddSwaggerGen(cfg =>
 
 builder.Services.AddScoped<ICollaborationService, CollaborationService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
 

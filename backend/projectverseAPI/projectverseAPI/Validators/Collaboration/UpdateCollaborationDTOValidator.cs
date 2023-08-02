@@ -3,7 +3,7 @@ using projectverseAPI.DTOs.Collaboration;
 
 namespace projectverseAPI.Validators.Collaboration
 {
-    public class UpdateCollaborationDTOValidator : AbstractValidator<UpdateCollaborationDTO>
+    public class UpdateCollaborationDTOValidator : AbstractValidator<UpdateCollaborationRequestDTO>
     {
         public UpdateCollaborationDTOValidator()
         {
