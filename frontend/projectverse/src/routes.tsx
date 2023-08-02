@@ -6,11 +6,13 @@ import { MainLayout } from "./layouts/MainLayout"
 import { CollaborationPage } from "./pages/CollaborationPage"
 import { HomePage } from "./pages/HomePage"
 import { FeedPage } from './pages/FeedPage';
+import { LoginPage } from './pages/LoginPage';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
       <Route element={<MainLayout/>}>
-        <Route index element={ <HomePage/> }></Route>
+        <Route index element={ <LoginPage/> }></Route>
+        <Route path="home" element={ <HomePage/> }></Route>
         <Route path="colabs" element={ <CollaborationPage/> }></Route>
         <Route path="feed" element={ <FeedPage/> }></Route>
       </Route>
