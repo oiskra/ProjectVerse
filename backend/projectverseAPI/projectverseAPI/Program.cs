@@ -27,11 +27,15 @@ builder.Services.AddControllers(options =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(
-        "AllowSpecificOrigin", 
+    options.AddDefaultPolicy(
         policy =>
         {
-            policy.WithOrigins("https://localhost:5173");
+            policy
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+            .WithOrigins("https://localhost:5173")
+            .SetIsOriginAllowed(_ => true);
         });
 });
 
@@ -146,8 +150,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(AllowSpecificOrigin);
 app.UseHttpsRedirection();
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();

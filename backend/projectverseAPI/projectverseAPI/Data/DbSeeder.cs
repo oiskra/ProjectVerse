@@ -26,20 +26,20 @@ namespace projectverseAPI.Data
             context.Technologies.AddRangeAsync(technologies);
             context.SaveChanges();
 
-            if (context.Components.Any()) return;
+            if (context.ComponentTypes.Any()) return;
 
-            var components = new Component[]
+            var components = new ComponentType[]
             {
-                new Component() {Id=new Guid(), Name="About Me"},
-                new Component() {Id=new Guid(), Name="Achievements"},
-                new Component() {Id=new Guid(), Name="Primary Technology"},
-                new Component() {Id=new Guid(), Name="Secondary Technology"},
-                new Component() {Id=new Guid(), Name="Known Technologies"},
-                new Component() {Id=new Guid(), Name="Interests"},
-                new Component() {Id=new Guid(), Name="Education"},
-                new Component() {Id=new Guid(), Name="Certificates"}
+                new ComponentType() {Id=new Guid(), Name="About Me"},
+                new ComponentType() {Id=new Guid(), Name="Achievements"},
+                new ComponentType() {Id=new Guid(), Name="Primary Technology"},
+                new ComponentType() {Id=new Guid(), Name="Secondary Technology"},
+                new ComponentType() {Id=new Guid(), Name="Known Technologies"},
+                new ComponentType() {Id=new Guid(), Name="Interests"},
+                new ComponentType() {Id=new Guid(), Name="Education"},
+                new ComponentType() {Id=new Guid(), Name="Certificates"}
             };
-            context.Components.AddRangeAsync(components);
+            context.ComponentTypes.AddRangeAsync(components);
             context.SaveChanges();
 
             if (context.ComponentThemes.Any()) return;
