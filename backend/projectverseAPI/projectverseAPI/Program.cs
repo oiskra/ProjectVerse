@@ -25,6 +25,16 @@ builder.Services.AddDbContext<ProjectVerseContext>(options =>
 builder.Services.AddControllers(options =>
     options.Filters.Add(typeof(ValidateModelStateAttribute)));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "AllowSpecificOrigin", 
+        policy =>
+        {
+            policy.WithOrigins("https://localhost:5173");
+        });
+});
+
 builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true);
 
@@ -136,7 +146,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors();
+app.UseCors(AllowSpecificOrigin);
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
