@@ -22,7 +22,7 @@ export const Login = () => {
   return (
 
     <Formik
-      initialValues={{ login: "", password: "" }}
+      initialValues={{ email: "", password: "" }}
       validationSchema={LoginSchema}
       onSubmit={async (data,{setSubmitting}) => {
         setSubmitting(true);
@@ -49,12 +49,12 @@ export const Login = () => {
 
             <h1 className="text-accent text-5xl font-bold my-5">Sign In</h1>
             <Field
-              name="login"
-              value={values.login}             
+              name="email"
+              value={values.email}             
               label="Email"              
               variant="outlined"   
-              error={errors.login ? true : false}                        
-              helperText={errors.login}
+              error={errors.email ? true : false}                        
+              helperText={errors.email}
               as={TextFieldS}
               />
             <Field
