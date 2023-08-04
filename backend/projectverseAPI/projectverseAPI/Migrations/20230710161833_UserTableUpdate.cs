@@ -47,25 +47,25 @@ namespace projectverseAPI.Migrations
                 table: "Collaborations");
 
             migrationBuilder.AddColumn<string>(
-                name: "UserId1",
+                name: "UserId",
                 table: "Projects",
                 type: "nvarchar(450)",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "UserId1",
+                name: "UserId",
                 table: "Profiles",
                 type: "nvarchar(450)",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "AuthorId1",
+                name: "AuthorId",
                 table: "PostComments",
                 type: "nvarchar(450)",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "AuthorId1",
+                name: "AuthorId",
                 table: "Collaborations",
                 type: "nvarchar(450)",
                 nullable: true);
@@ -89,48 +89,48 @@ namespace projectverseAPI.Migrations
                 nullable: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_UserId1",
+                name: "IX_Projects_UserId",
                 table: "Projects",
                 column: "UserId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Profiles_UserId1",
+                name: "IX_Profiles_UserId",
                 table: "Profiles",
                 column: "UserId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostComments_AuthorId1",
+                name: "IX_PostComments_AuthorId",
                 table: "PostComments",
                 column: "AuthorId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Collaborations_AuthorId1",
+                name: "IX_Collaborations_AuthorId",
                 table: "Collaborations",
                 column: "AuthorId1");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Collaborations_AspNetUsers_AuthorId1",
+                name: "FK_Collaborations_AspNetUsers_AuthorId",
                 table: "Collaborations",
                 column: "AuthorId1",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_PostComments_AspNetUsers_AuthorId1",
+                name: "FK_PostComments_AspNetUsers_AuthorId",
                 table: "PostComments",
                 column: "AuthorId1",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Profiles_AspNetUsers_UserId1",
+                name: "FK_Profiles_AspNetUsers_UserId",
                 table: "Profiles",
                 column: "UserId1",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Projects_AspNetUsers_UserId1",
+                name: "FK_Projects_AspNetUsers_UserId",
                 table: "Projects",
                 column: "UserId1",
                 principalTable: "AspNetUsers",
