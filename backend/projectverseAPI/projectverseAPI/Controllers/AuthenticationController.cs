@@ -68,7 +68,7 @@ namespace projectverseAPI.Controllers
                         Status = StatusCodes.Status401Unauthorized,
                         Errors = null
                     }) 
-                : Ok(result);
+                : Ok(new TokenResponseDTO { Token = result });
         }
 
         [HttpPost]
