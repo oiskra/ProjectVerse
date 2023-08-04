@@ -29,11 +29,12 @@ export const Login = () => {
 
         try{
           const userData = await login(data).unwrap();
+          console.log("data:"+userData)
           dispatch(setCredentials(userData));
              
         }
         catch(err){
-          // parseError(err);
+          console.log(err)
         }         
 
         setSubmitting(false);

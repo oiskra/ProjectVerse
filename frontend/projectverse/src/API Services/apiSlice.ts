@@ -6,11 +6,13 @@ const baseQuery = fetchBaseQuery({
   credentials:'include',
   prepareHeaders: (headers,{getState}) =>{
     const token = getState().auth.token
-    if(token){
-      headers.set('Authorization',`Bearer ${token}`)
-      headers.set('mode','cors')
-      headers.set('cache', "no-cache")
-    }
+    // if(token){
+
+        
+    //   headers.set('Authorization',`Bearer ${token}`)
+    //   headers.set('mode','cors')
+    //   headers.set('cache', "no-cache")
+    // }
     return headers
   }
 })
