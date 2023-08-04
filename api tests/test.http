@@ -1,0 +1,66 @@
+GET https://localhost:3000/api/collaborations HTTP/1.1
+content-type: application/json
+
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidGVzdCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6Im9ka2xlamFAZ21haWwuY29tIiwiZXhwIjoxNjkxMTQ5OTUwLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDozMDAwIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6MzAwMCJ9.hEUdw4BsW47LzC5Iq9PpC1oVfwuQD_yRASc7CWdNBMQ
+
+### REGISTER
+POST https://localhost:3000/api/auth/register HTTP/1.1
+content-type: application/json
+
+{
+  "email":"odkleja@gmail.com",  
+  "userName":"test",
+  "password":"TEST123!@wrgiworijgowirg",
+  "confirmPassword":"TEST123!@wrgiworijgowirg"
+}
+### LOGIN
+POST https://localhost:3000/api/auth/login HTTP/1.1
+content-type: application/json
+
+{
+  "email":"odkleja@gmail.com",
+  "password":"TEST123!@wrgiworijgowirg"
+}
+
+###
+
+POST https://localhost:3000/api/collaborations HTTP/1.1
+
+content-type: "application/json"
+authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidGVzdCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6Im9ka2xlamFAZ21haWwuY29tIiwiZXhwIjoxNjkxMTY1MjkyLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDozMDAwIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTE3MyJ9.hUVCL0kqlnHt3sJDQCHqkHg2TDhJ6QTNzZ7ra4MkHic"
+
+{
+  "name": "string",
+  "description": "string",
+  "difficulty": 2,
+  "technologies": [
+    "string"
+  ],
+  "collaborationPositions": [
+    {
+      "name": "string",
+      "description": "string"
+    }
+  ]
+}
+### get
+GET https://localhost:3000/api/collaborations HTTP/1.1
+
+content-type: application/json
+Authorization: Bearer 
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidGVzdCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6Im9ka2xlamFAZ21haWwuY29tIiwiZXhwIjoxNjkxMTY1NTA3LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDozMDAwIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6MzAwMCJ9.6eSfnVDUWaEaBu-kQTdpRuSTjoN6qPjA-Jj-Uv4dgDs
+
+{
+  "name": "string",
+  "description": "string",
+  "difficulty": 2,
+  "technologies": [
+    "string"
+  ],
+  "collaborationPositions": [
+    {
+      "name": "string",
+      "description": "string"
+    }
+  ]
+}
