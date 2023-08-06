@@ -59,17 +59,20 @@ builder.Services
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
 })
-    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+    .AddJwtBearer(options =>
     {
         var jwtConfig = builder.Configuration.GetSection("JwtConfig");
 
+        options.IncludeErrorDetails = true;
+        options.RequireHttpsMetadata = false;
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
+            
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
@@ -79,14 +82,60 @@ builder.Services.AddAuthentication(options =>
             ValidAudience = jwtConfig["validAudience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["secret"]))
         };
+
+        options.Events = new JwtBearerEvents()
+        {
+            OnChallenge = ctx =>
+            {
+                Console.WriteLine("On Challenge");
+                Console.WriteLine(ctx.AuthenticateFailure?.Message ?? "no msg");
+                return Task.CompletedTask;
+            },
+
+            OnMessageReceived = msg =>
+            {
+                var token = msg?.Request.Headers.Authorization.ToString();
+                string path = msg?.Request.Path ?? "";
+                if (!string.IsNullOrEmpty(token))
+
+                {
+                    Console.WriteLine("Access token");
+                    Console.WriteLine($"URL: {path}");
+                    Console.WriteLine($"Token: {token}\r\n");
+                }
+                else
+                {
+                    Console.WriteLine("Access token");
+                    Console.WriteLine("URL: " + path);
+                    Console.WriteLine("Token: No access token provided\r\n");
+                }
+                return Task.CompletedTask;
+            }
+        ,
+
+            OnTokenValidated = ctx =>
+            {
+                Console.WriteLine();
+                Console.WriteLine("Claims from the access token");
+                if (ctx?.Principal != null)
+                {
+                    foreach (var claim in ctx.Principal.Claims)
+                    {
+                        Console.WriteLine($"{claim.Type} - {claim.Value}");
+                    }
+                }
+                Console.WriteLine();
+                return Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("RequireAdmin",
+    options.AddPolicy("Test",
         policy => {
             policy.RequireAuthenticatedUser();
-            policy.RequireRole(UserRoles.Admin);
+            policy.RequireRole(UserRoles.User);
         });
 });
 
@@ -150,8 +199,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 app.UseCors();
+app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
