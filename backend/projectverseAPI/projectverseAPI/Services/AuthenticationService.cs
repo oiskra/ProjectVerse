@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using projectverseAPI.DTOs.Authentication;
 using projectverseAPI.Interfaces;
@@ -93,7 +94,7 @@ namespace projectverseAPI.Services
         private SigningCredentials GetSigningCredentials()
         {
             var jwtConfig = _configuration.GetSection("jwtConfig");
-            var key = Encoding.UTF8.GetBytes(jwtConfig["Secret"]);
+            var key = Encoding.UTF8.GetBytes(jwtConfig["secret"]);
             var secret = new SymmetricSecurityKey(key);
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
@@ -126,7 +127,5 @@ namespace projectverseAPI.Services
             );
             return tokenOptions;
         }
-
-
     }
 }
