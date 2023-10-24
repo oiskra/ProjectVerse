@@ -10,5 +10,6 @@
         public int Difficulty { get; set; }
         public IList<Technology>? Technologies { get; set; }
         public IList<CollaborationPosition>? CollaborationPositions { get; set; }
+        public IList<CollaborationApplicant>? CollaborationApplicants { get; set; } = new List<CollaborationApplicant>();
     }
 }

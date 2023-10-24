@@ -14,12 +14,20 @@ namespace projectverseAPI.Data
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostComment> PostComments { get; set; }
         public DbSet<Collaboration> Collaborations { get; set; }
+        public DbSet<CollaborationApplicant> CollaborationApplicants { get; set; }
         public DbSet<Technology> Technologies { get; set; }
 
 
         public ProjectVerseContext(DbContextOptions<ProjectVerseContext> options) : base(options)
+        { DbSeeder.Seed(this); }
+
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            DbSeeder.Seed(this);
+            base.OnModelCreating(builder);
+            builder.Entity<CollaborationApplicant>()
+                .HasOne(e => e.AppliedCollaboration)
+                .WithMany(e => e.CollaborationApplicants)
+                .OnDelete(DeleteBehavior.ClientCascade);
         }
 
     }

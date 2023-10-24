@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using projectverseAPI.Data;
 using projectverseAPI.DTOs.Collaboration;
 using projectverseAPI.Interfaces;
@@ -22,6 +22,64 @@ namespace projectverseAPI.Services
             _context = context;
             _mapper = mapper;
             _authenticationService = authenticationService;
+        }
+
+        public async Task<Guid> ApplyForCollaboration(Guid collaborationId, Guid collaborationPositionId)
+        {
+            var collaboration = await _context.Collaborations
+                .Include(c => c.CollaborationPositions)
+                .Include(c => c.CollaborationApplicants)
+                .FirstOrDefaultAsync(c => c.Id == collaborationId);
+
+            if (collaboration is null)
+                throw new ArgumentException("Collaboration doesn't exist.");
+
+            var position = collaboration.CollaborationPositions
+                .FirstOrDefault(c => c.Id == collaborationPositionId);
+
+            if(position is null)
+                throw new ArgumentException("Collaboration position doesn't exist.");
+
+            var currUser = await _authenticationService.GetCurrentUser();
+
+            if (currUser is null)
+                throw new Exception("Cannot get current user.");
+
+            var newApplicant = new CollaborationApplicant
+            {
+                Id = Guid.NewGuid(),
+                ApplicantUserId = new Guid(currUser.Id),
+                ApplicantUser = currUser,
+                AppliedPositionId = position.Id,
+                AppliedPosition = position,
+                AppliedCollaborationId = collaboration.Id,
+                AppliedCollaboration = collaboration,
+                AppliedOn = DateTime.Now
+            };
+
+            await _context.CollaborationApplicants.AddAsync(newApplicant);
+
+            if (collaboration.CollaborationApplicants is null)
+                collaboration.CollaborationApplicants = new List<CollaborationApplicant>() { newApplicant }; 
+            else
+                collaboration.CollaborationApplicants.Add(newApplicant);
+            
+            await _context.SaveChangesAsync();
+            
+            return newApplicant.Id;
+        }
+
+        public async Task<List<CollaborationApplicant>> GetCollaborationApplicants(Guid collaborationId)
+        {
+            var collaboration = await _context.Collaborations
+                .Include(c => c.CollaborationApplicants)
+                .ThenInclude(c => c.ApplicantUser)
+                .FirstOrDefaultAsync(c => c.Id == collaborationId);
+
+            if(collaboration is not null)                
+                return collaboration!.CollaborationApplicants!.ToList();
+
+            return new List<CollaborationApplicant>();
         }
 
         public async Task<Guid> CreateCollaboration(CreateCollaborationRequestDTO collaborationDTO)
@@ -132,5 +190,6 @@ namespace projectverseAPI.Services
                 throw new Exception(e.Message);
             }
         }
+
     }
 }

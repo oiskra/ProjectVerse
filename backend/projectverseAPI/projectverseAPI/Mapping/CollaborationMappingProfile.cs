@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
-using projectverseAPI.DTOs.Collaboration;
-using projectverseAPI.Interfaces;
+﻿using projectverseAPI.DTOs.Collaboration;
 using projectverseAPI.Models;
 
 namespace projectverseAPI.Mapping
@@ -20,13 +17,10 @@ namespace projectverseAPI.Mapping
                     opt => opt.MapFrom(src => 
                         src.Technologies.Select(tech => new Technology { Id = Guid.NewGuid(), Name = tech })));
 
-
             CreateMap<CreateCollaborationPositionDTO, CollaborationPosition>()
                 .ForMember(
                     x => x.Id,
                     opt => opt.MapFrom(src => Guid.NewGuid()));
-
-            
 
             //Update
             CreateMap<UpdateCollaborationRequestDTO, Collaboration>();
@@ -36,6 +30,15 @@ namespace projectverseAPI.Mapping
             CreateMap<Collaboration, CollaborationResponseDTO>();
             CreateMap<CollaborationPosition, CollaborationPositionDTO>();
             CreateMap<User, CollaborationAuthorDTO>();
+
+            //Applicants
+            CreateMap<CollaborationApplicant, CollaborationApplicantDTO>()
+                .ForMember(
+                    x => x.ApplicantEmail,
+                    opt => opt.MapFrom(src => src.ApplicantUser.Email))
+                .ForMember(
+                    x => x.ApplicantUserName,
+                    opt => opt.MapFrom(src => src.ApplicantUser.UserName));
         }
     }
 }

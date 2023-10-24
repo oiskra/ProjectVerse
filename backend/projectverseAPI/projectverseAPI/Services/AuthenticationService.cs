@@ -48,7 +48,6 @@ namespace projectverseAPI.Services
             return null;
         }
 
-
         public async Task Logout()
         { }
 

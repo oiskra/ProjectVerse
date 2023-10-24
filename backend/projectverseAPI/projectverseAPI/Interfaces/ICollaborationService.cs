@@ -10,5 +10,7 @@ namespace projectverseAPI.Interfaces
         Task<Guid> CreateCollaboration(CreateCollaborationRequestDTO collaboration);
         Task UpdateCollaboration(UpdateCollaborationRequestDTO collaboration);
         Task<bool> DeleteCollaborationById(Guid collaborationId);
+        Task<Guid> ApplyForCollaboration(Guid collaborationId, Guid collaborationPositionId);
+        Task<List<CollaborationApplicant>> GetCollaborationApplicants(Guid collaborationId);
     }
 }
