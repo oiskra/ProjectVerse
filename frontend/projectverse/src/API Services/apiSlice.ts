@@ -1,23 +1,27 @@
-import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react'
+import {BaseQueryApi, createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import { logOut, setCredentials } from '../features/Auth/authSlice'
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'https://localhost:3000/api',
+  baseUrl: 'http://localhost:3000/api',
   credentials:'include',
-  prepareHeaders: (headers,{getState}) =>{
-    const token = getState().auth.token
-    // if(token){
+  prepareHeaders: (headers:Headers,{getState}) =>{
 
-        
-    //   headers.set('Authorization',`Bearer ${token}`)
-    //   headers.set('mode','cors')
-    //   headers.set('cache', "no-cache")
-    // }
+    const token = getState().auth.token;
+
+    console.log(token);
+
+    headers.set('Content-Type',"application/json");
+    headers.set('origin',"http://localhost:5173");    
+
+    console.log(token);
+    if(token){        
+      headers.set('Authorization',`Bearer ${token}`)      
+    }
     return headers
   }
 })
 
-const baseQueryWithReauth = async (args,api,extraOptions) =>{
+const baseQueryWithReauth = async (args:any,api:BaseQueryApi,extraOptions:any) =>{
   let result = await baseQuery(args,api,extraOptions)
 
   if(result?.error?.originalStatus === 403){

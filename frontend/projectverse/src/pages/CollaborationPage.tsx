@@ -1,9 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ColabListing } from '../features/Collaborations/ColabListing'
-import { sampleCollaboration } from '../data/Collaboration'
+import Collaboration from '../data/Collaboration'
 import { ColabDescCard } from '../features/Collaborations/ColabDescCard'
+import {  useGetAllColabsMutation } from '../features/Collaborations/colabApiSlice'
 
 export const CollaborationPage: React.FC<{}> = () => {
+
+  const [colabList, setColabList] = useState([]);
+  const [colabs,{isLoading}] = useGetAllColabsMutation();
+
+  useEffect(() => {    
+    
+      (async () =>{
+        setColabList(await colabs({}).unwrap())
+      })();
+
+  }, [])
+  
 
 
   return (
@@ -26,13 +39,12 @@ export const CollaborationPage: React.FC<{}> = () => {
             </div>
 
             <div className="neo w-full bg-background h-full rounded-xl p-3 flex flex-col gap-3">
-              <ColabListing colab={sampleCollaboration} />
-              <ColabListing colab={sampleCollaboration} />
+              {colabList.map((colab:Collaboration)=><ColabListing key={colab.ID} colab={colab} />)}             
             </div>
             
           </div>
           <div className='w-2/5 h-full neo bg-background rounded-md'>
-            <ColabDescCard colab={sampleCollaboration} />
+            {/* <ColabDescCard colab={sampleCollaboration} /> */}
           </div>
         </div>
 

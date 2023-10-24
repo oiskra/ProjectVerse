@@ -16,6 +16,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "@types/joi": "^17.2.3",
     "@types/yup": "^0.32.0",
+    "@vitejs/plugin-basic-ssl": "^1.0.1",
     "formik": "^2.4.2",
     "joi": "^17.9.2",
     "localforage": "^1.10.0",

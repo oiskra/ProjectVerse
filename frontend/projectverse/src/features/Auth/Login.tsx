@@ -16,7 +16,6 @@ export const Login = () => {
   const [login,{isLoading}] = useLoginMutation();
   const dispatch = useDispatch()
 
-  
   if(isLoading) return <Loader />
 
   return (
@@ -26,19 +25,16 @@ export const Login = () => {
       validationSchema={LoginSchema}
       onSubmit={async (data,{setSubmitting}) => {
         setSubmitting(true);
-
+        
         try{
           const userData = await login(data).unwrap();
-          console.log("data:"+userData)
           dispatch(setCredentials(userData));
-             
+          navigate('/home');             
         }
         catch(err){
           console.log(err)
-        }         
-
-        setSubmitting(false);
-        navigate('/');
+        }
+        setSubmitting(false);        
       }     
 
       }
@@ -58,8 +54,7 @@ export const Login = () => {
               helperText={errors.email}
               as={TextFieldS}
               />
-            <Field
-            
+            <Field            
               value={values.password} 
               onChange={handleChange}
               onBlur={handleBlur}

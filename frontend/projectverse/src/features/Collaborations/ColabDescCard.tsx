@@ -18,12 +18,12 @@ export const ColabDescCard: React.FC<{ colab: Collaboration }> = ({ colab }) => 
       <div className='relative w-full h-1/6 text-black z-30'>
 
         <div className="absolute left-5 top-8 text-4xl font-bold">
-          {colab.Name}
+          {colab.name}
           {/* OPIS APKI MAMY TUTAJ ALE NIE WIEM BO NIE MAMY TEGO W MODELACH FIXME */}
         </div>
 
         <div className="absolute right-3 top-8 text-2xl flex gap-5 items-center">
-          {colab.Author.Username}
+          {colab.author.username}
           <img className='w-12 border rounded-full' src={img} />
 
         </div>
@@ -36,7 +36,7 @@ export const ColabDescCard: React.FC<{ colab: Collaboration }> = ({ colab }) => 
         </h2>
 
         <p className='text-sm opacity-70 py-2 text-justify'>
-          {colab.Description}
+          {colab.description}
         </p>
 
 
@@ -48,7 +48,7 @@ export const ColabDescCard: React.FC<{ colab: Collaboration }> = ({ colab }) => 
         </h2>
 
         <div className='flex justify-start gap-3'>
-          {colab.Technologies.map((tech: Technology) => {
+          {colab.technologies.map((tech: Technology) => {
             return <div key={tech.ID} className='neo p-3 text-sm rounded-xl'>{tech.Name}</div>
           })}
         </div>
@@ -63,14 +63,14 @@ export const ColabDescCard: React.FC<{ colab: Collaboration }> = ({ colab }) => 
             <span className='text-accent'>Who</span> we'll need
           </h2>
           <p style={{ fontSize: "0.7em", lineHeight: "1.4em" }} className='w-full opacity-70 text-justify justify-between'>
-            {colab.CollaborationPositions[targetDesc].Description}
+            {colab.collaborationPositions[targetDesc].Description}
           </p>
         </div>
 
 
 
         <div className='flex justify-start gap-2 w-2/6 flex-col transition-all' style={{ cursor: "pointer" }}>
-          {colab.CollaborationPositions.map((pos: CollaborationPositions) => {
+          {colab.collaborationPositions.map((pos: CollaborationPositions) => {
             return pos.ID === targetDesc ?
               <div key={pos.ID}
                 onClick={() => { setTargetDesc(pos.ID) }}
