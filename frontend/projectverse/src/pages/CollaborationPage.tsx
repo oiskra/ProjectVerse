@@ -6,18 +6,31 @@ import {  useGetAllColabsMutation } from '../features/Collaborations/colabApiSli
 
 export const CollaborationPage: React.FC<{}> = () => {
 
-  const [colabList, setColabList] = useState([]);
+  const [colabList, setColabList] = useState([] as Collaboration[]);
   const [colabs,{isLoading}] = useGetAllColabsMutation();
+
+  const [highlightColab, setHighlightColab] = useState(null as Collaboration | null);
 
   useEffect(() => {    
     
-      (async () =>{
-        setColabList(await colabs({}).unwrap())
-      })();
+  (async () =>{
+    setColabList(await colabs({}).unwrap()) 
 
-  }, [])
+    //this does not work :(
+    // setHighlightColab(colabList[0]);       
+  })();
+
+  }, [])  
   
 
+  const switchDetails = (colabID:string) =>{    
+    let colab:Collaboration = colabList.find((x:Collaboration) => x.id == colabID)! 
+    setHighlightColab(colab);
+  }
+
+  if(isLoading){ 
+    return <div>Loading...</div>
+  }
 
   return (
     <>
@@ -39,12 +52,16 @@ export const CollaborationPage: React.FC<{}> = () => {
             </div>
 
             <div className="neo w-full bg-background h-full rounded-xl p-3 flex flex-col gap-3">
-              {colabList.map((colab:Collaboration)=><ColabListing key={colab.ID} colab={colab} />)}             
+              {colabList.map((colab:Collaboration)=>{                              
+                return <ColabListing key={colab.id} selected = {highlightColab?.id === colab.id} colab={colab} switchDetails = {switchDetails}/>             
+              })}             
             </div>
             
           </div>
           <div className='w-2/5 h-full neo bg-background rounded-md'>
-            {/* <ColabDescCard colab={sampleCollaboration} /> */}
+            {highlightColab === null ? <div>...loading</div> : <ColabDescCard colab={highlightColab} />}
+            
+              
           </div>
         </div>
 

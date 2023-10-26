@@ -1,15 +1,24 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Collaboration from '../../data/Collaboration'
 import Technology from '../../data/Technology'
 import CollaborationPositions from '../../data/CollaborationPosition'
 import img from '../../assets/logo.png'
 import ribbon from '../../assets/ribbon.png'
+import CollaborationPosition from '../../data/CollaborationPosition'
 
 export const ColabDescCard: React.FC<{ colab: Collaboration }> = ({ colab }) => {
+ 
+  const [targetDesc, setTargetDesc] = useState({id:"XD",name:"test",description:"XD"} as CollaborationPosition | null);
 
-  const [targetDesc, setTargetDesc] = useState(0)
+  const [applySlider,setApplySlider] = useState(false);
+
+  useEffect(() => {
+    setTargetDesc(colab.collaborationPositions[0]);      
+  }, [])
+  
+
   return (
-    <div className='w-full h-full flex flex-col gap-4 items-center text-white p-3 relative'>
+    <div key={colab.id} className='w-full h-full flex flex-col gap-4 items-center text-white p-3 relative animate-fadeIn'>
       <div className='absolute w-full -top-1 h-1/6 z-20'>
         <img src={ribbon} alt="" />
         {/* TODO RIBBON HERE */}
@@ -49,39 +58,43 @@ export const ColabDescCard: React.FC<{ colab: Collaboration }> = ({ colab }) => 
 
         <div className='flex justify-start gap-3'>
           {colab.technologies.map((tech: Technology) => {
-            return <div key={tech.ID} className='neo p-3 text-sm rounded-xl'>{tech.Name}</div>
+            return <div key={tech.id} className='neo p-3 text-sm rounded-xl'>{tech.name}</div>
           })}
         </div>
 
 
       </div>
-      <div className='neo text-xl w-full p-5 rounded-xl flex flex-wrap gap-10'>
-
+      <div className='neo text-xl w-full p-5 rounded-xl h-2/5 flex flex-wrap gap-10'>
 
         <div className='w-3/5 text-justify justify-between'>
           <h2 className='w-full'>
             <span className='text-accent'>Who</span> we'll need
           </h2>
-          <p style={{ fontSize: "0.7em", lineHeight: "1.4em" }} className='w-full opacity-70 text-justify justify-between'>
-            {colab.collaborationPositions[targetDesc].Description}
+          <p style={{ fontSize: "0.7em", lineHeight: "1.4em" }} className='w-full opacity-70 text-justify justify-between animate-fadeIn'>
+            {targetDesc!.description}
           </p>
         </div>
 
-
-
-        <div className='flex justify-start gap-2 w-2/6 flex-col transition-all' style={{ cursor: "pointer" }}>
+        <div className='flex p-1 justify-start gap-2 w-2/6 h-full flex-col transition-all overflow-scroll' style={{ cursor: "pointer" }}>
           {colab.collaborationPositions.map((pos: CollaborationPositions) => {
-            return pos.ID === targetDesc ?
-              <div key={pos.ID}
-                onClick={() => { setTargetDesc(pos.ID) }}
-                className='neo p-3 rounded-xl w-full'
-                style={{ fontSize: "0.7em", border: "solid 2px #FFC328" }}>{pos.Name}
+            return pos.id === targetDesc!.id ?
+              <div 
+                key={pos.id}              
+                onClick={() => { setTargetDesc(pos) }}
+                className='neo rounded-xl w-full h-1/8 transition-all overflow-hidden relative flex-col flex gap-5'
+                onMouseOver={()=>setApplySlider(true)}  
+                onMouseOut={()=>setApplySlider(false)}  
+
+                style={{ fontSize: "0.7em", border: "solid 2px #FFC328" }}> 
+                <div className="w-full p-3 h-full relative">{pos.name}</div>
+                {applySlider ? <div className="w-full h-full absolute bg-accent text-background text-2xl font-black animate-slideIn flex items-center justify-center">Apply</div> : ""}
+                
               </div>
               :
-              <div key={pos.ID}
-                onClick={() => { setTargetDesc(pos.ID) }}
+              <div key={pos.id}
+                onClick={() => { setTargetDesc(pos) }}
                 className='neo p-3 rounded-xl w-full'
-                style={{ fontSize: "0.7em" }}>{pos.Name}</div>
+                style={{ fontSize: "0.7em" }}>{pos.name}</div>
 
           })}
         </div>

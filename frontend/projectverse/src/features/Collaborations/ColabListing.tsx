@@ -2,12 +2,18 @@ import Collaboration from "../../data/Collaboration"
 import Technology from "../../data/Technology"
 import { Difficulty } from "./Difficulty"
 
-export const ColabListing : React.FC<{colab:Collaboration}>  = ({colab}) => {
+export const ColabListing : React.FC<{colab:Collaboration ,switchDetails:Function, selected:boolean }>  = ({colab,switchDetails,selected}) => {
+
+  const switchDetailsHandler = () =>{
+    switchDetails(colab.id);
+  }
+
+
   return (    
-    <div className="neo p-5 rounded-md text-white flex" >
+    <div className="neo p-5 rounded-md text-white flex" style={{border:"solid 1px"+ selected ? "rgb(255 195 40":"none"}} onClick={switchDetailsHandler}>
       <div className="w-1/2 p5">
         <div className="flex flex-col pb-5 ">
-          <h2 className="text-3xl font-black">{colab.name}</h2>
+          <h2 className="text-3xl font-bold">{colab.name}</h2>
           <p>by <span className="text-accent">@{colab.author.username}</span></p>
         </div>
 
@@ -30,8 +36,10 @@ export const ColabListing : React.FC<{colab:Collaboration}>  = ({colab}) => {
         </div>
 
         <div className="flex justify-around h-1/2 gap-3">
-          {colab.technologies.map((tech:Technology)=>
-            <div key={tech.ID} className="bg-background neo text-center rounded-md h-full w-1/4 flex items-center justify-center">{tech.Name}</div>
+          {colab.technologies.slice(0,2).map((tech:Technology)=>{            
+            return <div key={tech.id} className="bg-background neo text-sm text-center rounded-md h-full w-2/4 flex items-center justify-center">{tech.name}</div>
+          }          
+            
           )}
         </div>
 
