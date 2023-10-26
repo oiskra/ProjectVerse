@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using projectverseAPI.Data;
+using projectverseAPI.Handlers;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
 using projectverseAPI.Services;
@@ -157,6 +159,13 @@ namespace projectverseAPI
         {
             services.AddAuthorization(options =>
             {
+                options.AddPolicy("CollaborationOwner",
+                    policy =>
+                    {
+                        policy.RequireAuthenticatedUser();
+                        policy.AddRequirements(new CollaborationOwnerRequirement());
+                    });
+
                 options.AddPolicy("Test",
                     policy => {
                         policy.RequireAuthenticatedUser();
@@ -173,6 +182,7 @@ namespace projectverseAPI
                 .AddScoped<ICollaborationApplicantsService, CollaborationApplicantsService>()
                 .AddScoped<ICollaborationService, CollaborationService>()
                 .AddScoped<IAuthenticationService, AuthenticationService>()
+                .AddScoped<IAuthorizationHandler, CollaborationOwnerAuthorizationHandler>()
                 .AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
             return services;

@@ -55,11 +55,11 @@ namespace projectverseAPI.Controllers
                         Errors = e.Message
                     });
             }
-
         }
 
         [HttpGet]
         [Route("{collaborationId}")]
+        [Authorize(Policy = "CollaborationOwner")]
         public async Task<ActionResult> GetCollaborationApplicants([FromRoute] Guid collaborationId)
         {
             var collaborationApplicants = await _applicantsService.GetCollaborationApplicants(collaborationId);
@@ -103,6 +103,7 @@ namespace projectverseAPI.Controllers
 
         [HttpDelete]
         [Route("{applicantId}")]
+        [Authorize(Policy = "CollaborationOwner")]
         public async Task<IActionResult> DeleteApplicantById([FromRoute] Guid applicantId)
         {
             try

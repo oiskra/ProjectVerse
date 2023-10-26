@@ -73,12 +73,12 @@ namespace projectverseAPI.Services
 
         public async Task<User?> GetCurrentUser()
         {
-            var name = _contextAccessor.HttpContext?.User.Identity?.Name;
+            var id = _contextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
 
-            if (name is null)
+            if (id is null)
                 return null;
 
-            var currentUser = await _userManager.FindByNameAsync(name);
+            var currentUser = await _userManager.FindByIdAsync(id);
             return currentUser;
         }
 
