@@ -149,49 +149,5 @@ namespace projectverseAPI.Controllers
                     }); 
             }
         }
-
-        [HttpPost]
-        [Route("{collaborationId}/collaborationPositions/{collaborationPositionId}/applicants")]
-        public async Task<ActionResult> Apply([FromRoute] Guid collaborationId, [FromRoute] Guid collaborationPositionId)
-        {
-            try
-            {
-                var createdApplicantId = await _collaborationService.ApplyForCollaboration(collaborationId, collaborationPositionId);
-                
-                return CreatedAtAction("Apply", new CreateResponseDTO { Id = createdApplicantId });
-            }
-            catch (ArgumentException e)
-            {
-                return NotFound(new ErrorResponseDTO
-                {
-                    Title = "Not Found",
-                    Status = StatusCodes.Status404NotFound,
-                    Errors = e.Message
-                });
-            }
-            catch (Exception e)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = e.Message
-                    });
-            }
-
-        }
-
-        [HttpGet]
-        [Route("{collaborationId}/applicants")]
-        public async Task<ActionResult> GetCollaborationApplicants([FromRoute] Guid collaborationId)
-        {
-            var collaborationApplicants = await _collaborationService.GetCollaborationApplicants(collaborationId);                                              
-
-            var collaborationApplicantsResponse = collaborationApplicants.Select(a => _mapper.Map<CollaborationApplicantDTO>(a));
-
-            return Ok(collaborationApplicantsResponse);
-        }
     }
 }

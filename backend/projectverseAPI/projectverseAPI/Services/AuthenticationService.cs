@@ -102,8 +102,12 @@ namespace projectverseAPI.Services
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, _user.UserName),
-                new Claim(ClaimTypes.Email, _user.Email)
+                new Claim("id", _user.Id),
+                new Claim("username", _user.UserName),
+                new Claim("email", _user.Email),
+                /*new Claim("name", _user.Name),
+                new Claim("surname", _user.Surname),
+                new Claim("country", _user.Country)*/
             };
             var roles = await _userManager.GetRolesAsync(_user);
             foreach (var role in roles)
@@ -121,7 +125,8 @@ namespace projectverseAPI.Services
                 issuer: jwtSettings["validIssuer"],
                 audience: jwtSettings["validAudience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["expiresIn"])),
+                //expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["expiresIn"])),
+                expires: DateTime.Now.AddDays(7),
                 signingCredentials: signingCredentials
             );
             return tokenOptions;

@@ -10,7 +10,6 @@ using projectverseAPI.Models;
 using projectverseAPI.Services;
 using projectverseAPI.Validators.Authentication;
 using projectverseAPI.Validators.Collaboration;
-using System.Net.NetworkInformation;
 using System.Text;
 
 namespace projectverseAPI
@@ -171,6 +170,7 @@ namespace projectverseAPI
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
             services
+                .AddScoped<ICollaborationApplicantsService, CollaborationApplicantsService>()
                 .AddScoped<ICollaborationService, CollaborationService>()
                 .AddScoped<IAuthenticationService, AuthenticationService>()
                 .AddTransient<IHttpContextAccessor, HttpContextAccessor>();

@@ -9,6 +9,7 @@
         public CollaborationPosition? AppliedPosition { get; set; }
         public Guid AppliedCollaborationId { get; set; }
         public Collaboration? AppliedCollaboration { get; set; }
+        public bool Accepted { get; set; }
         public DateTime AppliedOn { get; set; }
     }
 }
