@@ -56,7 +56,6 @@ namespace projectverseAPI
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
@@ -183,6 +182,7 @@ namespace projectverseAPI
                 .AddScoped<ICollaborationService, CollaborationService>()
                 .AddScoped<IAuthenticationService, AuthenticationService>()
                 .AddScoped<IAuthorizationHandler, CollaborationOwnerAuthorizationHandler>()
+                .AddTransient<ITokenService, TokenService>()
                 .AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
             return services;

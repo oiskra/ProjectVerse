@@ -57,7 +57,7 @@ namespace projectverseAPI.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<string?>> Login([FromBody] UserLoginDTO request)
+        public async Task<ActionResult<TokenResponseDTO>> Login([FromBody] UserLoginDTO request)
         {
             var result = await _authenticationService.LoginUser(request);
 
@@ -68,16 +68,72 @@ namespace projectverseAPI.Controllers
                         Status = StatusCodes.Status401Unauthorized,
                         Errors = null
                     }) 
-                : Ok(new TokenResponseDTO { Token = result });
+                : Ok(result);
         }
 
         [HttpPost]
-        [Route("logout")]
         [Authorize]
-        public async Task<IActionResult> Logout()
+        [Route("revoke")]
+        public async Task<IActionResult> Revoke()
         {
-            await _authenticationService.Logout();
-            return NoContent();
+            try
+            {
+                await _authenticationService.RevokeToken();
+                return NoContent();
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(new ErrorResponseDTO
+                {
+                    Title = "Bad Request",
+                    Status = StatusCodes.Status400BadRequest,
+                    Errors = e.Message
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new ErrorResponseDTO
+                    {
+                        Title = "Internal Server Error",
+                        Status = StatusCodes.Status500InternalServerError,
+                        Errors = null
+                    });
+            }
+
+        }
+
+        [HttpPost]
+        [Route("refresh")]
+        public async Task<ActionResult<TokenResponseDTO>> Refresh(RefreshRequestDTO refreshRequestDTO)
+        {
+            try
+            {
+                var newTokens = await _authenticationService.RefreshToken(refreshRequestDTO);
+
+                return Ok(newTokens);
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(new ErrorResponseDTO
+                {
+                    Title = "Bad Request",
+                    Status = StatusCodes.Status400BadRequest,
+                    Errors = e.Message
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new ErrorResponseDTO
+                    {
+                        Title = "Internal Server Error",
+                        Status = StatusCodes.Status500InternalServerError,
+                        Errors = null
+                    });
+            }
         }
     }
 }
