@@ -2,7 +2,12 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}",],
   theme: {
-    extend: {},
+    extend: {
+      animation:{
+        'fadeIn' : 'fadeIn 0.3s forwards',
+        'slideIn': 'slideIn 0.3s forwards'
+      }
+    },
     colors:{
       black:"#000000",
       white:"#E3E3E3",

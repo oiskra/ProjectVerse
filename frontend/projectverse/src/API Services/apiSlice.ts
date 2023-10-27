@@ -6,14 +6,11 @@ const baseQuery = fetchBaseQuery({
   credentials:'include',
   prepareHeaders: (headers:Headers,{getState}) =>{
 
-    const token = getState().auth.token;
-
-    console.log(token);
+    const token = getState().auth.token;   
 
     headers.set('Content-Type',"application/json");
     headers.set('origin',"http://localhost:5173");    
 
-    console.log(token);
     if(token){        
       headers.set('Authorization',`Bearer ${token}`)      
     }
