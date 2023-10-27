@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using projectverseAPI.Data;
 using projectverseAPI.DTOs.Collaboration;
 using projectverseAPI.Interfaces;
@@ -132,5 +131,6 @@ namespace projectverseAPI.Services
                 throw new Exception(e.Message);
             }
         }
+
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using projectverseAPI.Data;
 
@@ -11,9 +12,11 @@ using projectverseAPI.Data;
 namespace projectverseAPI.Migrations
 {
     [DbContext(typeof(ProjectVerseContext))]
-    partial class ProjectVerseContextModelSnapshot : ModelSnapshot
+    [Migration("20231023101349_ApplicantTable")]
+    partial class ApplicantTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -197,9 +200,6 @@ namespace projectverseAPI.Migrations
                     b.Property<string>("AuthorId1")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -208,9 +208,6 @@ namespace projectverseAPI.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PeopleInvolved")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -224,9 +221,6 @@ namespace projectverseAPI.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Accepted")
-                        .HasColumnType("bit");
 
                     b.Property<Guid>("ApplicantUserId")
                         .HasColumnType("uniqueidentifier");
@@ -717,7 +711,7 @@ namespace projectverseAPI.Migrations
                     b.HasOne("projectverseAPI.Models.Collaboration", "AppliedCollaboration")
                         .WithMany("CollaborationApplicants")
                         .HasForeignKey("AppliedCollaborationId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("projectverseAPI.Models.CollaborationPosition", "AppliedPosition")
