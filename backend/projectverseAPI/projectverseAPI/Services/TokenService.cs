@@ -46,7 +46,7 @@ namespace projectverseAPI.Services
                 ValidateAudience = false, 
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345")),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("jwtConfig")["secret"]!)),
                 ValidateLifetime = false 
             };
             var tokenHandler = new JwtSecurityTokenHandler();

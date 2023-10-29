@@ -34,6 +34,8 @@ namespace projectverseAPI
             services.AddValidatorsFromAssemblyContaining<CreateCollaborationDTOValidator>();
             services.AddValidatorsFromAssemblyContaining<UpdateCollaborationDTOValidator>();
             services.AddValidatorsFromAssemblyContaining<UserRegisterDTOValidator>();
+            services.AddValidatorsFromAssemblyContaining<UserLoginDTOValidator>();
+            services.AddValidatorsFromAssemblyContaining<RefreshRequestDTOValidator>();
 
             return services;
         }

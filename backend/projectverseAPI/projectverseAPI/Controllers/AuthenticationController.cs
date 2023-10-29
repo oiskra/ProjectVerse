@@ -123,7 +123,7 @@ namespace projectverseAPI.Controllers
                     Errors = e.Message
                 });
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return StatusCode(
                     StatusCodes.Status500InternalServerError,
@@ -131,7 +131,7 @@ namespace projectverseAPI.Controllers
                     {
                         Title = "Internal Server Error",
                         Status = StatusCodes.Status500InternalServerError,
-                        Errors = null
+                        Errors = e.Message
                     });
             }
         }
