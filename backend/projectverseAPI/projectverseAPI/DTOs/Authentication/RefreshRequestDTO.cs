@@ -1,7 +1,6 @@
-﻿
-namespace projectverseAPI.DTOs.Authentication
+﻿namespace projectverseAPI.DTOs.Authentication
 {
-    public class TokenResponseDTO
+    public class RefreshRequestDTO
     {
         public string? AccessToken { get; set; }
         public string? RefreshToken { get; set; }

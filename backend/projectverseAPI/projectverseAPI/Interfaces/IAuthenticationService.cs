@@ -7,8 +7,9 @@ namespace projectverseAPI.Interfaces
     public interface IAuthenticationService
     {
         Task<bool> RegisterUser(UserRegisterDTO userRegisterDTO);
-        Task<string?> LoginUser(UserLoginDTO userLoginDto);
+        Task<TokenResponseDTO?> LoginUser(UserLoginDTO userLoginDto);
         Task<User?> GetCurrentUser();
-        Task Logout();
+        Task<TokenResponseDTO> RefreshToken(RefreshRequestDTO refreshRequestDTO);
+        Task RevokeToken();
     }
 }
