@@ -12,5 +12,7 @@ namespace projectverseAPI.DTOs.Project
         public IList<ProjectTechnologyDTO> UsedTechnologies { get; set; }
         public bool IsPrivate { get; set; }
         public bool IsPublished { get; set; }
+        public DateTime CreatedAt { get; set; }
+
     }
 }
