@@ -11,6 +11,5 @@
         public IList<Technology> UsedTechnologies { get; set; }
         public bool IsPrivate  { get; set; }
         public bool IsPublished { get; set; }
-
     }
 }
