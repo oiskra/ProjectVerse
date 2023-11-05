@@ -18,13 +18,8 @@ namespace projectverseAPI.Mapping
 
             CreateMap<UpdateProjectRequestDTO, Project>();
 
-            CreateMap<Project, ProjectResponseDTO>()
-                .ForMember(
-                    x => x.UserName,
-                    opt => opt.MapFrom(src => src.User.UserName))
-                .ForMember(
-                    x => x.UserId,
-                    opt => opt.MapFrom(src => src.UserId));
+            CreateMap<Project, ProjectResponseDTO>();
+            CreateMap<User, ProjectAuthorDTO>();
 
             CreateMap<Technology, ProjectTechnologyDTO>()
                 .ReverseMap();

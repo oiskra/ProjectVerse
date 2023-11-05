@@ -4,6 +4,7 @@ using projectverseAPI.Data;
 using projectverseAPI.DTOs.Project;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace projectverseAPI.Services
@@ -28,7 +29,7 @@ namespace projectverseAPI.Services
         {
             var projects = await _context.Projects
                 .Include(p => p.UsedTechnologies)
-                .Include(p => p.User)
+                .Include(p => p.Author)
                 .ToListAsync();
 
             return projects;
@@ -37,9 +38,9 @@ namespace projectverseAPI.Services
         public async Task<List<Project>> GetAllProjectsByUserID(Guid userId)
         {
             var usersProjects = await _context.Projects
-                .Include(p => p.User)
+                .Include(p => p.Author)
                 .Include(p => p.UsedTechnologies)
-                .Where(p => p.UserId == userId)
+                .Where(p => p.AuthorId == userId)
                 .ToListAsync();
 
             return usersProjects;
@@ -48,7 +49,7 @@ namespace projectverseAPI.Services
         public async Task<Project?> GetProjectById(Guid projectId)
         {
             var project = await _context.Projects
-                .Include(p => p.User)
+                .Include(p => p.Author)
                 .Include(p => p.UsedTechnologies)
                 .FirstOrDefaultAsync(p => p.Id == projectId);
 
@@ -68,8 +69,8 @@ namespace projectverseAPI.Services
 
                 if (projectDTO.IsPublished.Equals(false))
                 {
-                    project.User = currentUser;
-                    project.UserId = Guid.Parse(currentUser.Id);
+                    project.Author = currentUser;
+                    project.AuthorId = Guid.Parse(currentUser.Id);
 
                     var addedProject = await _context.Projects.AddAsync(project);
 
@@ -83,8 +84,8 @@ namespace projectverseAPI.Services
                 {
                     Task.Run(async () =>
                     {
-                        project.User = currentUser;
-                        project.UserId = Guid.Parse(currentUser.Id);
+                        project.Author = currentUser;
+                        project.AuthorId = Guid.Parse(currentUser.Id);
 
                         var addedProject = await _context.Projects.AddAsync(project);
                         return addedProject.Entity.Id;
