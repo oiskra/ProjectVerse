@@ -35,11 +35,11 @@ namespace projectverseAPI.Services
                 if (collaboration is null)
                     throw new ArgumentException("Collaboration doesn't exist");
 
-                acceptedApplicant.Accepted = true;
+                acceptedApplicant.ApplicationStatus = ApplicationStatus.Accepted;
                 collaboration.PeopleInvolved += 1;
 
-                //_context.Update(acceptedApplicant);
-                _context.UpdateRange(acceptedApplicant, collaboration);
+                _context.CollaborationApplicants.Update(acceptedApplicant);
+                _context.Collaborations.Update(collaboration);
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -81,6 +81,10 @@ namespace projectverseAPI.Services
                 if (currUser is null)
                     throw new Exception("Cannot get current user.");
 
+                if (collaboration.CollaborationApplicants.Any(ca =>
+                    ca.AppliedPositionId == collaborationPositionId && ca.ApplicantUserId == Guid.Parse(currUser.Id)))
+                    throw new InvalidOperationException("User already applied for this position.");
+
                 var newApplicant = new CollaborationApplicant
                 {
                     Id = Guid.NewGuid(),
@@ -90,7 +94,7 @@ namespace projectverseAPI.Services
                     AppliedPosition = position,
                     AppliedCollaborationId = collaboration.Id,
                     AppliedCollaboration = collaboration,
-                    Accepted = false,
+                    ApplicationStatus = ApplicationStatus.Pending,
                     AppliedOn = DateTime.Now
                 };
 
@@ -110,6 +114,11 @@ namespace projectverseAPI.Services
             {
                 await transaction.RollbackAsync();
                 throw new ArgumentException(argE.Message);
+            }
+            catch (InvalidOperationException ioE)
+            {
+                await transaction.RollbackAsync();
+                throw new InvalidOperationException(ioE.Message);
             }
             catch (Exception e)
             {
@@ -143,7 +152,7 @@ namespace projectverseAPI.Services
                 if (applicantToDelete is null)
                     throw new ArgumentException("Applicant doesn't exist");
 
-                if (applicantToDelete.Accepted)
+                if (applicantToDelete.ApplicationStatus is ApplicationStatus.Accepted)
                 {
                     var collaboration = await _context.Collaborations
                         .Include(c => c.CollaborationApplicants)

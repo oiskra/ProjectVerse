@@ -1,4 +1,6 @@
-﻿namespace projectverseAPI.DTOs.Collaboration
+﻿using projectverseAPI.Models;
+
+namespace projectverseAPI.DTOs.Collaboration
 {
     public class CollaborationApplicantDTO
     {
@@ -7,7 +9,7 @@
         public string ApplicantEmail { get; set; }
         public Guid ApplicantUserId { get; set; }
         public Guid AppliedPositionId { get; set; } 
-        public bool Accepted { get; set; }
+        public ApplicationStatus ApplicationStatus { get; set; }
         public DateTime AppliedOn { get; set; }
     }
 }
