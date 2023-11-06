@@ -9,7 +9,14 @@
         public CollaborationPosition? AppliedPosition { get; set; }
         public Guid AppliedCollaborationId { get; set; }
         public Collaboration? AppliedCollaboration { get; set; }
-        public bool Accepted { get; set; }
+        public ApplicationStatus ApplicationStatus { get; set; }
         public DateTime AppliedOn { get; set; }
+    }
+
+    public enum ApplicationStatus
+    {
+        Rejected,
+        Pending,
+        Accepted
     }
 }
