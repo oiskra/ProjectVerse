@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using projectverseAPI.Data;
 
@@ -11,9 +12,11 @@ using projectverseAPI.Data;
 namespace projectverseAPI.Migrations
 {
     [DbContext(typeof(ProjectVerseContext))]
-    partial class ProjectVerseContextModelSnapshot : ModelSnapshot
+    [Migration("20231031145927_ProjectUpdate")]
+    partial class ProjectUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -491,15 +494,6 @@ namespace projectverseAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AuthorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AuthorId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -518,9 +512,15 @@ namespace projectverseAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId1");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Projects");
                 });
@@ -828,11 +828,11 @@ namespace projectverseAPI.Migrations
 
             modelBuilder.Entity("projectverseAPI.Models.Project", b =>
                 {
-                    b.HasOne("projectverseAPI.Models.User", "Author")
+                    b.HasOne("projectverseAPI.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("AuthorId1");
+                        .HasForeignKey("UserId1");
 
-                    b.Navigation("Author");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.Technology", b =>

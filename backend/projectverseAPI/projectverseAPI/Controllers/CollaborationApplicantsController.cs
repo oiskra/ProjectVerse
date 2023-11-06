@@ -12,7 +12,7 @@ namespace projectverseAPI.Controllers
     [Route("api/applicants")]
     [Produces("application/json")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class CollaborationApplicantsController : Controller
+    public class CollaborationApplicantsController : ControllerBase
     {
         private readonly ICollaborationApplicantsService _applicantsService;
         private readonly IMapper _mapper;

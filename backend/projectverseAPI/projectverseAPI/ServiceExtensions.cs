@@ -12,6 +12,7 @@ using projectverseAPI.Models;
 using projectverseAPI.Services;
 using projectverseAPI.Validators.Authentication;
 using projectverseAPI.Validators.Collaboration;
+using projectverseAPI.Validators.Project;
 using System.Text;
 
 namespace projectverseAPI
@@ -30,12 +31,15 @@ namespace projectverseAPI
                 return null;
             };
 
-            services.AddFluentValidationAutoValidation();
-            services.AddValidatorsFromAssemblyContaining<CreateCollaborationDTOValidator>();
-            services.AddValidatorsFromAssemblyContaining<UpdateCollaborationDTOValidator>();
-            services.AddValidatorsFromAssemblyContaining<UserRegisterDTOValidator>();
-            services.AddValidatorsFromAssemblyContaining<UserLoginDTOValidator>();
-            services.AddValidatorsFromAssemblyContaining<RefreshRequestDTOValidator>();
+            services
+                .AddFluentValidationAutoValidation()
+                .AddValidatorsFromAssemblyContaining<CreateCollaborationDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<UpdateCollaborationDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<UserRegisterDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<UserLoginDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<RefreshRequestDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<CreateProjectRequestDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<UpdateProjectRequestDTOValidator>();
 
             return services;
         }
@@ -183,6 +187,7 @@ namespace projectverseAPI
                 .AddScoped<ICollaborationApplicantsService, CollaborationApplicantsService>()
                 .AddScoped<ICollaborationService, CollaborationService>()
                 .AddScoped<IAuthenticationService, AuthenticationService>()
+                .AddScoped<IProjectService, ProjectService>()
                 .AddScoped<IAuthorizationHandler, CollaborationOwnerAuthorizationHandler>()
                 .AddTransient<ITokenService, TokenService>()
                 .AddTransient<IHttpContextAccessor, HttpContextAccessor>();

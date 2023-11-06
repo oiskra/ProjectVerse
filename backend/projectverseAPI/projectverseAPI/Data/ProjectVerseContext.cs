@@ -24,10 +24,11 @@ namespace projectverseAPI.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
             builder.Entity<CollaborationApplicant>()
                 .HasOne(e => e.AppliedCollaboration)
                 .WithMany(e => e.CollaborationApplicants)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .OnDelete(DeleteBehavior.ClientCascade);               
         }
 
     }
