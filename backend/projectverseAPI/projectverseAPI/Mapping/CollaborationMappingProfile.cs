@@ -13,6 +13,9 @@ namespace projectverseAPI.Mapping
                     x => x.Id,
                     opt => opt.MapFrom(src => Guid.NewGuid()))
                 .ForMember(
+                    x => x.PeopleInvolved,
+                    opt => opt.MapFrom(src => 1))
+                .ForMember(
                     x => x.Technologies,
                     opt => opt.MapFrom(src => 
                         src.Technologies.Select(tech => new Technology { Id = Guid.NewGuid(), Name = tech })));
