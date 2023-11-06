@@ -44,6 +44,15 @@ namespace projectverseAPI.Controllers
                     Errors = e.Message
                 });
             }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(new ErrorResponseDTO
+                {
+                    Title = "Bad Request",
+                    Status = StatusCodes.Status400BadRequest,
+                    Errors = e.Message
+                });
+            }
             catch (Exception e)
             {
                 return StatusCode(
