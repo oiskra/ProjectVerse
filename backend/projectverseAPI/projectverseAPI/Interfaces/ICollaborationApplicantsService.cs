@@ -1,4 +1,5 @@
-﻿using projectverseAPI.Models;
+﻿using projectverseAPI.DTOs.Collaboration;
+using projectverseAPI.Models;
 
 namespace projectverseAPI.Interfaces
 {
@@ -7,6 +8,6 @@ namespace projectverseAPI.Interfaces
         Task<Guid> ApplyForCollaboration(Guid collaborationId, Guid collaborationPositionId);
         Task RemoveApplicantForCollaboration(Guid applicantId);
         Task<List<CollaborationApplicant>> GetCollaborationApplicants(Guid collaborationId);
-        Task AcceptApplicant(Guid applicantId);
+        Task ChangeApplicationStatus(Guid applicantId, ChangeApplicationStatusRequestDTO applicationStateRequestDTO);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using projectverseAPI.Data;
+using projectverseAPI.DTOs.Collaboration;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
 
@@ -18,28 +19,34 @@ namespace projectverseAPI.Services
             _authenticationService = authenticationService;
         }
 
-        public async Task AcceptApplicant(Guid applicantId)
+        public async Task ChangeApplicationStatus(Guid applicantId, ChangeApplicationStatusRequestDTO applicationStateRequestDTO)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
             {
-                var acceptedApplicant = await _context.CollaborationApplicants
+                var applicant = await _context.CollaborationApplicants
                 .FirstOrDefaultAsync(a => a.Id == applicantId);
 
-                if (acceptedApplicant is null)
+                if (applicant is null)
                     throw new ArgumentException("Applicant doesn't exist");
 
-                var collaboration = await _context.Collaborations
-                    .FirstOrDefaultAsync(c => c.Id == acceptedApplicant.AppliedCollaborationId);
+                if (applicant.ApplicationStatus == applicationStateRequestDTO.ApplicationStatus)
+                    return;
 
-                if (collaboration is null)
-                    throw new ArgumentException("Collaboration doesn't exist");
+                if (applicationStateRequestDTO.ApplicationStatus == ApplicationStatus.Accepted)
+                {
+                    var collaboration = await _context.Collaborations
+                    .FirstOrDefaultAsync(c => c.Id == applicant.AppliedCollaborationId);
 
-                acceptedApplicant.ApplicationStatus = ApplicationStatus.Accepted;
-                collaboration.PeopleInvolved += 1;
+                    if (collaboration is null)
+                        throw new ArgumentException("Collaboration doesn't exist");
+                
+                    collaboration.PeopleInvolved += 1; 
+                    _context.Collaborations.Update(collaboration);
+                }
 
-                _context.CollaborationApplicants.Update(acceptedApplicant);
-                _context.Collaborations.Update(collaboration);
+                applicant.ApplicationStatus = applicationStateRequestDTO.ApplicationStatus;
+                _context.CollaborationApplicants.Update(applicant);
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -184,5 +191,6 @@ namespace projectverseAPI.Services
             }
 
         }
+        
     }
 }
