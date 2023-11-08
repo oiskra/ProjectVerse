@@ -17,7 +17,9 @@ export const NavBar = () => {
       <NavLink to="/" >Home</NavLink>
       <NavLink to="/feed" >Feed</NavLink>
       <NavLink to="/colabs" >Colab</NavLink>
-
+      <NavLink to="/new_colab" >temp new colab</NavLink>
+      <NavLink to="/colab_dashboard" >temp dashboard</NavLink>
+      
       <input type="text" />
 
       <div className='h-full flex items-center gap-3'>

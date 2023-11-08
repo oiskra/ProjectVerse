@@ -1,9 +1,9 @@
-import CollaborationPositions,{ sampleColabPos1, sampleColabPos2, sampleColabPos3, sampleColabPos4 } from "./CollaborationPosition";
+import CollaborationPositions from "./CollaborationPosition";
 import Technology, { sampleTech } from "./Technology";
 import User from "./User";
 
 interface Collaboration{
-  ID: number,
+  id: string,
   //FIX ME XD
   author:{id:string,username:string},
   name:string,
@@ -11,7 +11,7 @@ interface Collaboration{
   difficulty:number,
   technologies:Technology[],
   addedDate :Date,
-  members:User[],
+  peopleInvolved:number,
   collaborationPositions:CollaborationPositions[],
 }
 

@@ -1,11 +1,11 @@
 interface Technology{
- ID: number,
- Name:string
+ id: number,
+ name:string
 }
 
 export const sampleTech:Technology ={
-  ID: 0,
-  Name: "React"
+  id: 0,
+  name: "React"
 }
 
 

@@ -6,7 +6,7 @@ export const Difficulty : React.FC<{difficulty:number}> = ({difficulty}) => {
 
   for(let i = 0 ; i < difficulty ; i++){
     balls.push(
-      <div style={{"backgroundColor":color[difficulty]}} className='difBall'></div>
+      <div key = {i} style={{"backgroundColor":color[difficulty]}} className='difBall'></div>
     )
   }
 
