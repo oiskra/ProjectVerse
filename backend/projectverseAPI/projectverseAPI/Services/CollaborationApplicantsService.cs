@@ -33,17 +33,10 @@ namespace projectverseAPI.Services
                 if (applicant.ApplicationStatus == applicationStateRequestDTO.ApplicationStatus)
                     return;
 
-                if (applicationStateRequestDTO.ApplicationStatus == ApplicationStatus.Accepted)
-                {
-                    var collaboration = await _context.Collaborations
-                    .FirstOrDefaultAsync(c => c.Id == applicant.AppliedCollaborationId);
-
-                    if (collaboration is null)
-                        throw new ArgumentException("Collaboration doesn't exist");
-                
-                    collaboration.PeopleInvolved += 1; 
-                    _context.Collaborations.Update(collaboration);
-                }
+                await HandleStateChange(
+                    applicant.AppliedCollaborationId,
+                    applicant.ApplicationStatus,
+                    applicationStateRequestDTO.ApplicationStatus);
 
                 applicant.ApplicationStatus = applicationStateRequestDTO.ApplicationStatus;
                 _context.CollaborationApplicants.Update(applicant);
@@ -189,8 +182,26 @@ namespace projectverseAPI.Services
                 await transaction.RollbackAsync();
                 throw new Exception(e.Message);
             }
-
         }
-        
+
+        public async Task HandleStateChange(
+            Guid collaborationId,
+            ApplicationStatus oldStatus,
+            ApplicationStatus newStatus)
+        {
+            var collaboration = await _context.Collaborations
+               .FirstOrDefaultAsync(c => c.Id == collaborationId);
+
+            if (collaboration is null)
+                throw new ArgumentException("Collaboration doesn't exist");
+
+            if (oldStatus == ApplicationStatus.Accepted)
+                collaboration.PeopleInvolved -= 1;
+            else if (newStatus == ApplicationStatus.Accepted)
+                collaboration.PeopleInvolved += 1;
+            else return;
+
+            _context.Collaborations.Update(collaboration);
+        }
     }
 }
