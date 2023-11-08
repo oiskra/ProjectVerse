@@ -79,12 +79,15 @@ namespace projectverseAPI.Controllers
         }
 
         [HttpPatch]
-        [Route("{applicantId}/accept")]
-        public async Task<IActionResult> AcceptApplication([FromRoute] Guid applicantId)
+        [Authorize(Policy = "CollaborationOwner")]
+        [Route("{applicantId}/change-application-status")]
+        public async Task<IActionResult> ChangeApplicationStatus(
+            [FromRoute] Guid applicantId, 
+            [FromBody] ChangeApplicationStatusRequestDTO applicationStateRequestDTO)
         {
             try
             {
-                await _applicantsService.AcceptApplicant(applicantId);
+                await _applicantsService.ChangeApplicationStatus(applicantId, applicationStateRequestDTO);
 
                 return NoContent();
             }

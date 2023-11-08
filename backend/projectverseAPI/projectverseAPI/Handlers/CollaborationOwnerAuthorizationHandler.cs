@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using projectverseAPI.Data;
 using System.Net;
+using System.Reflection.Metadata.Ecma335;
 
 namespace projectverseAPI.Handlers
 {
@@ -23,22 +25,39 @@ namespace projectverseAPI.Handlers
         {
             if (!_contextAccessor.HttpContext.User.Identity.IsAuthenticated)
                 return Task.CompletedTask;
-            
+
+            bool match;
+
             //id usera na requescie
             var userIdParsed = Guid.TryParse(
                 context.User.Claims.FirstOrDefault(c => c.Type == "id")?.Value, 
                 out Guid userId);
-            
+
             //id collaboraacji
             var collaborationIdParsed = Guid.TryParse(
-                (string?)_contextAccessor.HttpContext.Request.RouteValues["collaborationId"], 
+                (string?)_contextAccessor.HttpContext.Request.RouteValues["collaborationId"],
                 out Guid collaborationId);
+            
+            if(!collaborationIdParsed)
+            {
+                var applicantIdParsed = Guid.TryParse(
+                    (string?)_contextAccessor.HttpContext.Request.RouteValues["applicantId"],
+                    out Guid applicantId);
+                
+                if(!applicantIdParsed)
+                {
+                    context.Fail();
+                    return Task.CompletedTask;
+                }
 
-            //check match
-            if (!userIdParsed && !collaborationIdParsed)
-                return Task.CompletedTask;
-
-            var match = _dbContext.Collaborations.Any(c => c.AuthorId == userId && c.Id == collaborationId);
+                match = _dbContext.CollaborationApplicants
+                    .Include(ca => ca.AppliedCollaboration)
+                    .Where(ca => ca.Id == applicantId)
+                    .Select(ca => ca.AppliedCollaboration)                   
+                    .Any(c => c.AuthorId == userId);
+            }
+            else
+                match = _dbContext.Collaborations.Any(c => c.AuthorId == userId && c.Id == collaborationId);
 
             if(!match)
             {
