@@ -6,7 +6,7 @@ namespace projectverseAPI.Interfaces
     {
         Task<List<Post>> GetAllPosts();
         //Task<Post> GetPostById(Guid postId);
-        //Task<Guid> CreatePost(Guid projectId);
+        Task<Guid> CreatePost(Guid projectId);
         //Task DeletePost(Guid postId);
 
         //Task LikePost(Guid postId);
