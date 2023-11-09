@@ -75,5 +75,37 @@ namespace projectverseAPI.Controllers
 
             return Ok(postsResponse);
         }
+
+        [HttpDelete]
+        [Route("{projectId}")]
+        public async Task<IActionResult> DeletePost(Guid projectId)
+        {
+            try
+            {
+                await _postService.DeletePost(projectId);
+
+                return NoContent();
+            }
+            catch (ArgumentException e)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Title = "Not Found",
+                    Status = StatusCodes.Status404NotFound,
+                    Errors = e.Message
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new ErrorResponseDTO
+                    {
+                        Title = "Internal Server Error",
+                        Status = 500,
+                        Errors = null
+                    });
+            }
+        }
     }
 }

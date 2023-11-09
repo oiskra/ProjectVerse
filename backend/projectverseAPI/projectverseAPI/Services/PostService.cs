@@ -74,6 +74,44 @@ namespace projectverseAPI.Services
 
         }
 
+        public async Task DeletePost(Guid projectId)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var postToDelete = await _context.Posts
+                    .Include(p => p.PostComments)
+                    .FirstOrDefaultAsync(p => p.Id == postId);
+
+                if (postToDelete is null)
+                    throw new ArgumentException("Post doesn't exist.");
+
+                var project = await _context.Projects
+                    .FirstOrDefaultAsync(p => p.Id == postToDelete.ProjectId);
+
+                if (project is null)
+                    throw new ArgumentException("Associated project doesn't exist.");
+
+                project.IsPublished = false;
+
+                _context.Posts.Remove(postToDelete);
+                _context.Projects.Update(project);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (ArgumentException e)
+            {
+                await transaction.RollbackAsync();
+                throw new ArgumentException(e.Message);
+            }
+            catch (Exception e)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception(e.Message);
+            }
+        }
+
         public async Task<List<Post>> GetAllPosts()
         {
             var posts = await _context.Posts

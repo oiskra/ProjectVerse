@@ -5,9 +5,8 @@ namespace projectverseAPI.Interfaces
     public interface IPostService
     {
         Task<List<Post>> GetAllPosts();
-        //Task<Post> GetPostById(Guid postId);
         Task<Guid> CreatePost(Guid projectId);
-        //Task DeletePost(Guid postId);
+        Task DeletePost(Guid projectId);
 
         //Task LikePost(Guid postId);
         //Task UnlikePost(Guid postId);
