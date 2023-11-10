@@ -11,7 +11,7 @@ namespace projectverseAPI.Interfaces
         //Task LikePost(Guid postId);
         //Task UnlikePost(Guid postId);
 
-        //Task RecordPostView(Guid postId);
+        Task RecordPostView(Guid postId);
 
         //Task CreatePostComment(Guid postId, CreatePostCommentRequestDTO createPostCommentDTO);
         //Task GetAllPostCommentsFromPost(Guid postId);

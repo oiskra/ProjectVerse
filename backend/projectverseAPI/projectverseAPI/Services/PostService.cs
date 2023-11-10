@@ -81,7 +81,7 @@ namespace projectverseAPI.Services
             {
                 var postToDelete = await _context.Posts
                     .Include(p => p.PostComments)
-                    .FirstOrDefaultAsync(p => p.Id == postId);
+                    .FirstOrDefaultAsync(p => p.Id == projectId);
 
                 if (postToDelete is null)
                     throw new ArgumentException("Post doesn't exist.");
@@ -123,6 +123,36 @@ namespace projectverseAPI.Services
                 .ToListAsync();
 
             return posts;
+        }
+
+        public async Task RecordPostView(Guid postId)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var post = await _context.Posts
+                        .Include(p => p.PostComments)
+                        .FirstOrDefaultAsync(p => p.Id == postId);
+
+                if (post is null)
+                    throw new ArgumentException("Post doesn't exist.");
+
+                post.Views += 1;
+                _context.Posts.Update(post);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (ArgumentException argE)
+            {
+                await transaction.RollbackAsync();
+                throw new ArgumentException(argE.Message);
+            }
+            catch (Exception e)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception(e.Message);
+            }
         }
     }
 }

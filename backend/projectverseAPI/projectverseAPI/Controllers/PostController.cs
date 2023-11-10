@@ -78,7 +78,7 @@ namespace projectverseAPI.Controllers
 
         [HttpDelete]
         [Route("{projectId}")]
-        public async Task<IActionResult> DeletePost(Guid projectId)
+        public async Task<IActionResult> DeletePost([FromRoute] Guid projectId)
         {
             try
             {
@@ -106,6 +106,39 @@ namespace projectverseAPI.Controllers
                         Errors = null
                     });
             }
+        }
+
+        [HttpPatch]
+        [Route("{postId}/view")]
+        public async Task<IActionResult> RecordPostView([FromRoute] Guid postId)
+        {
+            try
+            {
+                await _postService.RecordPostView(postId);
+
+                return NoContent();
+            }
+            catch (ArgumentException e)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Title = "Not Found",
+                    Status = StatusCodes.Status404NotFound,
+                    Errors = e.Message
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new ErrorResponseDTO
+                    {
+                        Title = "Internal Server Error",
+                        Status = 500,
+                        Errors = null
+                    });
+            }
+
         }
     }
 }
