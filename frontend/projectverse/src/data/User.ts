@@ -3,7 +3,7 @@ interface User{
   username:string,
   email:string,
   surname:string,
-  country:string;
+  country:string
 }
 
 
