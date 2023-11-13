@@ -34,7 +34,7 @@ namespace projectverseAPI.Controllers
                 var createdPostId = await _postService.CreatePost(createPostDTO.ProjectId);
 
                 return CreatedAtAction(
-                    "CreatePost", 
+                    "CreatePost",
                     new CreateResponseDTO { Id = createdPostId });
             }
             catch (ArgumentException e)
@@ -152,6 +152,40 @@ namespace projectverseAPI.Controllers
                 var commentsResponse = comments.Select(c => _mapper.Map<PostCommentDTO>(c));
 
                 return Ok(commentsResponse);
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new ErrorResponseDTO
+                    {
+                        Title = "Internal Server Error",
+                        Status = 500,
+                        Errors = null
+                    });
+            }
+        }
+
+        [HttpPost]
+        [Route("{postId}/comments")]
+        public async Task<ActionResult<CreateResponseDTO>> CreatePostComment(Guid postId, CreatePostCommentRequestDTO createPostCommentDTO)
+        {
+            try
+            {
+                var createdId = await _postService.CreatePostComment(postId, createPostCommentDTO);
+
+                return CreatedAtAction(
+                    "CreatePostComment",
+                    new CreateResponseDTO { Id = createdId });
+            }
+            catch (ArgumentException e)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Title = "Not Found",
+                    Status = StatusCodes.Status404NotFound,
+                    Errors = e.Message
+                });
             }
             catch (Exception)
             {

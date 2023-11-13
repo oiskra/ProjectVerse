@@ -12,7 +12,14 @@ namespace projectverseAPI.Mapping
             CreateMap<Project, PostProjectDTO>();
             CreateMap<PostComment, PostCommentDTO>();
             CreateMap<User, PostCommentAuthorDTO>();
-                
+
+            CreateMap<CreatePostCommentRequestDTO, PostComment>()
+                .ForMember(
+                    x => x.Id,
+                    opt => opt.MapFrom(src => Guid.NewGuid()))
+                .ForMember(
+                    x => x.PostedAt,
+                    opt => opt.MapFrom(src => DateTime.Now));
         }
     }
 }

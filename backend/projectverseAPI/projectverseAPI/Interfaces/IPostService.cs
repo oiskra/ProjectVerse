@@ -1,4 +1,5 @@
-﻿using projectverseAPI.Models;
+﻿using projectverseAPI.DTOs.Post;
+using projectverseAPI.Models;
 
 namespace projectverseAPI.Interfaces
 {
@@ -13,9 +14,9 @@ namespace projectverseAPI.Interfaces
 
         Task RecordPostView(Guid postId);
 
-        //Task CreatePostComment(Guid postId, CreatePostCommentRequestDTO createPostCommentDTO);
+        Task<Guid> CreatePostComment(Guid postId, CreatePostCommentRequestDTO createPostCommentDTO);
         Task<List<PostComment>> GetAllPostCommentsFromPost(Guid postId);
-        //Task UpdatePostComment(Guid postId, UpdatePostCommentRequestDTO updatePostCommentDTO);
+        //Task UpdatePostComment(Guid postCommentId, UpdatePostCommentRequestDTO updatePostCommentDTO);
         //Task DeletePostComment(Guid commentId);
     }
 }

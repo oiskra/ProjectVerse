@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using projectverseAPI.Data;
+using projectverseAPI.DTOs.Post;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
 
@@ -74,6 +75,47 @@ namespace projectverseAPI.Services
 
         }
 
+        public async Task<Guid> CreatePostComment(Guid postId, CreatePostCommentRequestDTO createPostCommentDTO)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var comment = _mapper.Map<PostComment>(createPostCommentDTO);
+
+                var currentUser = await _authenticationService.GetCurrentUser();
+
+                if (currentUser is null)
+                    throw new Exception("Cannot get current user.");
+
+                var post = await _context.Posts
+                    .FirstOrDefaultAsync(p => p.Id == postId);
+
+                if (post is null)
+                    throw new ArgumentException("Post doesn't exist.");
+
+                comment.Post = post;
+                comment.PostId = post.Id;
+                comment.Author = currentUser;
+                comment.AuthorId = Guid.Parse(currentUser.Id);
+
+                var createdPost = await _context.PostComments.AddAsync(comment);
+                await transaction.CommitAsync();
+                await _context.SaveChangesAsync();
+
+                return createdPost.Entity.Id;
+            }
+            catch (ArgumentException argE)
+            {
+                await transaction.RollbackAsync();
+                throw new ArgumentException(argE.Message);
+            }
+            catch (Exception e)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception(e.Message);
+            }
+        }
+
         public async Task DeletePost(Guid projectId)
         {
             using var transaction = _context.Database.BeginTransaction();
@@ -115,6 +157,7 @@ namespace projectverseAPI.Services
         public async Task<List<PostComment>> GetAllPostCommentsFromPost(Guid postId)
         {
             var comments = await _context.PostComments
+                .Include(pc => pc.Author)
                 .Where(pc => pc.PostId == postId)
                 .ToListAsync();
 
