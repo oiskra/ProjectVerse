@@ -112,6 +112,15 @@ namespace projectverseAPI.Services
             }
         }
 
+        public async Task<List<PostComment>> GetAllPostCommentsFromPost(Guid postId)
+        {
+            var comments = await _context.PostComments
+                .Where(pc => pc.PostId == postId)
+                .ToListAsync();
+
+            return comments;
+        }
+
         public async Task<List<Post>> GetAllPosts()
         {
             var posts = await _context.Posts

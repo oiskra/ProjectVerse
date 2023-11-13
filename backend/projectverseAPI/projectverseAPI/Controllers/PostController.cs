@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using projectverseAPI.DTOs;
 using projectverseAPI.DTOs.Post;
 using projectverseAPI.Interfaces;
+using System.Runtime.CompilerServices;
 
 namespace projectverseAPI.Controllers
 {
@@ -109,7 +110,7 @@ namespace projectverseAPI.Controllers
         }
 
         [HttpPatch]
-        [Route("{postId}/view")]
+        [Route("{postId}/views")]
         public async Task<IActionResult> RecordPostView([FromRoute] Guid postId)
         {
             try
@@ -139,6 +140,30 @@ namespace projectverseAPI.Controllers
                     });
             }
 
+        }
+
+        [HttpGet]
+        [Route("{postId}/comments")]
+        public async Task<ActionResult<List<PostCommentDTO>>> GetAllPostCommentsFromPost([FromRoute] Guid postId)
+        {
+            try
+            {
+                var comments = await _postService.GetAllPostCommentsFromPost(postId);
+                var commentsResponse = comments.Select(c => _mapper.Map<PostCommentDTO>(c));
+
+                return Ok(commentsResponse);
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new ErrorResponseDTO
+                    {
+                        Title = "Internal Server Error",
+                        Status = 500,
+                        Errors = null
+                    });
+            }
         }
     }
 }

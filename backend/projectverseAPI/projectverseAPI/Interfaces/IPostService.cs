@@ -14,7 +14,7 @@ namespace projectverseAPI.Interfaces
         Task RecordPostView(Guid postId);
 
         //Task CreatePostComment(Guid postId, CreatePostCommentRequestDTO createPostCommentDTO);
-        //Task GetAllPostCommentsFromPost(Guid postId);
+        Task<List<PostComment>> GetAllPostCommentsFromPost(Guid postId);
         //Task UpdatePostComment(Guid postId, UpdatePostCommentRequestDTO updatePostCommentDTO);
         //Task DeletePostComment(Guid commentId);
     }
