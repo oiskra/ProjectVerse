@@ -234,5 +234,34 @@ namespace projectverseAPI.Services
                 throw new Exception(e.Message);
             }
         }
+
+        public async Task UpdatePostComment(UpdatePostCommentRequestDTO updatePostCommentDTO)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var comment = await _context.PostComments
+                    .FirstOrDefaultAsync(pc => pc.Id == updatePostCommentDTO.Id);
+
+                if (comment is null)
+                    throw new ArgumentException("Comment doesn't exist.");
+
+                comment.Body = updatePostCommentDTO.Body;
+
+                _context.PostComments.Update(comment);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (ArgumentException argE)
+            {
+                await transaction.RollbackAsync();
+                throw new ArgumentException(argE.Message);
+            }
+            catch (Exception e)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception(e.Message);
+            }
+        }
     }
 }

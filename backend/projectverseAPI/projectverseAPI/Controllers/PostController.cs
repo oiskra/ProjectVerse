@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using projectverseAPI.DTOs;
 using projectverseAPI.DTOs.Post;
 using projectverseAPI.Interfaces;
+using projectverseAPI.Models;
 using System.Runtime.CompilerServices;
 
 namespace projectverseAPI.Controllers
@@ -208,6 +209,48 @@ namespace projectverseAPI.Controllers
             {
                 await _postService.DeletePostComment(commentId);
 
+                return NoContent();
+            }
+            catch (ArgumentException e)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Title = "Not Found",
+                    Status = StatusCodes.Status404NotFound,
+                    Errors = e.Message
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new ErrorResponseDTO
+                    {
+                        Title = "Internal Server Error",
+                        Status = 500,
+                        Errors = null
+                    });
+            }
+        }
+
+        [HttpPut]
+        [Route("{commentId}")]
+        public async Task<IActionResult> UpdatePostComment([FromRoute] Guid commentId, UpdatePostCommentRequestDTO updatePostDTO)
+        {
+            try
+            {
+                if (commentId != updatePostDTO.Id)
+                    return BadRequest(new ErrorResponseDTO
+                    {
+                        Title = "Bad Request",
+                        Status = StatusCodes.Status400BadRequest,
+                        Errors = new
+                        {
+                            Id = new List<string> { "Route id and object id don't match." }
+                        }
+                    });
+
+                await _postService.UpdatePostComment(updatePostDTO);
                 return NoContent();
             }
             catch (ArgumentException e)
