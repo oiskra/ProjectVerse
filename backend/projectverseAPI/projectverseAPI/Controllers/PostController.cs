@@ -199,5 +199,37 @@ namespace projectverseAPI.Controllers
                     });
             }
         }
+
+        [HttpDelete]
+        [Route("comments/{commentId}")]
+        public async Task<IActionResult> DeletePostComment([FromRoute] Guid commentId)
+        {
+            try
+            {
+                await _postService.DeletePostComment(commentId);
+
+                return NoContent();
+            }
+            catch (ArgumentException e)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Title = "Not Found",
+                    Status = StatusCodes.Status404NotFound,
+                    Errors = e.Message
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new ErrorResponseDTO
+                    {
+                        Title = "Internal Server Error",
+                        Status = 500,
+                        Errors = null
+                    });
+            }
+        }
     }
 }

@@ -154,6 +154,34 @@ namespace projectverseAPI.Services
             }
         }
 
+        public async Task DeletePostComment(Guid commentId)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var commentToDelete = await _context.PostComments
+                    .FirstOrDefaultAsync(pc => pc.Id == commentId);
+
+                if (commentToDelete is null)
+                    throw new ArgumentException("Comment doesn't exist.");
+
+                _context.PostComments.Remove(commentToDelete);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (ArgumentException e)
+            {
+                await transaction.RollbackAsync();
+                throw new ArgumentException(e.Message);
+            }
+            catch (Exception e)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception(e.Message);
+            }
+        }
+
         public async Task<List<PostComment>> GetAllPostCommentsFromPost(Guid postId)
         {
             var comments = await _context.PostComments
