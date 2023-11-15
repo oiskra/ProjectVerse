@@ -9,7 +9,7 @@ namespace projectverseAPI.Interfaces
         Task<Guid> CreatePost(Guid projectId);
         Task DeletePost(Guid projectId);
 
-        //Task LikePost(Guid postId);
+        Task LikePost(Guid postId);
         //Task UnlikePost(Guid postId);
 
         Task RecordPostView(Guid postId);

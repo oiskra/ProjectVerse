@@ -274,5 +274,46 @@ namespace projectverseAPI.Controllers
                     });
             }
         }
+
+        [HttpPost]
+        [Route("{postId}/like")]
+        public async Task<IActionResult> LikePost([FromRoute] Guid postId)
+        {
+            try
+            {
+                await _postService.LikePost(postId);
+
+                return NoContent();
+            }
+            catch (ArgumentException e)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Title = "Not Found",
+                    Status = StatusCodes.Status404NotFound,
+                    Errors = e.Message
+                });
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(new ErrorResponseDTO
+                {
+                    Title = "Bad Request",
+                    Status = StatusCodes.Status400BadRequest,
+                    Errors = e.Message
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new ErrorResponseDTO
+                    {
+                        Title = "Internal Server Error",
+                        Status = 500,
+                        Errors = null
+                    });
+            }
+        }
     }
 }
