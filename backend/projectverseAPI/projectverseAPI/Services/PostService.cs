@@ -258,6 +258,47 @@ namespace projectverseAPI.Services
             }
         }
 
+        public async Task UnlikePost(Guid postId)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var currentUser = await _authenticationService.GetCurrentUser();
+                if (currentUser is null)
+                    throw new Exception("Cannot get current user.");
+
+                var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+                if (post is null)
+                    throw new ArgumentException("Post doesn't exist.");
+
+                var like = await _context.Likes
+                    .Include(l => l.User)
+                    .Include(l => l.Post)
+                    .FirstOrDefaultAsync(l =>
+                        (l.Post != null && l.Post.Id == postId) &&
+                        (l.User != null && l.User.Id == currentUser.Id));
+                if(like is null)
+                    throw new ArgumentException("User hasn't liked this post.");
+
+                post.LikesCount -= 1;
+                _context.Posts.Update(post);
+                _context.Likes.Remove(like);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (ArgumentException argE)
+            {
+                await transaction.RollbackAsync();
+                throw new ArgumentException(argE.Message);
+            }
+            catch (Exception e)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception(e.Message);
+            }
+        }
+
         public async Task RecordPostView(Guid postId)
         {
             using var transaction = _context.Database.BeginTransaction();

@@ -315,5 +315,37 @@ namespace projectverseAPI.Controllers
                     });
             }
         }
+
+        [HttpDelete]
+        [Route("{postId}/unlike")]
+        public async Task<IActionResult> UnlikePost([FromRoute] Guid postId)
+        {
+            try
+            {
+                await _postService.UnlikePost(postId);
+
+                return NoContent();
+            }
+            catch (ArgumentException e)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Title = "Not Found",
+                    Status = StatusCodes.Status404NotFound,
+                    Errors = e.Message
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new ErrorResponseDTO
+                    {
+                        Title = "Internal Server Error",
+                        Status = 500,
+                        Errors = null
+                    });
+            }
+        }
     }
 }
