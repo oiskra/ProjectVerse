@@ -7,7 +7,6 @@ namespace projectverseAPI.Interfaces
     {
         Task<Guid> ApplyForCollaboration(Guid collaborationId, Guid collaborationPositionId);
         Task RemoveApplicantForCollaboration(Guid applicantId);
-        Task<List<CollaborationApplicant>> GetCollaborationApplicants(Guid collaborationId);
         Task ChangeApplicationStatus(Guid applicantId, ChangeApplicationStatusRequestDTO applicationStateRequestDTO);
     }
 }
