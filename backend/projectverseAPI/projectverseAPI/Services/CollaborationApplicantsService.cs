@@ -127,7 +127,7 @@ namespace projectverseAPI.Services
             }
         }
 
-        public async Task<List<CollaborationApplicant>> GetCollaborationApplicants(Guid collaborationId)
+/*        public async Task<List<CollaborationApplicant>> GetCollaborationApplicants(Guid collaborationId)
         {
             //redo pod CollaborationApplicants?
             var collaboration = await _context.Collaborations
@@ -139,7 +139,7 @@ namespace projectverseAPI.Services
                 return collaboration!.CollaborationApplicants!.ToList();
 
             return new List<CollaborationApplicant>();
-        }
+        }*/
 
         public async Task RemoveApplicantForCollaboration(Guid applicantId)
         {

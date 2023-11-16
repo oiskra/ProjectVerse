@@ -92,11 +92,11 @@ namespace projectverseAPI.Services
         {
             var userExists = await _userManager.FindByNameAsync(userRegisterDTO.UserName);
             if (userExists is not null)
-                throw new ArgumentException("User with that username already exists.");
+                throw new ArgumentException("User with that username already exists.", "email");
 
             var emailExits = await _userManager.FindByEmailAsync(userRegisterDTO.Email);
             if (emailExits is not null)
-                throw new ArgumentException("User with that email already exists.");
+                throw new ArgumentException("User with that email already exists.", "username");
 
             var user = _mapper.Map<User>(userRegisterDTO);
 

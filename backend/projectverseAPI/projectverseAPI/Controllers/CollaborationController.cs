@@ -15,13 +15,16 @@ namespace projectverseAPI.Controllers
     public class CollaborationController : ControllerBase
     {
         private readonly ICollaborationService _collaborationService;
+        private readonly ICollaborationApplicantsService _collaborationApplicantsService;
         private readonly IMapper _mapper;
 
         public CollaborationController(
             ICollaborationService collaborationService,
+            ICollaborationApplicantsService collaborationApplicantsService,
             IMapper mapper)
         {
             _collaborationService = collaborationService;
+            _collaborationApplicantsService = collaborationApplicantsService;
             _mapper = mapper;
         }
 
@@ -58,7 +61,8 @@ namespace projectverseAPI.Controllers
 
         [HttpGet]
         [Route("{collaborationId}")]
-        public async Task<ActionResult<CollaborationResponseDTO>> GetCollaborationById([FromRoute] Guid collaborationId)
+        [Authorize(Policy = "CollaborationOwner")]
+        public async Task<ActionResult<SingleCollaborationWithApplicantsResponseDTO>> GetCollaborationById([FromRoute] Guid collaborationId)
         {
             var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
 
@@ -70,7 +74,7 @@ namespace projectverseAPI.Controllers
                     Errors = null 
                 });
 
-            var collaborationResponse = _mapper.Map<CollaborationResponseDTO>(collaboration);
+            var collaborationResponse = _mapper.Map<SingleCollaborationWithApplicantsResponseDTO>(collaboration);
 
             return Ok(collaborationResponse);
         }
@@ -147,6 +151,115 @@ namespace projectverseAPI.Controllers
                         Status = 500,
                         Errors = null
                     }); 
+            }
+        }
+
+        [HttpPost]
+        [Route("{collaborationId}/collaboration-positions/{collaborationPositionId}/apply")]
+        public async Task<ActionResult> Apply([FromRoute] Guid collaborationId, [FromRoute] Guid collaborationPositionId)
+        {
+            try
+            {
+                var createdApplicantId = await _collaborationApplicantsService.ApplyForCollaboration(collaborationId, collaborationPositionId);
+
+                return CreatedAtAction("Apply", new CreateResponseDTO { Id = createdApplicantId });
+            }
+            catch (ArgumentException e)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Title = "Not Found",
+                    Status = StatusCodes.Status404NotFound,
+                    Errors = e.Message
+                });
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(new ErrorResponseDTO
+                {
+                    Title = "Bad Request",
+                    Status = StatusCodes.Status400BadRequest,
+                    Errors = e.Message
+                });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new ErrorResponseDTO
+                    {
+                        Title = "Internal Server Error",
+                        Status = StatusCodes.Status500InternalServerError,
+                        Errors = e.Message
+                    });
+            }
+        }
+
+        [HttpPatch]
+        [Authorize(Policy = "CollaborationOwner")]
+        [Route("applicants/{applicantId}/change-application-status")]
+        public async Task<IActionResult> ChangeApplicationStatus(
+            [FromRoute] Guid applicantId,
+            [FromBody] ChangeApplicationStatusRequestDTO applicationStateRequestDTO)
+        {
+            try
+            {
+                await _collaborationApplicantsService.ChangeApplicationStatus(applicantId, applicationStateRequestDTO);
+
+                return NoContent();
+            }
+            catch (ArgumentException e)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Title = "Not Found",
+                    Status = StatusCodes.Status404NotFound,
+                    Errors = e.Message
+                });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new ErrorResponseDTO
+                    {
+                        Title = "Internal Server Error",
+                        Status = StatusCodes.Status500InternalServerError,
+                        Errors = e.Message
+                    });
+            }
+        }
+
+        [HttpDelete]
+        [Route("applicants/{applicantId}")]
+        [Authorize(Policy = "CollaborationOwner")]
+        public async Task<IActionResult> DeleteApplicantById([FromRoute] Guid applicantId)
+        {
+            try
+            {
+                await _collaborationApplicantsService.RemoveApplicantForCollaboration(applicantId);
+
+                return NoContent();
+            }
+            catch (ArgumentException)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Title = "Not Found",
+                    Status = StatusCodes.Status404NotFound,
+                    Errors = null
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new ErrorResponseDTO
+                    {
+                        Title = "Internal Server Error",
+                        Status = 500,
+                        Errors = null
+                    });
             }
         }
     }

@@ -12,6 +12,7 @@ namespace projectverseAPI.Data
         public DbSet<ComponentTheme> ComponentThemes { get; set; }
         public DbSet<ComponentType> ComponentTypes { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<Like> Likes { get; set; }
         public DbSet<PostComment> PostComments { get; set; }
         public DbSet<Collaboration> Collaborations { get; set; }
         public DbSet<CollaborationApplicant> CollaborationApplicants { get; set; }

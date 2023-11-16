@@ -33,6 +33,7 @@ namespace projectverseAPI.Mapping
             CreateMap<Collaboration, CollaborationResponseDTO>();
             CreateMap<CollaborationPosition, CollaborationPositionDTO>();
             CreateMap<User, CollaborationAuthorDTO>();
+            CreateMap<Collaboration, SingleCollaborationWithApplicantsResponseDTO>();
 
             //Applicants
             CreateMap<CollaborationApplicant, CollaborationApplicantDTO>()

@@ -99,6 +99,8 @@ namespace projectverseAPI.Services
                 .Where(c => c.Id.Equals(collaborationId))
                 .Include(c => c.Technologies)
                 .Include(c => c.CollaborationPositions)
+                .Include(c => c.CollaborationApplicants!)
+                    .ThenInclude(ca => ca.ApplicantUser)
                 .Include(c => c.Author)
                 .FirstOrDefaultAsync(c => c.Id == collaborationId);
             
