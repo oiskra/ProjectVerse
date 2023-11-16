@@ -26,7 +26,7 @@ namespace projectverseAPI.Controllers
         }
 
         [HttpPost]
-        [Route("{collaborationId}/collaborationPositions/{collaborationPositionId}")]
+        [Route("{collaborationId}/collaboration-positions/{collaborationPositionId}")]
         public async Task<ActionResult> Apply([FromRoute] Guid collaborationId, [FromRoute] Guid collaborationPositionId)
         {
             try

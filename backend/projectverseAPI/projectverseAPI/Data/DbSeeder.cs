@@ -16,7 +16,7 @@ namespace projectverseAPI.Data
         {
             context.Database.EnsureCreated();
 
-           /* if (context.UserRoles.Any()) return;
+           /*if (context.UserRoles.Any()) return;
 
             _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
             _roleManager.CreateAsync(new IdentityRole(UserRoles.User));

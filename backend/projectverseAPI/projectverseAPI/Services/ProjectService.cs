@@ -97,8 +97,8 @@ namespace projectverseAPI.Services
                             Id = Guid.NewGuid(),
                             Project = project,
                             ProjectId = project.Id,
-                            Views = 0,
-                            Likes = 0,
+                            ViewsCount = 0,
+                            LikesCount = 0,
                             PostComments = new List<PostComment>()
                         };
 

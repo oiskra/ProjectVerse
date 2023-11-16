@@ -12,6 +12,7 @@ using projectverseAPI.Models;
 using projectverseAPI.Services;
 using projectverseAPI.Validators.Authentication;
 using projectverseAPI.Validators.Collaboration;
+using projectverseAPI.Validators.Post;
 using projectverseAPI.Validators.Project;
 using System.Text;
 
@@ -39,7 +40,9 @@ namespace projectverseAPI
                 .AddValidatorsFromAssemblyContaining<UserLoginDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<RefreshRequestDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<CreateProjectRequestDTOValidator>()
-                .AddValidatorsFromAssemblyContaining<UpdateProjectRequestDTOValidator>();
+                .AddValidatorsFromAssemblyContaining<UpdateProjectRequestDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<CreatePostCommentRequestDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<UpdatePostCommentRequestDTOValidator>();
 
             return services;
         }
@@ -188,6 +191,7 @@ namespace projectverseAPI
                 .AddScoped<ICollaborationService, CollaborationService>()
                 .AddScoped<IAuthenticationService, AuthenticationService>()
                 .AddScoped<IProjectService, ProjectService>()
+                .AddScoped<IPostService, PostService>()
                 .AddScoped<IAuthorizationHandler, CollaborationOwnerAuthorizationHandler>()
                 .AddTransient<ITokenService, TokenService>()
                 .AddTransient<IHttpContextAccessor, HttpContextAccessor>();
