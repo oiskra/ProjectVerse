@@ -184,6 +184,12 @@ namespace projectverseAPI.Services
 
         public async Task<List<PostComment>> GetAllPostCommentsFromPost(Guid postId)
         {
+            var existingPost = await _context.Posts
+                .FirstOrDefaultAsync(p => p.Id == postId);
+
+            if (existingPost is null)
+                throw new ArgumentException("Post doesn't exist.");
+
             var comments = await _context.PostComments
                 .Include(pc => pc.Author)
                 .Where(pc => pc.PostId == postId)

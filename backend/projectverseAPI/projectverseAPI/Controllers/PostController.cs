@@ -154,6 +154,15 @@ namespace projectverseAPI.Controllers
 
                 return Ok(commentsResponse);
             }
+            catch (ArgumentException e)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Title = "Not Found",
+                    Status = StatusCodes.Status404NotFound,
+                    Errors = e.Message
+                });
+            }
             catch (Exception)
             {
                 return StatusCode(
