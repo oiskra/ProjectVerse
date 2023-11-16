@@ -7,6 +7,10 @@ namespace projectverseAPI.Validators.Project
     { 
         public UpdateProjectRequestDTOValidator()
         {
+            RuleFor(x => x.Id)
+               .NotNull()
+               .NotEmpty();
+
             RuleFor(x => x.Name)
                .NotNull()
                .NotEmpty();
