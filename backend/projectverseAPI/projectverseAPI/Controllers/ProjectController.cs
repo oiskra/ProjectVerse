@@ -68,23 +68,9 @@ namespace projectverseAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<CreateResponseDTO>> CreateProject([FromBody] CreateProjectRequestDTO projectDTO)
         {
-            try
-            {
-                var createdProjectId = await _projectService.CreateProject(projectDTO);
+            var createdProjectId = await _projectService.CreateProject(projectDTO);
 
-                return CreatedAtAction("CreateProject", new CreateResponseDTO { Id = createdProjectId });
-            }
-            catch (Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
-            }
+            return CreatedAtAction("CreateProject", new CreateResponseDTO { Id = createdProjectId });
         }
 
         [HttpPut]
@@ -117,17 +103,6 @@ namespace projectverseAPI.Controllers
                     Errors = null
                 });
             }
-            catch (Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
-            }
         }
 
         [HttpDelete]
@@ -148,17 +123,6 @@ namespace projectverseAPI.Controllers
                     Status = StatusCodes.Status404NotFound,
                     Errors = e.Message
                 });
-            }
-            catch (Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
             }
         }
     }

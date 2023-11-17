@@ -31,22 +31,8 @@ namespace projectverseAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<CreateResponseDTO>> CreateCollaboration([FromBody] CreateCollaborationRequestDTO createCollaborationDTO)
         {
-            try
-            {
-                var createdCollaborationId = await _collaborationService.CreateCollaboration(createCollaborationDTO);
-                return CreatedAtAction("CreateCollaboration", new CreateResponseDTO { Id = createdCollaborationId });
-            }
-            catch (Exception) 
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
-            }
+            var createdCollaborationId = await _collaborationService.CreateCollaboration(createCollaborationDTO);
+            return CreatedAtAction("CreateCollaboration", new CreateResponseDTO { Id = createdCollaborationId });
         }
 
         [HttpGet]
@@ -109,17 +95,6 @@ namespace projectverseAPI.Controllers
                     Errors = null
                 });
             }
-            catch (Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
-            }
         }
 
         [HttpDelete]
@@ -140,17 +115,6 @@ namespace projectverseAPI.Controllers
                     Status = StatusCodes.Status404NotFound,
                     Errors = null
                 }); 
-            }
-            catch (Exception)
-            { 
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError, 
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    }); 
             }
         }
 
@@ -182,17 +146,6 @@ namespace projectverseAPI.Controllers
                     Errors = e.Message
                 });
             }
-            catch (Exception e)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = StatusCodes.Status500InternalServerError,
-                        Errors = e.Message
-                    });
-            }
         }
 
         [HttpPatch]
@@ -217,17 +170,6 @@ namespace projectverseAPI.Controllers
                     Errors = e.Message
                 });
             }
-            catch (Exception e)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = StatusCodes.Status500InternalServerError,
-                        Errors = e.Message
-                    });
-            }
         }
 
         [HttpDelete]
@@ -249,17 +191,6 @@ namespace projectverseAPI.Controllers
                     Status = StatusCodes.Status404NotFound,
                     Errors = null
                 });
-            }
-            catch (Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
             }
         }
     }

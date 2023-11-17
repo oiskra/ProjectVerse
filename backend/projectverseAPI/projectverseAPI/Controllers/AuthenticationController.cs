@@ -42,17 +42,6 @@ namespace projectverseAPI.Controllers
                     Errors = error
                 });                
             }
-            catch(Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = StatusCodes.Status500InternalServerError,
-                        Errors = null
-                    });
-            }
         }
 
         [HttpPost]
@@ -90,18 +79,6 @@ namespace projectverseAPI.Controllers
                     Errors = e.Message
                 });
             }
-            catch (Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = StatusCodes.Status500InternalServerError,
-                        Errors = null
-                    });
-            }
-
         }
 
         [HttpPost]
@@ -122,17 +99,6 @@ namespace projectverseAPI.Controllers
                     Status = StatusCodes.Status400BadRequest,
                     Errors = e.Message
                 });
-            }
-            catch (Exception e)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = StatusCodes.Status500InternalServerError,
-                        Errors = e.Message
-                    });
             }
         }
     }

@@ -36,9 +36,9 @@ namespace projectverseAPI.Services
                 await HandleStateChange(
                     applicant.AppliedCollaborationId,
                     applicant.ApplicationStatus,
-                    applicationStateRequestDTO.ApplicationStatus);
+                    (ApplicationStatus)applicationStateRequestDTO.ApplicationStatus!);
 
-                applicant.ApplicationStatus = applicationStateRequestDTO.ApplicationStatus;
+                applicant.ApplicationStatus = (ApplicationStatus)applicationStateRequestDTO.ApplicationStatus!;
                 _context.CollaborationApplicants.Update(applicant);
 
                 await _context.SaveChangesAsync();

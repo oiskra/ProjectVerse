@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using projectverseAPI;
 using projectverseAPI.Data;
+using projectverseAPI.Handlers;
 using projectverseAPI.Validators;
 
 
@@ -45,6 +46,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<GlobalExceptionHandler>();
 
 app.MapControllers();
 
