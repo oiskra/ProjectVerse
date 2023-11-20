@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using projectverseAPI.Constants;
 using projectverseAPI.Data;
 using projectverseAPI.Handlers;
 using projectverseAPI.Interfaces;
@@ -167,18 +168,14 @@ namespace projectverseAPI
         {
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("CollaborationOwner",
-                    policy =>
-                    {
-                        policy.RequireAuthenticatedUser();
-                        policy.AddRequirements(new CollaborationOwnerRequirement());
-                    });
-
                 options.AddPolicy("Test",
                     policy => {
                         policy.RequireAuthenticatedUser();
                         policy.RequireRole(UserRoles.User);
                     });
+
+                options.AddPolicy(PolicyConstants.SameAuthorPolicy, policy =>
+                    policy.Requirements.Add(new SameAuthorRequirement()));
             });
 
             return services;
@@ -192,9 +189,9 @@ namespace projectverseAPI
                 .AddScoped<IAuthenticationService, AuthenticationService>()
                 .AddScoped<IProjectService, ProjectService>()
                 .AddScoped<IPostService, PostService>()
-                .AddScoped<IAuthorizationHandler, CollaborationOwnerAuthorizationHandler>()
                 .AddTransient<ITokenService, TokenService>()
-                .AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+                .AddTransient<IHttpContextAccessor, HttpContextAccessor>()
+                .AddSingleton<IAuthorizationHandler, SameAuthorAuthorizationHandler>();
 
             return services;
         }

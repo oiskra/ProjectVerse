@@ -1,6 +1,8 @@
-﻿namespace projectverseAPI.Models
+﻿using projectverseAPI.Interfaces;
+
+namespace projectverseAPI.Models
 {
-    public class PostComment
+    public class PostComment : IAuthorizableByAuthor
     {
         public Guid Id { get; set; }
         public Post Post { get; set; }

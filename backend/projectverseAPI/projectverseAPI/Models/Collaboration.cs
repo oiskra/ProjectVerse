@@ -1,6 +1,8 @@
-﻿namespace projectverseAPI.Models
+﻿using projectverseAPI.Interfaces;
+
+namespace projectverseAPI.Models
 {
-    public class Collaboration
+    public class Collaboration : IAuthorizableByAuthor
     {
         public Guid Id { get; set; }
         public User? Author { get; set; }

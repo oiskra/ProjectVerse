@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using projectverseAPI.Constants;
 using projectverseAPI.DTOs;
 using projectverseAPI.DTOs.Collaboration;
 using projectverseAPI.Interfaces;
+using projectverseAPI.Models;
 
 namespace projectverseAPI.Controllers
 {
@@ -14,15 +17,18 @@ namespace projectverseAPI.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CollaborationController : ControllerBase
     {
+        private readonly IAuthorizationService _authorizationService;
         private readonly ICollaborationService _collaborationService;
         private readonly ICollaborationApplicantsService _collaborationApplicantsService;
         private readonly IMapper _mapper;
 
         public CollaborationController(
+            IAuthorizationService authorizationService,
             ICollaborationService collaborationService,
             ICollaborationApplicantsService collaborationApplicantsService,
             IMapper mapper)
         {
+            _authorizationService = authorizationService;
             _collaborationService = collaborationService;
             _collaborationApplicantsService = collaborationApplicantsService;
             _mapper = mapper;
@@ -47,7 +53,6 @@ namespace projectverseAPI.Controllers
 
         [HttpGet]
         [Route("{collaborationId}")]
-        [Authorize(Policy = "CollaborationOwner")]
         public async Task<ActionResult<SingleCollaborationWithApplicantsResponseDTO>> GetCollaborationById([FromRoute] Guid collaborationId)
         {
             var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
@@ -59,6 +64,10 @@ namespace projectverseAPI.Controllers
                     Status = StatusCodes.Status404NotFound, 
                     Errors = null 
                 });
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+            if (!authorizationResult.Succeeded)
+                return Forbid();
 
             var collaborationResponse = _mapper.Map<SingleCollaborationWithApplicantsResponseDTO>(collaboration);
 
@@ -82,6 +91,11 @@ namespace projectverseAPI.Controllers
                         }
                     });
 
+                var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 await _collaborationService.UpdateCollaboration(updateCollaborationDTO);
 
                 return NoContent();
@@ -103,6 +117,11 @@ namespace projectverseAPI.Controllers
         {
             try
             {
+                var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 await _collaborationService.DeleteCollaborationById(collaborationId);
 
                 return NoContent();
@@ -149,14 +168,19 @@ namespace projectverseAPI.Controllers
         }
 
         [HttpPatch]
-        [Authorize(Policy = "CollaborationOwner")]
-        [Route("applicants/{applicantId}/change-application-status")]
+        [Route("{collaborationId}/applicants/{applicantId}/change-application-status")]
         public async Task<IActionResult> ChangeApplicationStatus(
+            [FromRoute] Guid collaborationId,
             [FromRoute] Guid applicantId,
             [FromBody] ChangeApplicationStatusRequestDTO applicationStateRequestDTO)
         {
             try
             {
+                var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 await _collaborationApplicantsService.ChangeApplicationStatus(applicantId, applicationStateRequestDTO);
 
                 return NoContent();
@@ -173,12 +197,16 @@ namespace projectverseAPI.Controllers
         }
 
         [HttpDelete]
-        [Route("applicants/{applicantId}")]
-        [Authorize(Policy = "CollaborationOwner")]
-        public async Task<IActionResult> DeleteApplicantById([FromRoute] Guid applicantId)
+        [Route("{collaborationId}/applicants/{applicantId}")]
+        public async Task<IActionResult> DeleteApplicantById([FromRoute] Guid collaborationId, [FromRoute] Guid applicantId)
         {
             try
             {
+                var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 await _collaborationApplicantsService.RemoveApplicantForCollaboration(applicantId);
 
                 return NoContent();

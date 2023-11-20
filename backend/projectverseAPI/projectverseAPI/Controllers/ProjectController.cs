@@ -2,12 +2,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using projectverseAPI.Constants;
 using projectverseAPI.DTOs;
 using projectverseAPI.DTOs.Project;
 using projectverseAPI.Interfaces;
-using projectverseAPI.Models;
-using projectverseAPI.Services;
-using System.Runtime.CompilerServices;
+
 
 namespace projectverseAPI.Controllers
 {
@@ -17,13 +16,16 @@ namespace projectverseAPI.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ProjectController : ControllerBase
     {
+        private readonly IAuthorizationService _authorizationService;
         private readonly IProjectService _projectService;
         private readonly IMapper _mapper;
 
         public ProjectController(
+            IAuthorizationService authorizationService,
             IProjectService projectService,
             IMapper mapper)
         {
+            _authorizationService = authorizationService;
             _projectService = projectService;
             _mapper = mapper;
         }
@@ -90,6 +92,11 @@ namespace projectverseAPI.Controllers
                         }
                     });
 
+                var project = await _projectService.GetProjectById(projectId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, project, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 await _projectService.UpdateProject(updateProjectDTO);
 
                 return NoContent();
@@ -111,6 +118,11 @@ namespace projectverseAPI.Controllers
         {
             try
             {
+                var project = await _projectService.GetProjectById(projectId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, project, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 await _projectService.DeleteProject(projectId);
 
                 return NoContent();

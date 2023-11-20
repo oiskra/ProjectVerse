@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using projectverseAPI.Constants;
 using projectverseAPI.DTOs;
 using projectverseAPI.DTOs.Post;
 using projectverseAPI.Interfaces;
@@ -14,13 +15,19 @@ namespace projectverseAPI.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PostController : ControllerBase
     {
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IProjectService _projectService;
         private readonly IPostService _postService;
         private readonly IMapper _mapper;
 
         public PostController(
+            IAuthorizationService authorizationService,
+            IProjectService projectService,
             IPostService postService,
             IMapper mapper)
         {
+            _authorizationService = authorizationService;
+            _projectService = projectService;
             _postService = postService;
             _mapper = mapper;
         }
@@ -71,6 +78,11 @@ namespace projectverseAPI.Controllers
         {
             try
             {
+                var project = await _projectService.GetProjectById(projectId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, project, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 await _postService.DeletePost(projectId);
 
                 return NoContent();
@@ -158,6 +170,11 @@ namespace projectverseAPI.Controllers
         {
             try
             {
+                var comment = await _postService.GetPostCommentById(commentId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, comment, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 await _postService.DeletePostComment(commentId);
 
                 return NoContent();
@@ -189,6 +206,11 @@ namespace projectverseAPI.Controllers
                             Id = new List<string> { "Route id and object id don't match." }
                         }
                     });
+
+                var comment = await _postService.GetPostCommentById(commentId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, comment, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
 
                 await _postService.UpdatePostComment(updatePostDTO);
                 return NoContent();

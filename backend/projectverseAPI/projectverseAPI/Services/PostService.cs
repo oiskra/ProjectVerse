@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using projectverseAPI.Data;
 using projectverseAPI.DTOs.Post;
@@ -199,6 +200,18 @@ namespace projectverseAPI.Services
                 .ToListAsync();
 
             return comments;
+        }
+
+        public async Task<PostComment> GetPostCommentById(Guid commentId)
+        {
+            var project = await _context.PostComments
+                .Include(pc => pc.Author)
+                .FirstOrDefaultAsync(pc => pc.Id == commentId);
+
+            if (project is null)
+                throw new ArgumentException("Comment doesn't exist.");
+
+            return project;
         }
 
         public async Task<List<Post>> GetAllPosts()
