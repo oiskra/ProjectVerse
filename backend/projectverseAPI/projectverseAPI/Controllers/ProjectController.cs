@@ -13,6 +13,7 @@ namespace projectverseAPI.Controllers
     [ApiController]
     [Route("api/projects")]
     [Produces("application/json")]
+    [Consumes("application/json")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ProjectController : ControllerBase
     {

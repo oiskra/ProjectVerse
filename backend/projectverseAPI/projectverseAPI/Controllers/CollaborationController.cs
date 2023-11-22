@@ -14,6 +14,7 @@ namespace projectverseAPI.Controllers
     [ApiController]
     [Route("api/collaborations")]
     [Produces("application/json")]
+    [Consumes("application/json")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CollaborationController : ControllerBase
     {
