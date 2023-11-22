@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using projectverseAPI.Data;
 using projectverseAPI.DTOs.Post;
@@ -33,6 +34,9 @@ namespace projectverseAPI.Services
 
                 if (project is null)
                     throw new ArgumentException("Project doesn't exist.");
+
+                if (project.IsPrivate)
+                    throw new InvalidOperationException("Post can't be create when project is private.");
 
                 if (_context.Posts.Any(p => p.ProjectId == project.Id))
                     throw new InvalidOperationException("Post with this project already exists.");
@@ -184,12 +188,30 @@ namespace projectverseAPI.Services
 
         public async Task<List<PostComment>> GetAllPostCommentsFromPost(Guid postId)
         {
+            var existingPost = await _context.Posts
+                .FirstOrDefaultAsync(p => p.Id == postId);
+
+            if (existingPost is null)
+                throw new ArgumentException("Post doesn't exist.");
+
             var comments = await _context.PostComments
                 .Include(pc => pc.Author)
                 .Where(pc => pc.PostId == postId)
                 .ToListAsync();
 
             return comments;
+        }
+
+        public async Task<PostComment> GetPostCommentById(Guid commentId)
+        {
+            var project = await _context.PostComments
+                .Include(pc => pc.Author)
+                .FirstOrDefaultAsync(pc => pc.Id == commentId);
+
+            if (project is null)
+                throw new ArgumentException("Comment doesn't exist.");
+
+            return project;
         }
 
         public async Task<List<Post>> GetAllPosts()

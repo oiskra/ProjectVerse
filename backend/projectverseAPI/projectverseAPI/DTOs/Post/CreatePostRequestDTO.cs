@@ -2,6 +2,6 @@
 {
     public class CreatePostRequestDTO
     {
-        public Guid ProjectId { get; set; }
+        public Guid? ProjectId { get; set; }
     }
 }

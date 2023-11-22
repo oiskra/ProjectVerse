@@ -2,11 +2,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using projectverseAPI.Constants;
 using projectverseAPI.DTOs;
 using projectverseAPI.DTOs.Post;
 using projectverseAPI.Interfaces;
-using projectverseAPI.Models;
-using System.Runtime.CompilerServices;
 
 namespace projectverseAPI.Controllers
 {
@@ -16,13 +15,19 @@ namespace projectverseAPI.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PostController : ControllerBase
     {
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IProjectService _projectService;
         private readonly IPostService _postService;
         private readonly IMapper _mapper;
 
         public PostController(
+            IAuthorizationService authorizationService,
+            IProjectService projectService,
             IPostService postService,
             IMapper mapper)
         {
+            _authorizationService = authorizationService;
+            _projectService = projectService;
             _postService = postService;
             _mapper = mapper;
         }
@@ -32,7 +37,7 @@ namespace projectverseAPI.Controllers
         {
             try
             {
-                var createdPostId = await _postService.CreatePost(createPostDTO.ProjectId);
+                var createdPostId = await _postService.CreatePost((Guid)createPostDTO.ProjectId!);
 
                 return CreatedAtAction(
                     "CreatePost",
@@ -56,17 +61,6 @@ namespace projectverseAPI.Controllers
                     Errors = e.Message
                 });
             }
-            catch (Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
-            }
         }
 
         [HttpGet]
@@ -84,6 +78,11 @@ namespace projectverseAPI.Controllers
         {
             try
             {
+                var project = await _projectService.GetProjectById(projectId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, project, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 await _postService.DeletePost(projectId);
 
                 return NoContent();
@@ -96,17 +95,6 @@ namespace projectverseAPI.Controllers
                     Status = StatusCodes.Status404NotFound,
                     Errors = e.Message
                 });
-            }
-            catch (Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
             }
         }
 
@@ -129,18 +117,6 @@ namespace projectverseAPI.Controllers
                     Errors = e.Message
                 });
             }
-            catch (Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
-            }
-
         }
 
         [HttpGet]
@@ -154,16 +130,14 @@ namespace projectverseAPI.Controllers
 
                 return Ok(commentsResponse);
             }
-            catch (Exception)
+            catch (ArgumentException e)
             {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
+                return NotFound(new ErrorResponseDTO
+                {
+                    Title = "Not Found",
+                    Status = StatusCodes.Status404NotFound,
+                    Errors = e.Message
+                });
             }
         }
 
@@ -188,17 +162,6 @@ namespace projectverseAPI.Controllers
                     Errors = e.Message
                 });
             }
-            catch (Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
-            }
         }
 
         [HttpDelete]
@@ -207,6 +170,11 @@ namespace projectverseAPI.Controllers
         {
             try
             {
+                var comment = await _postService.GetPostCommentById(commentId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, comment, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 await _postService.DeletePostComment(commentId);
 
                 return NoContent();
@@ -219,17 +187,6 @@ namespace projectverseAPI.Controllers
                     Status = StatusCodes.Status404NotFound,
                     Errors = e.Message
                 });
-            }
-            catch (Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
             }
         }
 
@@ -250,6 +207,11 @@ namespace projectverseAPI.Controllers
                         }
                     });
 
+                var comment = await _postService.GetPostCommentById(commentId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, comment, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 await _postService.UpdatePostComment(updatePostDTO);
                 return NoContent();
             }
@@ -261,17 +223,6 @@ namespace projectverseAPI.Controllers
                     Status = StatusCodes.Status404NotFound,
                     Errors = e.Message
                 });
-            }
-            catch (Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
             }
         }
 
@@ -303,17 +254,6 @@ namespace projectverseAPI.Controllers
                     Errors = e.Message
                 });
             }
-            catch (Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
-            }
         }
 
         [HttpDelete]
@@ -334,17 +274,6 @@ namespace projectverseAPI.Controllers
                     Status = StatusCodes.Status404NotFound,
                     Errors = e.Message
                 });
-            }
-            catch (Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
             }
         }
     }

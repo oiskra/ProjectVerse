@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using projectverseAPI.Constants;
 using projectverseAPI.DTOs;
 using projectverseAPI.DTOs.Collaboration;
 using projectverseAPI.Interfaces;
+using projectverseAPI.Models;
 
 namespace projectverseAPI.Controllers
 {
@@ -14,15 +17,18 @@ namespace projectverseAPI.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CollaborationController : ControllerBase
     {
+        private readonly IAuthorizationService _authorizationService;
         private readonly ICollaborationService _collaborationService;
         private readonly ICollaborationApplicantsService _collaborationApplicantsService;
         private readonly IMapper _mapper;
 
         public CollaborationController(
+            IAuthorizationService authorizationService,
             ICollaborationService collaborationService,
             ICollaborationApplicantsService collaborationApplicantsService,
             IMapper mapper)
         {
+            _authorizationService = authorizationService;
             _collaborationService = collaborationService;
             _collaborationApplicantsService = collaborationApplicantsService;
             _mapper = mapper;
@@ -31,22 +37,8 @@ namespace projectverseAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<CreateResponseDTO>> CreateCollaboration([FromBody] CreateCollaborationRequestDTO createCollaborationDTO)
         {
-            try
-            {
-                var createdCollaborationId = await _collaborationService.CreateCollaboration(createCollaborationDTO);
-                return CreatedAtAction("CreateCollaboration", new CreateResponseDTO { Id = createdCollaborationId });
-            }
-            catch (Exception) 
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
-            }
+            var createdCollaborationId = await _collaborationService.CreateCollaboration(createCollaborationDTO);
+            return CreatedAtAction("CreateCollaboration", new CreateResponseDTO { Id = createdCollaborationId });
         }
 
         [HttpGet]
@@ -61,7 +53,6 @@ namespace projectverseAPI.Controllers
 
         [HttpGet]
         [Route("{collaborationId}")]
-        [Authorize(Policy = "CollaborationOwner")]
         public async Task<ActionResult<SingleCollaborationWithApplicantsResponseDTO>> GetCollaborationById([FromRoute] Guid collaborationId)
         {
             var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
@@ -73,6 +64,10 @@ namespace projectverseAPI.Controllers
                     Status = StatusCodes.Status404NotFound, 
                     Errors = null 
                 });
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+            if (!authorizationResult.Succeeded)
+                return Forbid();
 
             var collaborationResponse = _mapper.Map<SingleCollaborationWithApplicantsResponseDTO>(collaboration);
 
@@ -96,6 +91,11 @@ namespace projectverseAPI.Controllers
                         }
                     });
 
+                var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 await _collaborationService.UpdateCollaboration(updateCollaborationDTO);
 
                 return NoContent();
@@ -109,17 +109,6 @@ namespace projectverseAPI.Controllers
                     Errors = null
                 });
             }
-            catch (Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
-            }
         }
 
         [HttpDelete]
@@ -128,6 +117,11 @@ namespace projectverseAPI.Controllers
         {
             try
             {
+                var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 await _collaborationService.DeleteCollaborationById(collaborationId);
 
                 return NoContent();
@@ -140,17 +134,6 @@ namespace projectverseAPI.Controllers
                     Status = StatusCodes.Status404NotFound,
                     Errors = null
                 }); 
-            }
-            catch (Exception)
-            { 
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError, 
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    }); 
             }
         }
 
@@ -182,28 +165,22 @@ namespace projectverseAPI.Controllers
                     Errors = e.Message
                 });
             }
-            catch (Exception e)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = StatusCodes.Status500InternalServerError,
-                        Errors = e.Message
-                    });
-            }
         }
 
         [HttpPatch]
-        [Authorize(Policy = "CollaborationOwner")]
-        [Route("applicants/{applicantId}/change-application-status")]
+        [Route("{collaborationId}/applicants/{applicantId}/change-application-status")]
         public async Task<IActionResult> ChangeApplicationStatus(
+            [FromRoute] Guid collaborationId,
             [FromRoute] Guid applicantId,
             [FromBody] ChangeApplicationStatusRequestDTO applicationStateRequestDTO)
         {
             try
             {
+                var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 await _collaborationApplicantsService.ChangeApplicationStatus(applicantId, applicationStateRequestDTO);
 
                 return NoContent();
@@ -217,26 +194,19 @@ namespace projectverseAPI.Controllers
                     Errors = e.Message
                 });
             }
-            catch (Exception e)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = StatusCodes.Status500InternalServerError,
-                        Errors = e.Message
-                    });
-            }
         }
 
         [HttpDelete]
-        [Route("applicants/{applicantId}")]
-        [Authorize(Policy = "CollaborationOwner")]
-        public async Task<IActionResult> DeleteApplicantById([FromRoute] Guid applicantId)
+        [Route("{collaborationId}/applicants/{applicantId}")]
+        public async Task<IActionResult> DeleteApplicantById([FromRoute] Guid collaborationId, [FromRoute] Guid applicantId)
         {
             try
             {
+                var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 await _collaborationApplicantsService.RemoveApplicantForCollaboration(applicantId);
 
                 return NoContent();
@@ -249,17 +219,6 @@ namespace projectverseAPI.Controllers
                     Status = StatusCodes.Status404NotFound,
                     Errors = null
                 });
-            }
-            catch (Exception)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new ErrorResponseDTO
-                    {
-                        Title = "Internal Server Error",
-                        Status = 500,
-                        Errors = null
-                    });
             }
         }
     }

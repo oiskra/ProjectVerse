@@ -2,6 +2,6 @@
 {
     public class CreatePostCommentRequestDTO
     {
-        public string Body { get; set; }
+        public string? Body { get; set; }
     }
 }
