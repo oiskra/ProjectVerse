@@ -12,6 +12,7 @@ namespace projectverseAPI.Controllers
     [ApiController]
     [Route("api/posts")]
     [Produces("application/json")]
+    [Consumes("application/json")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PostController : ControllerBase
     {

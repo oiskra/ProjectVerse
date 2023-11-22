@@ -7,8 +7,10 @@ using projectverseAPI.Interfaces;
 namespace projectverseAPI.Controllers
 {
     [ApiController]
-    [Route("api/auth")]
     [AllowAnonymous]
+    [Route("api/auth")]
+    [Produces("application/json")]
+    [Consumes("application/json")]
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
