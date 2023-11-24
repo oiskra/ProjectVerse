@@ -134,5 +134,76 @@ namespace projectverseAPI.Services
             }
         }
 
+        public async Task<Guid> AddCollaborationPosition(Guid collaborationId, CreateCollaborationPositionDTO collaborationPositionDTO)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var collaboration = await _context
+                    .Collaborations
+                    .Include(c => c.CollaborationPositions)
+                    .FirstOrDefaultAsync(c => c.Id == collaborationId);
+
+                if(collaboration is null)
+                    throw new ArgumentException("Collaboration doesn't exist.");
+
+                var collaborationPosition = _mapper.Map<CollaborationPosition>(collaborationPositionDTO);
+
+                collaboration.CollaborationPositions!.Add(collaborationPosition);
+                _context.Collaborations.Update(collaboration);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return collaborationPosition.Id;
+            }
+            catch (ArgumentException argE)
+            {
+                await transaction.RollbackAsync();
+                throw new ArgumentException(argE.Message);
+            }
+            catch (Exception e)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task DeleteCollaborationPositionById(Guid collaborationId, Guid collaborationPositionId)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var collaboration = await _context
+                    .Collaborations
+                    .Include(c => c.CollaborationPositions)
+                    .FirstOrDefaultAsync(c => c.Id == collaborationId);
+
+                if (collaboration is null)
+                    throw new ArgumentException("Collaboration doesn't exist.");
+
+                var collaborationPostionToDelete = collaboration.CollaborationPositions!.FirstOrDefault(pc => pc.Id == collaborationPositionId)!;
+
+                if (collaborationPostionToDelete is null)
+                    throw new ArgumentException("Collaboration position doesn't exist.");
+
+                collaboration.CollaborationPositions!.Remove(collaborationPostionToDelete);
+                _context.Collaborations.Update(collaboration);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (ArgumentException argE)
+            {
+                await transaction.RollbackAsync();
+                throw new ArgumentException(argE.Message);
+            }
+            catch (Exception e)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception(e.Message);
+            }
+        }
+
     }
 }

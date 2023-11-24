@@ -39,7 +39,9 @@ namespace projectverseAPI.Controllers
         public async Task<ActionResult<CreateResponseDTO>> CreateCollaboration([FromBody] CreateCollaborationRequestDTO createCollaborationDTO)
         {
             var createdCollaborationId = await _collaborationService.CreateCollaboration(createCollaborationDTO);
-            return CreatedAtAction("CreateCollaboration", new CreateResponseDTO { Id = createdCollaborationId });
+            return CreatedAtAction(
+                nameof(CreateCollaboration), 
+                new CreateResponseDTO { Id = createdCollaborationId });
         }
 
         [HttpGet]
@@ -212,13 +214,61 @@ namespace projectverseAPI.Controllers
 
                 return NoContent();
             }
-            catch (ArgumentException)
+            catch (ArgumentException e)
             {
                 return NotFound(new ErrorResponseDTO
                 {
                     Title = "Not Found",
                     Status = StatusCodes.Status404NotFound,
-                    Errors = null
+                    Errors = e.Message
+                });
+            }
+        }
+
+        [HttpPatch]
+        [Route("{collaborationId}/collaboration-positions/")]
+        public async Task<ActionResult<CreateResponseDTO>> AddCollaborationPosition(
+            [FromRoute] Guid collaborationId,
+            [FromBody] CreateCollaborationPositionDTO collaborationPositionDTO)
+        {
+            try
+            {
+                var createdId = await _collaborationService.AddCollaborationPosition(collaborationId, collaborationPositionDTO);
+
+                return CreatedAtAction(
+                    nameof(AddCollaborationPosition),
+                    new CreateResponseDTO { Id = createdId });
+            }
+            catch (ArgumentException e)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Title = "Not Found",
+                    Status = StatusCodes.Status404NotFound,
+                    Errors = e.Message
+                });
+            }
+        }
+
+        [HttpPatch]
+        [Route("{collaborationId}/collaboration-positions/{collaborationPositionId}")]
+        public async Task<IActionResult> DeleteCollaborationPosition(
+            [FromRoute] Guid collaborationId,
+            [FromRoute] Guid collaborationPositionId)
+        {
+            try
+            {
+                await _collaborationService.DeleteCollaborationPositionById(collaborationId, collaborationPositionId);
+
+                return NoContent();
+            }
+            catch (ArgumentException e)
+            {
+                return NotFound(new ErrorResponseDTO
+                {
+                    Title = "Not Found",
+                    Status = StatusCodes.Status404NotFound,
+                    Errors = e.Message
                 });
             }
         }
