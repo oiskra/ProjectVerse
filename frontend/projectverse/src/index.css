@@ -23,12 +23,9 @@ body {
     height: 100%;
 }
 
-#navBar {
-    height: 10%;
-}
-
 #contentWrapper {
-    height: 90%;
+  display:flex;
+    
 }
 
 
