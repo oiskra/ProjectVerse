@@ -5,16 +5,24 @@ import CollaborationPositions from '../../data/CollaborationPosition'
 import img from '../../assets/logo.png'
 import ribbon from '../../assets/ribbon.png'
 import CollaborationPosition from '../../data/CollaborationPosition'
+import { usePostColabPosApplyMutation } from './colabApiSlice'
 
 export const ColabDescCard: React.FC<{ colab: Collaboration }> = ({ colab }) => {
+
+  const [apply] = usePostColabPosApplyMutation();
  
   const [targetDesc, setTargetDesc] = useState({id:"XD",name:"test",description:"XD"} as CollaborationPosition | null);
 
   const [applySlider,setApplySlider] = useState(false);
 
   useEffect(() => {
-    setTargetDesc(colab.collaborationPositions[0]);      
+    setTargetDesc(colab.collaborationPositions[0]);
   }, [])
+
+  const applyHandler = (colabPosID:string, ColabID:string) =>{
+    console.log(colabPosID,ColabID)
+    apply({colabPosID,ColabID});
+  }
   
 
   return (
@@ -87,7 +95,7 @@ export const ColabDescCard: React.FC<{ colab: Collaboration }> = ({ colab }) => 
 
                 style={{ fontSize: "0.7em", border: "solid 2px #FFC328" }}> 
                 <div className="w-full p-3 h-full relative">{pos.name}</div>
-                {applySlider ? <div className="w-full h-full absolute bg-accent text-background text-2xl font-black animate-slideIn flex items-center justify-center">Apply</div> : ""}
+                {applySlider ? <div onClick = {() =>{applyHandler(pos.id!,colab.id)}} className="w-full h-full absolute bg-accent text-background text-2xl font-black animate-slideIn flex items-center justify-center">Apply</div> : ""}
                 
               </div>
               :

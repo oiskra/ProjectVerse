@@ -1,11 +1,14 @@
 import React from 'react'
-import { ContentLayout } from '../../layouts/ContentLayout'
-import { ApplicantsList } from '../../components/ApplicantsList'
+import { ApplicantsList } from './CollaborationDashboard/ApplicantsList'
+import CollaborationApplicant from '../../data/CollaborationApplicant'
 
-export const CollaborationApplicants = () => {
-  return (   
+export const CollaborationApplicants:React.FC<{applicants:CollaborationApplicant[]}> = ({applicants}) => {
 
-      <ApplicantsList />
+  applicants = applicants.filter((x:CollaborationApplicant) => x.applicationStatus !== 2);
+  
+  return (
+
+    <ApplicantsList applicants={applicants} />
    
   )
 }
