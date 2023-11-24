@@ -6,17 +6,19 @@ const authSlice = createSlice({
   reducers:{
     setCredentials:(state,action) =>{;
       // const {user,token} = action.payload
-      const {token} = action.payload;
+      const {accessToken,refreshToken} = action.payload;
 
       //decode 
-      let base64Url = token.split(".")[1];
+      let base64Url = accessToken.split(".")[1];
       let data = base64Url.replace("-", "+").replace("_", "/");    
   
       state.user = JSON.parse(window.atob(data));
-      state.token = token;
+      state.token = accessToken;      
+
+      localStorage.setItem("credentials",JSON.stringify({accessToken,refreshToken}));
 
     },
-    logOut :(state,action) =>{
+    logOut :(state) => {
       state.user = null;
       state.token = null;
     }    
