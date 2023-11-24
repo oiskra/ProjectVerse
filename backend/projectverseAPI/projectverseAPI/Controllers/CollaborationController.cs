@@ -233,6 +233,11 @@ namespace projectverseAPI.Controllers
         {
             try
             {
+                var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 var createdId = await _collaborationService.AddCollaborationPosition(collaborationId, collaborationPositionDTO);
 
                 return CreatedAtAction(
@@ -258,6 +263,11 @@ namespace projectverseAPI.Controllers
         {
             try
             {
+                var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+                if (!authorizationResult.Succeeded)
+                    return Forbid();
+
                 await _collaborationService.DeleteCollaborationPositionById(collaborationId, collaborationPositionId);
 
                 return NoContent();
