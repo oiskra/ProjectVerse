@@ -93,6 +93,17 @@ namespace projectverseAPI.Services
             return collaborations;
         }
 
+        public async Task<List<Collaboration>> GetAllCollaborationsByUserId(Guid userId)
+        {
+            var collaborations = await _context.Collaborations
+                .Where(c => c.AuthorId == userId)
+                .Include(c => c.Author)
+                .Include(c => c.CollaborationPositions)
+                .Include(c => c.Technologies)
+                .ToListAsync();
+            return collaborations;
+        }
+
         public async Task<Collaboration?> GetCollaborationById(Guid collaborationId)
         {
             var collaboration = await _context.Collaborations

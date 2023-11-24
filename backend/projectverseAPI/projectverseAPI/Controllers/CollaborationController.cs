@@ -48,8 +48,16 @@ namespace projectverseAPI.Controllers
         public async Task<ActionResult<IList<CollaborationResponseDTO>>> GetAllCollabortions()
         {
             var collaborations = await _collaborationService.GetAllCollaborations();
+            var collaborationsResponse = _mapper.Map<CollaborationResponseDTO>(collaborations);
 
-            var collaborationsResponse = collaborations.Select(c => _mapper.Map<CollaborationResponseDTO>(c));
+            return Ok(collaborationsResponse);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<CollaborationResponseDTO>>> GetAllCollaborationsByUserId([FromQuery] Guid userId)
+        {
+            var collaborations = await _collaborationService.GetAllCollaborationsByUserId(userId);
+            var collaborationsResponse = _mapper.Map<CollaborationResponseDTO>(collaborations);
 
             return Ok(collaborationsResponse);
         }
