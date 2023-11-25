@@ -45,20 +45,13 @@ namespace projectverseAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<CollaborationResponseDTO>>> GetAllCollabortions()
+        public async Task<ActionResult<IList<CollaborationResponseDTO>>> GetAllCollabortions(
+            [FromQuery] Guid? userId)
         {
-            var collaborations = await _collaborationService.GetAllCollaborations();
-            var collaborationsResponse = _mapper.Map<CollaborationResponseDTO>(collaborations);
-
-            return Ok(collaborationsResponse);
-        }
-
-        [HttpGet]
-        [Route("by-userId/{userId}")]
-        public async Task<ActionResult<List<CollaborationResponseDTO>>> GetAllCollaborationsByUserId([FromRoute] Guid userId)
-        {
-            var collaborations = await _collaborationService.GetAllCollaborationsByUserId(userId);
-            var collaborationsResponse = _mapper.Map<CollaborationResponseDTO>(collaborations);
+            var collaborations = userId is null 
+                ? await _collaborationService.GetAllCollaborations()
+                : await _collaborationService.GetAllCollaborationsByUserId((Guid)userId);
+            var collaborationsResponse = _mapper.Map<List<CollaborationResponseDTO>>(collaborations);
 
             return Ok(collaborationsResponse);
         }
