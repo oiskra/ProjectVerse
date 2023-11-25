@@ -14,7 +14,7 @@ export const CollaborationPage: React.FC<{}> = () => {
   useEffect(() => {    
     
   (async () =>{
-    setColabList(await colabs({}).unwrap()) 
+    setColabList(await colabs({}).unwrap())     
 
     //this does not work :(
     // setHighlightColab(colabList[0]);       
@@ -35,7 +35,7 @@ export const CollaborationPage: React.FC<{}> = () => {
   return (
     <>
 
-      <div className=" h-full  items-center mx-20">
+      <div className=" h-full items-center mx-20">
 
 
         <div className='h-full w-full flex justify-center gap-10 items-center p-5'>
@@ -59,6 +59,7 @@ export const CollaborationPage: React.FC<{}> = () => {
             
           </div>
           <div className='w-2/5 h-full neo bg-background rounded-md'>
+            {/* FIXME move loading somewhere else */}
             {highlightColab === null ? <div>...loading</div> : <ColabDescCard colab={highlightColab} />}
             
               

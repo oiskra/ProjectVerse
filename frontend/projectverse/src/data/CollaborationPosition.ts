@@ -1,7 +1,7 @@
-interface CollaborationPositions {
-  id:string,
+interface CollaborationPosition {
+  id?:string,
   name:string,
   description:string,
 }
 
-export default CollaborationPositions
+export default CollaborationPosition

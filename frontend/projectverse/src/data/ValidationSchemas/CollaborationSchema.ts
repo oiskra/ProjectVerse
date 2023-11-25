@@ -1,5 +1,4 @@
 import * as Yup from 'yup';
-import CollaborationPosition from '../CollaborationPosition';
 
 const CollaborationSchema = Yup.object({
   name:Yup.string().required(),

@@ -1,9 +1,13 @@
-interface User{
+interface User {
+
   id : number,
-  username:string,
-  email:string,
-  surname:string,
-  country:string
+  username : string,
+  email : string,
+  surname : string,
+  country : string,
+  refreshToken : string,
+  refreshTokenExpiryTime : Date
+  
 }
 
 
