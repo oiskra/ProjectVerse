@@ -18,8 +18,10 @@ namespace projectverseAPI.Handlers
             {
                 await _next(context);
             }
-            catch
+            catch(Exception e)
             {
+                Console.WriteLine(e.Message);
+
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = "application/json";
 
