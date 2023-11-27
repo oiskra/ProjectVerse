@@ -14,6 +14,8 @@ import { Provider, useDispatch } from 'react-redux';
 import store from './context/store';
 import { setCredentials } from './features/Auth/authSlice';
 import { SessionSetter } from './features/Auth/SessionSetter';
+import { ThemeProvider } from '@emotion/react';
+import { theme } from './materialTheme';
 
 
 console.log("main triggered")
@@ -21,12 +23,14 @@ console.log("main triggered")
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>  
     <GlobalOverride />
+    <ThemeProvider theme={theme}>
     
 
     <Provider store={store}>
       <SessionSetter />
       <RouterProvider router={router} fallbackElement={ <PageLoading/> }/>
     </Provider>
+    </ThemeProvider>
     
   </React.StrictMode>,
 )

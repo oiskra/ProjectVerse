@@ -7,28 +7,33 @@ import { CollaborationPositionsPage } from '../features/Collaborations/Collabora
 import { CollaborationMembers } from '../features/Collaborations/CollaborationMembers';
 
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
-import { useGetColabMutation } from '../features/Collaborations/colabApiSlice';
-import Collaboration, { sampleColaboration } from '../data/Collaboration';
+import { useGetCollabMutation } from '../features/Collaborations/colabApiSlice';
+
 import { Loader } from '../components/Loader';
 import { useParams } from 'react-router';
+import Collaboration from '../data/Collaboration';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSingle, getCurrentColab} from '../features/Collaborations/colabSlice';
 
 export const ColabManagement = () => {
 
   const params  = useParams();
+  const dispatch = useDispatch();
+  const [colabMutation] = useGetCollabMutation();
+
   const id = params.id;
 
   const [page, setPage] = useState('home');
 
-  const [colabData, setColabData] = useState(null as Collaboration || null);
-  const [colab, {isLoading}] = useGetColabMutation();
+  const colabData = useSelector(getCurrentColab);
+  
+  
   
   useEffect(()=>{
-    colab(id!).unwrap().then((data:Collaboration)=>{      
-      setColabData(data);
-      console.log(data);
-    })
-    
-  }, [])  
+    //@ts-ignore
+    dispatch(fetchSingle({colabMutation,id})); 
+    console.warn(colabData);
+  }, [id])  
 
   const handlePageChange = (event : React.SyntheticEvent, newValue: string) => {
     setPage(newValue);
@@ -38,7 +43,7 @@ export const ColabManagement = () => {
     // TODO colab swicher
   }
 
-  if(colabData === null){
+  if(!colabData){
     return (<Loader />)
   }  
 

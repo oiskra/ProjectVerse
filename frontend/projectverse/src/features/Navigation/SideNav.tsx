@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import logo from '../../assets/logo.png'
 import { List } from '@mui/material';
 import { useSelector } from 'react-redux';
@@ -15,23 +15,36 @@ import PersonIcon from '@mui/icons-material/Person';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import ExploreIcon from '@mui/icons-material/Explore';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import { useGetUserCollabsMutation } from '../Collaborations/colabApiSlice';
+import SideBarMutationList from './SideBarMutationList';
+import Collaboration from '../../data/Collaboration';
 
 
 export const SideNav = () => {
   
   const [expanded,setExpanded] = useState(true);
+  const [data,setData] = useState({} as Collaboration)
+
+  const [userCollabMutation] = useGetUserCollabsMutation()
 
   const handleExpand = () =>{
     setExpanded(!expanded);
   }
 
-  const handleMouseOver = () => setExpanded(true)
-  const handleMouseOut = () => setExpanded(false)
-
-  
+  const handleMouseOver = () =>{} //setExpanded(true)
+  const handleMouseOut = () =>{} //setExpanded(false)
 
   const user:User  = useSelector((state:any) => state.auth.user)
 
+
+  useEffect(() => {
+    (async () =>{
+      console.log("side nav triggered")
+      setData(await userCollabMutation(user.id).unwrap())
+
+    })()
+    
+  }, [])
 
   return (
 
@@ -58,11 +71,12 @@ export const SideNav = () => {
 
           <SideBarLabelTab name="Collaborations" sideBarExpanded={expanded}  headerIcon={GroupsIcon}>
 
-            <SideBarItem name="Discover" href="/colabs"  expanded = {expanded} />
+            <SideBarItem name="Discover" href="/collabs"  expanded = {expanded} />
+            <SideBarItem name="Add new" href="/new_collab"  expanded = {expanded} />
 
             <SideBarLabelTab name="Your Collaborations" sideBarExpanded={expanded}>
               
-              <SideBarItem name="Projects" href="/colab_dashboard/9854c3da-9133-492a-bcb5-48816fd5196a"  expanded = {expanded}/>
+              <SideBarMutationList data={data} baseHref='/collab_dashboard'/>
 
             </SideBarLabelTab>
             

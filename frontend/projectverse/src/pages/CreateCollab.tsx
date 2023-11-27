@@ -5,28 +5,41 @@ import { TextFieldS } from '../CustomElements/styledTextField';
 import { ButtonS } from '../CustomElements/ButtonS';
 import { Box, Chip, FormControl, FormGroup, FormHelperText, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import technologiesList from '../data/tempTechnologiesList';
+import { useAddCollabMutation } from '../features/Collaborations/colabApiSlice';
+import { useDispatch } from 'react-redux';
+import Collaboration from '../data/Collaboration';
+import {addCollab } from '../features/Collaborations/colabSlice';
+import { useNavigate } from 'react-router-dom';
 
-export const CreateColab = () => {
+export const CreateCollab = () => {
+
+  const [fetchAddColab] = useAddCollabMutation()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return (
     <Formik
       validateOnChange={false}
       validateOnBlur={false}
-      initialValues={{ name: "", description: "", difficulty: 1, technologies: [] }}
+      initialValues={{ name: "", description: "", difficulty: 1, technologies: [],collaborationPositions:[{name:"",description:""}] }}
       validationSchema={CollaborationSchema}
       onSubmit={async (data, { setSubmitting }) => {
         setSubmitting(true);
-        console.log("subbmit attemtpt")
+        
         try {
           console.log(data);
+          fetchAddColab(data).unwrap()
+          .then((response: Collaboration)=>{
+            dispatch(addCollab(response));
+            navigate(`/collab_dashboard/${response.id}`);
+          })
+         
           
-          // const userData = await login(data).unwrap();
-          // dispatch(setCredentials(userData));
-          // navigate('/home');             
         }
         catch (err) {
-          console.log(err)
+          console.error(err)
         }
+
         setSubmitting(false);
       }
 
@@ -69,19 +82,6 @@ export const CreateColab = () => {
               as={TextFieldS}
             />
 
-            <Field
-              style={{ display: "none" }}
-              value={values.technologies}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              name="technologies"
-              label="Technologies separated by /"
-              variant="outlined"
-              error={errors.technologies ? true : false}
-              helperText={errors.technologies}
-              as={TextFieldS}
-            />
-
             <FormControl>
               <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
               <Select 
@@ -116,7 +116,29 @@ export const CreateColab = () => {
 
             </FormControl>
 
-            
+            <Field           
+              value={values.collaborationPositions.name}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              name="Position name"
+              label="Position name"
+              variant="outlined"
+              error={errors.technologies ? true : false}
+              helperText={errors.technologies}
+              as={TextFieldS}
+            />
+
+            <Field          
+              value={values.collaborationPositions.description}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              name="Position Description"
+              label="Position description"
+              variant="outlined"
+              error={errors.technologies ? true : false}
+              helperText={errors.technologies}
+              as={TextFieldS}
+            />
 
             
 

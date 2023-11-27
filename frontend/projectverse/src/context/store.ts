@@ -9,8 +9,8 @@ const store = configureStore({
   reducer:{
     [apiSlice.reducerPath]: apiSlice.reducer,
     auth:authReducer,
-    // [colabSlice.reducerPath]: colabSlice.reducer,
-    // colab:colabReducer
+    [colabSlice.reducerPath]: colabSlice.reducer,
+    collab:colabReducer
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware().concat(apiSlice.middleware),

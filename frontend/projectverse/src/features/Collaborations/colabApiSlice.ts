@@ -1,53 +1,60 @@
 import { apiSlice } from "../../API Services/apiSlice";
 import Collaboration from "../../data/Collaboration";
-import CollaborationPosition from "../../data/CollaborationPosition";
-import CollaborationPositions from "../../data/CollaborationPosition";
+
 
 export const colabApiSlice = apiSlice.injectEndpoints({
+  
   endpoints: builder =>({
 
     //Main colab endpoints
 
-    getAllColabs:builder.mutation({
+    getAllCollabs:builder.mutation({
       query:() =>({
         url:'/collaborations',
         method:'GET',        
       })
     }),
 
-    getColab:builder.mutation({
+    getUserCollabs:builder.mutation({
+      query:(id:string) =>({
+        url:`/collaborations?userId=${id}`,
+        method:'GET',        
+      })
+    }),
+
+    getCollab:builder.mutation({
       query:(id:string) =>({
         url:`/collaborations/${id}`,
         method:'GET',        
       })
-    }),
+    }),    
     
-    postColab:builder.mutation({
-      query:colab =>({
-        url:'/collaboration',
+    addCollab:builder.mutation({
+      query:collab =>({
+        url:'/collaborations',
         method:'POST',
-        body:colab
+        body:collab
       })
     }),
 
-    updateColab:builder.mutation({
+    updateCollab:builder.mutation({
       query:({colab,id}:{colab:Collaboration,id:string}) =>({
-        url:`/collaboration/${id}`,
+        url:`/collaborations/${id}`,
         method:'PUT',
         body:colab
       })
     }),
 
-    deleteColab:builder.mutation({
+    deleteCollab:builder.mutation({
       query:(id:string) =>({
-        url:`/collaboration/${id}`,
+        url:`/collaborations/${id}`,
         method:'DELETE'
       })
     }),
 
     // patchColab:builder.mutation({
     //   query:(id:string,colab:any) =>({
-    //     url:`/collaboration/${id}`,
+    //     url:`/collaborations/${id}`,
     //     method:'PATCH',
     //     body:colab
     //   })
@@ -56,7 +63,7 @@ export const colabApiSlice = apiSlice.injectEndpoints({
     //Collaboration positions endpoints
     //FIXME Pytanie do brzega
 
-    postColabPos:builder.mutation({
+    postCollabPos:builder.mutation({
       query:({colabPos,ColabID}:{colabPos:any,ColabID:string}) =>({
         url:`/collaborations/${ColabID}/collaboration-positions`,
         method:'POST',
@@ -64,7 +71,7 @@ export const colabApiSlice = apiSlice.injectEndpoints({
       })
     }),
 
-    postColabPosApply:builder.mutation({
+    postCollabPosApply:builder.mutation({
       query:({colabPosID,ColabID}:{colabPosID:string,ColabID:string}) =>({
         url:`/collaborations/${ColabID}/collaboration-positions/${colabPosID}/apply`,
         method:'POST',        
@@ -86,11 +93,12 @@ export const colabApiSlice = apiSlice.injectEndpoints({
 
 
 export const {
-  useGetAllColabsMutation,
-  useGetColabMutation,
-  useUpdateColabMutation,
-  usePostColabMutation,
-  usePostColabPosMutation,
+  useGetAllCollabsMutation,
+  useGetUserCollabsMutation,
+  useGetCollabMutation,
+  useUpdateCollabMutation,
+  useAddCollabMutation,
+  usePostCollabPosMutation,
   usePatchApplicationStatusMutation,
-  usePostColabPosApplyMutation
+  usePostCollabPosApplyMutation
 } = colabApiSlice
