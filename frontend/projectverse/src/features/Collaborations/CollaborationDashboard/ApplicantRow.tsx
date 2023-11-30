@@ -6,7 +6,7 @@ import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
 import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-import { ButtonS } from '../../../CustomElements/ButtonS';
+import { ButtonS } from '../../../customElements/ButtonS';
 import { Button, Popover, Typography } from '@mui/material';
 import { usePatchApplicationStatusMutation } from '../colabApiSlice';
 

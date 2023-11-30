@@ -1,26 +1,22 @@
 import { UseMutation } from "@reduxjs/toolkit/dist/query/react/buildHooks";
 import { useState, useEffect } from "react";
 import SideBarItem from "./SideBarItem";
+import { useSelector } from "react-redux";
+import User from "../../data/User";
+import Collaboration from "../../data/Collaboration";
 
-const SideBarMutationList:React.FC<{name:string,mutation:UseMutation<any>,baseHref:string}> = ({name,mutation,baseHref}) =>{
+const SideBarMutationList:React.FC<{data:Collaboration[],baseHref:string}> = ({data,baseHref}) =>{
 
-  const [mutationObj] = mutation()
+  console.log(data);
 
-  const [data,setData] = useState([] as Array<{}>);
-
-  useEffect(() => {
-    getData();  
-  }, [])
-
-  const getData = async () =>{
-    const response = await mutationObj({}).unwrap() as Array<{}>
-    setData(response);
+  if(!data){
+    return <></>
   }
 
   return(
     <>
       {data.map((elem:any) =>
-        <SideBarItem href = {null} name = {elem.name} expanded={true} />
+        <SideBarItem key={elem.id} href = {`${baseHref}/${elem.id}`} name = {elem.name} expanded={true} />
       )}    
     </>
     

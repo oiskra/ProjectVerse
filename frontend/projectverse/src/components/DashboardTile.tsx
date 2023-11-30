@@ -1,6 +1,6 @@
 import { Card, CardContent, Typography, CardActions, Button } from '@mui/material'
 import React from 'react'
-import { neoOverride } from '../CustomElements/overrideStyleGroups'
+import { neoOverride } from '../customElements/overrideStyleGroups'
 
 export const DashboardTile:React.FC<{header:string,count:number,lastWeekCount:number}> = ({header,count,lastWeekCount}) => {
   return (

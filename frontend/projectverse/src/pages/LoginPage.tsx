@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Login } from '../features/Auth/Login'
-import { ButtonS } from '../CustomElements/ButtonS'
+import { ButtonS } from '../customElements/ButtonS'
 import { Register } from '../features/Auth/Register'
 
 export const LoginPage = () => {

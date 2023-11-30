@@ -1,6 +1,6 @@
 import React from 'react'
-import { ApplicantsList } from './CollaborationDashboard/ApplicantsList'
-import CollaborationApplicant from '../../data/CollaborationApplicant'
+import { ApplicantsList } from './ApplicantsList'
+import CollaborationApplicant from '../../../data/CollaborationApplicant'
 
 export const CollaborationApplicants:React.FC<{applicants:CollaborationApplicant[]}> = ({applicants}) => {
 

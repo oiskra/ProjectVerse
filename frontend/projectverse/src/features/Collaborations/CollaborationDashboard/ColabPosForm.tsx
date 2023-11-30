@@ -1,20 +1,36 @@
 import { Formik, Field } from 'formik';
-import { ButtonS } from '../../../CustomElements/ButtonS';
-import { TextFieldS } from '../../../CustomElements/styledTextField';
+import { ButtonS } from '../../../customElements/ButtonS';
+import { TextFieldS } from '../../../customElements/styledTextField';
 
 import CollaborationPositionSchema from '../../../data/ValidationSchemas/CollaborationPositionSchema';
+import { usePostCollabPosMutation } from '../colabApiSlice';
+import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addCollabPos } from '../collabSlice';
+
 
 export const ColabPosForm = () => {
+
+  const dispatch = useDispatch();
+  const params = useParams();
+  const CollabID = params.id!;
+
+
+  const [addCollabPosMutation] = usePostCollabPosMutation();
+
   return (
     <Formik
       initialValues={{ name: "", description: "" }}
       validationSchema={CollaborationPositionSchema}
-      onSubmit={async (data, { setSubmitting }) => {
+      onSubmit={async (collabPos, { setSubmitting }) => {
 
         setSubmitting(true);
 
         try {
-
+          addCollabPosMutation({collabPos,CollabID})
+          .then(()=>{
+            dispatch(addCollabPos(collabPos));
+          })
         }
 
         catch (err) {

@@ -1,7 +1,7 @@
 import { Formik, Field } from 'formik';
 import { useNavigate } from 'react-router-dom';
-import { ButtonS } from '../../CustomElements/ButtonS';
-import { TextFieldS } from '../../CustomElements/styledTextField';
+import { ButtonS } from '../../customElements/ButtonS';
+import { TextFieldS } from '../../customElements/styledTextField';
 import { Loader } from '../../components/Loader';
 import { useRegisterMutation } from './authApiSlice';
 import RegisterSchema from '../../data/ValidationSchemas/RegisterSchema';
