@@ -5,7 +5,7 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 
 import { ColabPosForm } from './CollaborationDashboard/ColabPosForm';
 import CollaborationPosition from '../../data/CollaborationPosition';
-import { neoOverride } from '../../CustomElements/overrideStyleGroups';
+import { neoOverride } from '../../customElements/overrideStyleGroups';
 
 
 export const CollaborationPositionsPage:React.FC<{positions:CollaborationPosition[]}> = ({positions}) => {

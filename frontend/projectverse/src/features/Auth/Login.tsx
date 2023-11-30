@@ -1,5 +1,5 @@
-import { TextFieldS } from '../../CustomElements/styledTextField';
-import { ButtonS } from '../../CustomElements/ButtonS';
+import { TextFieldS } from '../../customElements/styledTextField';
+import { ButtonS } from '../../customElements/ButtonS';
 import { Field, Formik } from 'formik';
 import LoginSchema from '../../data/ValidationSchemas/LoginSchema';
 import { useNavigate } from 'react-router-dom';

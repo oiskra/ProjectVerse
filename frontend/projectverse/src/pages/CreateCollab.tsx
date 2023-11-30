@@ -1,14 +1,14 @@
 import { Field, Formik } from 'formik';
 import React, { useState } from 'react'
 import CollaborationSchema from '../data/ValidationSchemas/CollaborationSchema';
-import { TextFieldS } from '../CustomElements/styledTextField';
-import { ButtonS } from '../CustomElements/ButtonS';
+import { TextFieldS } from '../customElements/styledTextField';
+import { ButtonS } from '../customElements/ButtonS';
 import { Box, Chip, FormControl, FormGroup, FormHelperText, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import technologiesList from '../data/tempTechnologiesList';
 import { useAddCollabMutation } from '../features/Collaborations/colabApiSlice';
 import { useDispatch } from 'react-redux';
 import Collaboration from '../data/Collaboration';
-import {addCollab } from '../features/Collaborations/colabSlice';
+import {addCollab } from '../features/Collaborations/collabSlice';
 import { useNavigate } from 'react-router-dom';
 
 export const CreateCollab = () => {

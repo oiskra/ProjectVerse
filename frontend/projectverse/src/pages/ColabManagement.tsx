@@ -1,10 +1,10 @@
 import { Box, Tabs, Tab } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { ColabHome } from '../features/Collaborations/ColabHome';
-import { CollaborationApplicants } from '../features/Collaborations/CollaborationApplicants';
+import { CollaborationApplicants } from '../features/Collaborations/CollaborationDashboard/CollaborationApplicants';
 import { ContentLayout } from '../layouts/ContentLayout';
 import { CollaborationPositionsPage } from '../features/Collaborations/CollaborationPositionsPage';
-import { CollaborationMembers } from '../features/Collaborations/CollaborationMembers';
+import { CollaborationMembers } from '../features/Collaborations/CollaborationDashboard/CollaborationMembers';
 
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import { useGetCollabMutation } from '../features/Collaborations/colabApiSlice';
@@ -13,7 +13,7 @@ import { Loader } from '../components/Loader';
 import { useParams } from 'react-router';
 import Collaboration from '../data/Collaboration';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchSingle, getCurrentColab} from '../features/Collaborations/colabSlice';
+import { fetchSingle, getCurrentColab} from '../features/Collaborations/collabSlice';
 
 export const ColabManagement = () => {
 
@@ -32,7 +32,6 @@ export const ColabManagement = () => {
   useEffect(()=>{
     //@ts-ignore
     dispatch(fetchSingle({colabMutation,id})); 
-    console.warn(colabData);
   }, [id])  
 
   const handlePageChange = (event : React.SyntheticEvent, newValue: string) => {

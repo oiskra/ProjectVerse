@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ColabListing } from '../features/Collaborations/ColabListing'
 import Collaboration from '../data/Collaboration'
-import { ColabDescCard } from '../features/Collaborations/ColabDescCard'
+import { ColabDescCard } from '../features/Collaborations/CollabDescCard'
 import {  useGetAllColabsMutation } from '../features/Collaborations/colabApiSlice'
 
 export const CollaborationPageOld: React.FC<{}> = () => {

@@ -1,5 +1,6 @@
-import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAction, createAsyncThunk, createSelector, createSlice, nanoid } from "@reduxjs/toolkit";
 import Collaboration from "../../data/Collaboration";
+import CollaborationPosition from "../../data/CollaborationPosition";
 
 export const fetchCollabs = createAsyncThunk('collab/fetchCollabs', async (mutation) => {
 
@@ -28,7 +29,7 @@ export const fetchSingle = createAsyncThunk('collab/fetchSingle',async (data) =>
   }
 })
 
-const colabSlice = createSlice({
+const collabSlice = createSlice({
   name:'collab',
   initialState:{
     collabs:[] as Collaboration[],
@@ -51,6 +52,10 @@ const colabSlice = createSlice({
       const [id] = action.payload
       const targetIndex = state.collabs.findIndex((collab:Collaboration)=> collab.id == id);
       state.collabs.splice(targetIndex,1)
+    },
+
+    addCollabPos:(state,action:PayloadAction<CollaborationPosition>) =>{      
+      state.currentCollab?.collaborationPositions.push(action.payload);
     }
 
   },
@@ -77,10 +82,11 @@ const colabSlice = createSlice({
 
 
 export const {
-  addCollab
-} = colabSlice.actions
+  addCollab,
+  addCollabPos
+} = collabSlice.actions
 
-export default colabSlice.reducer
+export default collabSlice.reducer
 
 export const getCollabs = (state) => state.collab.collabs
 export const getCurrentColab = (state) => state.collab.currentCollab

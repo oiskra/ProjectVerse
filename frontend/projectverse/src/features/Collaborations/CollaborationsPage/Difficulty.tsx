@@ -6,15 +6,15 @@ export const Difficulty : React.FC<{difficulty:number}> = ({difficulty}) => {
 
   for(let i = 0 ; i < difficulty ; i++){
     balls.push(
-      <div key = {i} style={{"backgroundColor":color[difficulty]}} className='difBall'></div>
+      <div key = {i} style={{"backgroundColor":color[difficulty]}} className='difBall neo'></div>
     )
   }
 
 
   return (
-    <div  className='w-full h-full flex gap-3 items-center p-2'>
-      <div className='w-2/5 text-1 justify-center flex' style={{fontSize:"0.6em"}}>Difficulty</div>
-      <div className='w-3/5 flex justify-center gap-1'>
+    <div  className='w-full flex gap-3 items-between justify-between'>
+      <div className='' style={{fontSize:"1em"}}>Difficulty</div>
+      <div className='flex justify-center gap-1'>
         {balls}
       </div>
     </div>

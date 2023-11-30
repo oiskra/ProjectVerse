@@ -1,5 +1,6 @@
 import { apiSlice } from "../../API Services/apiSlice";
 import Collaboration from "../../data/Collaboration";
+import CollaborationPosition from "../../data/CollaborationPosition";
 
 
 export const colabApiSlice = apiSlice.injectEndpoints({
@@ -64,16 +65,16 @@ export const colabApiSlice = apiSlice.injectEndpoints({
     //FIXME Pytanie do brzega
 
     postCollabPos:builder.mutation({
-      query:({colabPos,ColabID}:{colabPos:any,ColabID:string}) =>({
-        url:`/collaborations/${ColabID}/collaboration-positions`,
-        method:'POST',
-        body:colabPos
+      query:({collabPos,CollabID}:{collabPos:CollaborationPosition,CollabID:string}) =>({
+        url:`/collaborations/${CollabID}/collaboration-positions`,
+        method:'PATCH',
+        body:collabPos
       })
     }),
 
     postCollabPosApply:builder.mutation({
-      query:({colabPosID,ColabID}:{colabPosID:string,ColabID:string}) =>({
-        url:`/collaborations/${ColabID}/collaboration-positions/${colabPosID}/apply`,
+      query:({collabPosID,CollabID}:{collabPosID:string,CollabID:string}) =>({
+        url:`/collaborations/${CollabID}/collaboration-positions/${collabPosID}/apply`,
         method:'POST',        
        
       })
