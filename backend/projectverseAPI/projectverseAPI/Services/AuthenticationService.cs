@@ -88,7 +88,7 @@ namespace projectverseAPI.Services
             await _userManager.UpdateAsync(currentUser);
         }
 
-        public async Task<bool> RegisterUser(UserRegisterDTO userRegisterDTO)
+        public async Task<Guid> RegisterUser(UserRegisterDTO userRegisterDTO)
         {
             var userExists = await _userManager.FindByNameAsync(userRegisterDTO.UserName);
             if (userExists is not null)
@@ -105,7 +105,7 @@ namespace projectverseAPI.Services
             if (await _roleManager.RoleExistsAsync(UserRoles.User))
                 await _userManager.AddToRoleAsync(user, UserRoles.User);
             
-            return result.Succeeded;
+            return Guid.Parse(user.Id);
         }
 
         public async Task<User?> GetCurrentUser()
