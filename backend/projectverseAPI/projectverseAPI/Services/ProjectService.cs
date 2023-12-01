@@ -38,9 +38,9 @@ namespace projectverseAPI.Services
         public async Task<List<Project>> GetAllProjectsByUserID(Guid userId)
         {
             var usersProjects = await _context.Projects
+                .Where(p => p.AuthorId == userId)
                 .Include(p => p.Author)
                 .Include(p => p.UsedTechnologies)
-                .Where(p => p.AuthorId == userId)
                 .ToListAsync();
 
             return usersProjects;
@@ -49,9 +49,10 @@ namespace projectverseAPI.Services
         public async Task<Project?> GetProjectById(Guid projectId)
         {
             var project = await _context.Projects
+                .Where(p => p.Id == projectId)
                 .Include(p => p.Author)
                 .Include(p => p.UsedTechnologies)
-                .FirstOrDefaultAsync(p => p.Id == projectId);
+                .FirstOrDefaultAsync();
 
             return project;
         }

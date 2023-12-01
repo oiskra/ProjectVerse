@@ -58,9 +58,10 @@ namespace projectverseAPI.Services
             try
             {
                 var collaborationToDelete = await _context.Collaborations
+                    .Where(c => c.Id == collaborationId)
                     .Include(c => c.Technologies)
                     .Include(c => c.CollaborationPositions)
-                    .FirstOrDefaultAsync(c => c.Id == collaborationId);
+                    .FirstOrDefaultAsync();
 
                 if (collaborationToDelete is null)
                     throw new ArgumentException("Collaboration doesn't exist");
@@ -113,7 +114,7 @@ namespace projectverseAPI.Services
                 .Include(c => c.CollaborationApplicants!)
                     .ThenInclude(ca => ca.ApplicantUser)
                 .Include(c => c.Author)
-                .FirstOrDefaultAsync(c => c.Id == collaborationId);
+                .FirstOrDefaultAsync();
             
             return collaboration;
         }
@@ -150,10 +151,10 @@ namespace projectverseAPI.Services
             using var transaction = _context.Database.BeginTransaction();
             try
             {
-                var collaboration = await _context
-                    .Collaborations
+                var collaboration = await _context.Collaborations
+                    .Where(c => c.Id == collaborationId)
                     .Include(c => c.CollaborationPositions)
-                    .FirstOrDefaultAsync(c => c.Id == collaborationId);
+                    .FirstOrDefaultAsync();
 
                 if(collaboration is null)
                     throw new ArgumentException("Collaboration doesn't exist.");
@@ -185,10 +186,10 @@ namespace projectverseAPI.Services
             using var transaction = _context.Database.BeginTransaction();
             try
             {
-                var collaboration = await _context
-                    .Collaborations
+                var collaboration = await _context.Collaborations
+                    .Where(c => c.Id == collaborationId)
                     .Include(c => c.CollaborationPositions)
-                    .FirstOrDefaultAsync(c => c.Id == collaborationId);
+                    .FirstOrDefaultAsync();
 
                 if (collaboration is null)
                     throw new ArgumentException("Collaboration doesn't exist.");

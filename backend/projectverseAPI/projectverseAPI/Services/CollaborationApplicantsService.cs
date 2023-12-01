@@ -25,7 +25,7 @@ namespace projectverseAPI.Services
             try
             {
                 var applicant = await _context.CollaborationApplicants
-                .FirstOrDefaultAsync(a => a.Id == applicantId);
+                    .FirstOrDefaultAsync(a => a.Id == applicantId);
 
                 if (applicant is null)
                     throw new ArgumentException("Applicant doesn't exist");
@@ -63,9 +63,10 @@ namespace projectverseAPI.Services
             try
             {
                 var collaboration = await _context.Collaborations
-               .Include(c => c.CollaborationPositions)
-               .Include(c => c.CollaborationApplicants)
-               .FirstOrDefaultAsync(c => c.Id == collaborationId);
+                   .Where(c => c.Id == collaborationId)
+                   .Include(c => c.CollaborationPositions)
+                   .Include(c => c.CollaborationApplicants)
+                   .FirstOrDefaultAsync();
 
                 if (collaboration is null)
                     throw new ArgumentException("Collaboration doesn't exist.");
@@ -127,27 +128,13 @@ namespace projectverseAPI.Services
             }
         }
 
-/*        public async Task<List<CollaborationApplicant>> GetCollaborationApplicants(Guid collaborationId)
-        {
-            //redo pod CollaborationApplicants?
-            var collaboration = await _context.Collaborations
-                .Include(c => c.CollaborationApplicants)
-                .ThenInclude(c => c.ApplicantUser)
-                .FirstOrDefaultAsync(c => c.Id == collaborationId);
-
-            if (collaboration is not null)
-                return collaboration!.CollaborationApplicants!.ToList();
-
-            return new List<CollaborationApplicant>();
-        }*/
-
         public async Task RemoveApplicantForCollaboration(Guid applicantId)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
             {
                 var applicantToDelete = await _context.CollaborationApplicants
-                .FirstOrDefaultAsync(a => a.Id == applicantId);
+                    .FirstOrDefaultAsync(a => a.Id == applicantId);
 
                 if (applicantToDelete is null)
                     throw new ArgumentException("Applicant doesn't exist");
@@ -155,8 +142,9 @@ namespace projectverseAPI.Services
                 if (applicantToDelete.ApplicationStatus is ApplicationStatus.Accepted)
                 {
                     var collaboration = await _context.Collaborations
+                        .Where(c => c.Id == applicantToDelete.AppliedCollaborationId)
                         .Include(c => c.CollaborationApplicants)
-                        .FirstOrDefaultAsync(c => c.Id == applicantToDelete.AppliedCollaborationId);
+                        .FirstOrDefaultAsync();
 
                     if (
                         collaboration is not null &&
