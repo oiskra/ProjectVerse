@@ -227,7 +227,7 @@ namespace projectverseAPI.Controllers
             }
         }
 
-        [HttpPatch]
+        [HttpPost]
         [Route("{collaborationId}/collaboration-positions/")]
         public async Task<ActionResult<CreateResponseDTO>> AddCollaborationPosition(
             [FromRoute] Guid collaborationId,
@@ -257,7 +257,7 @@ namespace projectverseAPI.Controllers
             }
         }
 
-        [HttpPatch]
+        [HttpDelete]
         [Route("{collaborationId}/collaboration-positions/{collaborationPositionId}")]
         public async Task<IActionResult> DeleteCollaborationPosition(
             [FromRoute] Guid collaborationId,

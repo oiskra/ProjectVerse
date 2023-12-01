@@ -15,6 +15,7 @@ namespace projectverseAPI.Data
         public DbSet<Like> Likes { get; set; }
         public DbSet<PostComment> PostComments { get; set; }
         public DbSet<Collaboration> Collaborations { get; set; }
+        public DbSet<CollaborationPosition> CollaborationPositions { get; set; }
         public DbSet<CollaborationApplicant> CollaborationApplicants { get; set; }
         public DbSet<Technology> Technologies { get; set; }
 

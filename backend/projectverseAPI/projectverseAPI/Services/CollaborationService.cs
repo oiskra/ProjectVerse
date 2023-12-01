@@ -152,22 +152,22 @@ namespace projectverseAPI.Services
             try
             {
                 var collaboration = await _context.Collaborations
-                    .Where(c => c.Id == collaborationId)
-                    .Include(c => c.CollaborationPositions)
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync(c => c.Id == collaborationId);
 
                 if(collaboration is null)
                     throw new ArgumentException("Collaboration doesn't exist.");
 
                 var collaborationPosition = _mapper.Map<CollaborationPosition>(collaborationPositionDTO);
 
-                collaboration.CollaborationPositions!.Add(collaborationPosition);
-                _context.Collaborations.Update(collaboration);
+                collaborationPosition.Collaboration = collaboration;
+                collaborationPosition.CollaborationId = collaboration.Id;
+
+                var createdEntity = await _context.CollaborationPositions.AddAsync(collaborationPosition);
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return collaborationPosition.Id;
+                return createdEntity.Entity.Id;
             }
             catch (ArgumentException argE)
             {
@@ -186,23 +186,13 @@ namespace projectverseAPI.Services
             using var transaction = _context.Database.BeginTransaction();
             try
             {
-                var collaboration = await _context.Collaborations
-                    .Where(c => c.Id == collaborationId)
-                    .Include(c => c.CollaborationPositions)
-                    .FirstOrDefaultAsync();
+                var deletedRecordsCount = await _context.CollaborationPositions
+                    .Where(c => c.Id == collaborationPositionId && c.CollaborationId == collaborationId)
+                    .ExecuteDeleteAsync();
 
-                if (collaboration is null)
-                    throw new ArgumentException("Collaboration doesn't exist.");
+                if (deletedRecordsCount == 0)
+                    throw new ArgumentException("Collaboration position wasn't deleted. Make sure parameters are correct.");
 
-                var collaborationPostionToDelete = collaboration.CollaborationPositions!.FirstOrDefault(pc => pc.Id == collaborationPositionId)!;
-
-                if (collaborationPostionToDelete is null)
-                    throw new ArgumentException("Collaboration position doesn't exist.");
-
-                collaboration.CollaborationPositions!.Remove(collaborationPostionToDelete);
-                _context.Collaborations.Update(collaboration);
-
-                await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
             catch (ArgumentException argE)
