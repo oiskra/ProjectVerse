@@ -219,7 +219,9 @@ namespace projectverseAPI.Services
         public async Task<List<Post>> GetAllPosts()
         {
             var posts = await _context.Posts
-                .Include(p => p.PostComments)
+                .Include(p => p.PostComments
+                    .OrderByDescending(pc => pc.PostedAt)
+                    .Take(3))
                 .Include(p => p.Project)
                     .ThenInclude(p => p.Author)
                 .Include(p => p.Project)
