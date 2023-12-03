@@ -36,6 +36,7 @@ namespace projectverseAPI
             services
                 .AddFluentValidationAutoValidation()
                 .AddValidatorsFromAssemblyContaining<CreateCollaborationDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<CreateCollaborationPositionDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<UpdateCollaborationDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<UserRegisterDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<UserLoginDTOValidator>()
