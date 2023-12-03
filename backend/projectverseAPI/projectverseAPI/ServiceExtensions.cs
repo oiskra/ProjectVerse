@@ -174,7 +174,7 @@ namespace projectverseAPI
                         policy.RequireRole(UserRoles.User);
                     });
 
-                options.AddPolicy(PolicyConstants.SameAuthorPolicy, policy =>
+                options.AddPolicy(PolicyNameConstants.SameAuthorPolicy, policy =>
                     policy.Requirements.Add(new SameAuthorRequirement()));
             });
 

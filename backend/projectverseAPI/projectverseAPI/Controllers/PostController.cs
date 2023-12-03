@@ -80,7 +80,7 @@ namespace projectverseAPI.Controllers
             try
             {
                 var project = await _projectService.GetProjectById(projectId);
-                var authorizationResult = await _authorizationService.AuthorizeAsync(User, project, PolicyConstants.SameAuthorPolicy);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, project, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 
@@ -172,7 +172,7 @@ namespace projectverseAPI.Controllers
             try
             {
                 var comment = await _postService.GetPostCommentById(commentId);
-                var authorizationResult = await _authorizationService.AuthorizeAsync(User, comment, PolicyConstants.SameAuthorPolicy);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, comment, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 
@@ -209,7 +209,7 @@ namespace projectverseAPI.Controllers
                     });
 
                 var comment = await _postService.GetPostCommentById(commentId);
-                var authorizationResult = await _authorizationService.AuthorizeAsync(User, comment, PolicyConstants.SameAuthorPolicy);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, comment, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using projectverseAPI.Constants;
 using projectverseAPI.Interfaces;
 
 namespace projectverseAPI.Handlers
@@ -13,7 +14,7 @@ namespace projectverseAPI.Handlers
             string? userId = context
                 .User
                 .Claims
-                .FirstOrDefault(c => c.Type == "id")?.Value;
+                .FirstOrDefault(c => c.Type == ClaimNameConstants.Identifier)?.Value;
 
             if (!Guid.TryParse(userId, out Guid parsedUserId))
                 return Task.CompletedTask;

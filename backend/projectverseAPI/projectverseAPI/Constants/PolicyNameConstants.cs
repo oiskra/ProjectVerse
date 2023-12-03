@@ -1,6 +1,6 @@
 ﻿namespace projectverseAPI.Constants
 {
-    public static class PolicyConstants
+    public static class PolicyNameConstants
     {
         public const string SameAuthorPolicy = "SameAuthorPolicy";
     }

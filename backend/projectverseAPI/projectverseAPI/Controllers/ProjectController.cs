@@ -94,7 +94,7 @@ namespace projectverseAPI.Controllers
                     });
 
                 var project = await _projectService.GetProjectById(projectId);
-                var authorizationResult = await _authorizationService.AuthorizeAsync(User, project, PolicyConstants.SameAuthorPolicy);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, project, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 
@@ -120,7 +120,7 @@ namespace projectverseAPI.Controllers
             try
             {
                 var project = await _projectService.GetProjectById(projectId);
-                var authorizationResult = await _authorizationService.AuthorizeAsync(User, project, PolicyConstants.SameAuthorPolicy);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, project, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.JsonWebTokens;
+using projectverseAPI.Constants;
 using projectverseAPI.DTOs.Authentication;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
@@ -110,8 +112,8 @@ namespace projectverseAPI.Services
 
         public async Task<User?> GetCurrentUser()
         {
-            var id = _contextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
-
+            var id = _contextAccessor.HttpContext?.User.FindFirst(ClaimNameConstants.Identifier)?.Value;
+            
             if (id is null)
                 return null;
 
