@@ -65,9 +65,6 @@ namespace projectverseAPI.Services
                 var project = _mapper.Map<Project>(projectDTO);
                 var currentUser = await _authenticationService.GetCurrentUser();
 
-                if (currentUser is null)
-                    throw new Exception("Cannot get current user.");
-
                 if (projectDTO.IsPublished.Equals(false))
                 {
                     project.Author = currentUser;

@@ -82,9 +82,6 @@ namespace projectverseAPI.Services
         public async Task RevokeToken()
         {
             var currentUser = await GetCurrentUser();
-            if (currentUser is null)
-                throw new InvalidOperationException("User not logged in.");
-
             currentUser.RefreshToken = null;
 
             await _userManager.UpdateAsync(currentUser);
@@ -110,12 +107,12 @@ namespace projectverseAPI.Services
             return Guid.Parse(user.Id);
         }
 
-        public async Task<User?> GetCurrentUser()
+        public async Task<User> GetCurrentUser()
         {
             var id = _contextAccessor.HttpContext?.User.FindFirst(ClaimNameConstants.Identifier)?.Value;
-            
+
             if (id is null)
-                return null;
+                throw new InvalidOperationException("Cannot get current user.");
 
             var currentUser = await _userManager.FindByIdAsync(id);
             return currentUser;

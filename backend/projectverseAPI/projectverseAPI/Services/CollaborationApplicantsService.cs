@@ -79,9 +79,6 @@ namespace projectverseAPI.Services
 
                 var currUser = await _authenticationService.GetCurrentUser();
 
-                if (currUser is null)
-                    throw new Exception("Cannot get current user.");
-
                 if (collaboration.CollaborationApplicants.Any(ca =>
                     ca.AppliedPositionId == collaborationPositionId && ca.ApplicantUserId == Guid.Parse(currUser.Id)))
                     throw new InvalidOperationException("User already applied for this position.");

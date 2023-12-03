@@ -31,9 +31,6 @@ namespace projectverseAPI.Services
                 var collaboration = _mapper.Map<Collaboration>(collaborationDTO);
 
                 var currentUser = await _authenticationService.GetCurrentUser();
-
-                if (currentUser is null)
-                    throw new Exception("Cannot get current user.");
                 
                 collaboration.Author = currentUser;
                 collaboration.AuthorId = Guid.Parse(currentUser.Id);

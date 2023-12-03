@@ -88,9 +88,6 @@ namespace projectverseAPI.Services
 
                 var currentUser = await _authenticationService.GetCurrentUser();
 
-                if (currentUser is null)
-                    throw new Exception("Cannot get current user.");
-
                 var post = await _context.Posts
                     .FirstOrDefaultAsync(p => p.Id == postId);
 
@@ -237,8 +234,6 @@ namespace projectverseAPI.Services
             try
             {
                 var currentUser = await _authenticationService.GetCurrentUser();
-                if (currentUser is null)
-                    throw new Exception("Cannot get current user.");
 
                 var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
                 if (post is null)
@@ -291,8 +286,6 @@ namespace projectverseAPI.Services
             try
             {
                 var currentUser = await _authenticationService.GetCurrentUser();
-                if (currentUser is null)
-                    throw new Exception("Cannot get current user.");
 
                 var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
                 if (post is null)
