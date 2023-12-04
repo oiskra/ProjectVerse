@@ -23,7 +23,7 @@ namespace projectverseAPI.Services
             _authenticationService = authenticationService;
         }
 
-        public async Task<Guid> CreateCollaboration(CreateCollaborationRequestDTO collaborationDTO)
+        public async Task<Collaboration> Create(CreateCollaborationRequestDTO collaborationDTO)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
@@ -40,7 +40,7 @@ namespace projectverseAPI.Services
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return addedCollaboration.Entity.Id;
+                return addedCollaboration.Entity;
             }
             catch (Exception e)
             {
@@ -49,7 +49,7 @@ namespace projectverseAPI.Services
             }
         }
 
-        public async Task<bool> DeleteCollaborationById(Guid collaborationId)
+        public async Task Delete(Guid collaborationId)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
@@ -67,7 +67,6 @@ namespace projectverseAPI.Services
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
-                return true;
             }
             catch (ArgumentException argE) 
             {
@@ -81,7 +80,7 @@ namespace projectverseAPI.Services
             }
         }
 
-        public async Task<List<Collaboration>> GetAllCollaborations()
+        public async Task<List<Collaboration>> GetAll()
         {
             var collaborations = await _context.Collaborations
                 .Include(c => c.Author)
@@ -91,7 +90,7 @@ namespace projectverseAPI.Services
             return collaborations;
         }
 
-        public async Task<List<Collaboration>> GetAllCollaborationsByUserId(Guid userId)
+        public async Task<List<Collaboration>> GetAllByUserId(Guid userId)
         {
             var collaborations = await _context.Collaborations
                 .Where(c => c.AuthorId == userId)
@@ -102,9 +101,10 @@ namespace projectverseAPI.Services
             return collaborations;
         }
 
-        public async Task<Collaboration?> GetCollaborationById(Guid collaborationId)
+        public async Task<Collaboration> GetById(Guid collaborationId)
         {
             var collaboration = await _context.Collaborations
+                .AsNoTracking()
                 .Where(c => c.Id.Equals(collaborationId))
                 .Include(c => c.Technologies)
                 .Include(c => c.CollaborationPositions)
@@ -116,7 +116,7 @@ namespace projectverseAPI.Services
             return collaboration;
         }
 
-        public async Task UpdateCollaboration(UpdateCollaborationRequestDTO collaborationDTO)
+        public async Task<Collaboration> Update(UpdateCollaborationRequestDTO collaborationDTO)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
@@ -127,10 +127,12 @@ namespace projectverseAPI.Services
                     throw new ArgumentException("Collaboration doesn't exist.");
 
                 var collaboration = _mapper.Map<Collaboration>(collaborationDTO);
-                _context.Collaborations.Update(collaboration);
+                var updated = _context.Collaborations.Update(collaboration);
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+
+                return updated.Entity;
             }
             catch (ArgumentException argE)
             {
