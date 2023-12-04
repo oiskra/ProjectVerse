@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.JsonWebTokens;
+using projectverseAPI.Constants;
 using projectverseAPI.DTOs.Authentication;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
@@ -80,15 +82,12 @@ namespace projectverseAPI.Services
         public async Task RevokeToken()
         {
             var currentUser = await GetCurrentUser();
-            if (currentUser is null)
-                throw new InvalidOperationException("User not logged in.");
-
             currentUser.RefreshToken = null;
 
             await _userManager.UpdateAsync(currentUser);
         }
 
-        public async Task<bool> RegisterUser(UserRegisterDTO userRegisterDTO)
+        public async Task<Guid> RegisterUser(UserRegisterDTO userRegisterDTO)
         {
             var userExists = await _userManager.FindByNameAsync(userRegisterDTO.UserName);
             if (userExists is not null)
@@ -105,15 +104,15 @@ namespace projectverseAPI.Services
             if (await _roleManager.RoleExistsAsync(UserRoles.User))
                 await _userManager.AddToRoleAsync(user, UserRoles.User);
             
-            return result.Succeeded;
+            return Guid.Parse(user.Id);
         }
 
-        public async Task<User?> GetCurrentUser()
+        public async Task<User> GetCurrentUser()
         {
-            var id = _contextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            var id = _contextAccessor.HttpContext?.User.FindFirst(ClaimNameConstants.Identifier)?.Value;
 
             if (id is null)
-                return null;
+                throw new InvalidOperationException("Cannot get current user.");
 
             var currentUser = await _userManager.FindByIdAsync(id);
             return currentUser;

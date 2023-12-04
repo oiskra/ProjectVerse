@@ -88,9 +88,6 @@ namespace projectverseAPI.Services
 
                 var currentUser = await _authenticationService.GetCurrentUser();
 
-                if (currentUser is null)
-                    throw new Exception("Cannot get current user.");
-
                 var post = await _context.Posts
                     .FirstOrDefaultAsync(p => p.Id == postId);
 
@@ -126,8 +123,9 @@ namespace projectverseAPI.Services
             try
             {
                 var postToDelete = await _context.Posts
+                    .Where(p => p.Id == projectId)
                     .Include(p => p.PostComments)
-                    .FirstOrDefaultAsync(p => p.Id == projectId);
+                    .FirstOrDefaultAsync();
 
                 if (postToDelete is null)
                     throw new ArgumentException("Post doesn't exist.");
@@ -195,8 +193,8 @@ namespace projectverseAPI.Services
                 throw new ArgumentException("Post doesn't exist.");
 
             var comments = await _context.PostComments
-                .Include(pc => pc.Author)
                 .Where(pc => pc.PostId == postId)
+                .Include(pc => pc.Author)
                 .ToListAsync();
 
             return comments;
@@ -205,8 +203,9 @@ namespace projectverseAPI.Services
         public async Task<PostComment> GetPostCommentById(Guid commentId)
         {
             var project = await _context.PostComments
+                .Where(pc => pc.Id == commentId)
                 .Include(pc => pc.Author)
-                .FirstOrDefaultAsync(pc => pc.Id == commentId);
+                .FirstOrDefaultAsync();
 
             if (project is null)
                 throw new ArgumentException("Comment doesn't exist.");
@@ -217,7 +216,9 @@ namespace projectverseAPI.Services
         public async Task<List<Post>> GetAllPosts()
         {
             var posts = await _context.Posts
-                .Include(p => p.PostComments)
+                .Include(p => p.PostComments
+                    .OrderByDescending(pc => pc.PostedAt)
+                    .Take(3))
                 .Include(p => p.Project)
                     .ThenInclude(p => p.Author)
                 .Include(p => p.Project)
@@ -233,19 +234,18 @@ namespace projectverseAPI.Services
             try
             {
                 var currentUser = await _authenticationService.GetCurrentUser();
-                if (currentUser is null)
-                    throw new Exception("Cannot get current user.");
 
                 var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
                 if (post is null)
                     throw new ArgumentException("Post doesn't exist.");
 
                 var existingLike = await _context.Likes
+                    .Where(l =>
+                        (l.Post != null && l.Post.Id == postId) &&
+                        (l.User != null && l.User.Id == currentUser.Id))
                     .Include(l => l.User)
                     .Include(l => l.Post)
-                    .FirstOrDefaultAsync(l => 
-                        (l.Post != null && l.Post.Id == postId) && 
-                        (l.User != null && l.User.Id == currentUser.Id));
+                    .FirstOrDefaultAsync();
 
                 if(existingLike is not null)
                     throw new InvalidOperationException("User has already liked this post.");
@@ -286,19 +286,18 @@ namespace projectverseAPI.Services
             try
             {
                 var currentUser = await _authenticationService.GetCurrentUser();
-                if (currentUser is null)
-                    throw new Exception("Cannot get current user.");
 
                 var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
                 if (post is null)
                     throw new ArgumentException("Post doesn't exist.");
 
                 var like = await _context.Likes
+                    .Where(l =>
+                        (l.Post != null && l.Post.Id == postId) &&
+                        (l.User != null && l.User.Id == currentUser.Id))
                     .Include(l => l.User)
                     .Include(l => l.Post)
-                    .FirstOrDefaultAsync(l =>
-                        (l.Post != null && l.Post.Id == postId) &&
-                        (l.User != null && l.User.Id == currentUser.Id));
+                    .FirstOrDefaultAsync();
                 if(like is null)
                     throw new ArgumentException("User hasn't liked this post.");
 
@@ -327,8 +326,9 @@ namespace projectverseAPI.Services
             try
             {
                 var post = await _context.Posts
-                        .Include(p => p.PostComments)
-                        .FirstOrDefaultAsync(p => p.Id == postId);
+                    .Where(p => p.Id == postId)        
+                    .Include(p => p.PostComments)
+                    .FirstOrDefaultAsync();
 
                 if (post is null)
                     throw new ArgumentException("Post doesn't exist.");

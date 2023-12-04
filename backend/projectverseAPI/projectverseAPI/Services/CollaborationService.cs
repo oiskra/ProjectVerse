@@ -31,9 +31,6 @@ namespace projectverseAPI.Services
                 var collaboration = _mapper.Map<Collaboration>(collaborationDTO);
 
                 var currentUser = await _authenticationService.GetCurrentUser();
-
-                if (currentUser is null)
-                    throw new Exception("Cannot get current user.");
                 
                 collaboration.Author = currentUser;
                 collaboration.AuthorId = Guid.Parse(currentUser.Id);
@@ -58,9 +55,10 @@ namespace projectverseAPI.Services
             try
             {
                 var collaborationToDelete = await _context.Collaborations
+                    .Where(c => c.Id == collaborationId)
                     .Include(c => c.Technologies)
                     .Include(c => c.CollaborationPositions)
-                    .FirstOrDefaultAsync(c => c.Id == collaborationId);
+                    .FirstOrDefaultAsync();
 
                 if (collaborationToDelete is null)
                     throw new ArgumentException("Collaboration doesn't exist");
@@ -113,7 +111,7 @@ namespace projectverseAPI.Services
                 .Include(c => c.CollaborationApplicants!)
                     .ThenInclude(ca => ca.ApplicantUser)
                 .Include(c => c.Author)
-                .FirstOrDefaultAsync(c => c.Id == collaborationId);
+                .FirstOrDefaultAsync();
             
             return collaboration;
         }
@@ -150,9 +148,7 @@ namespace projectverseAPI.Services
             using var transaction = _context.Database.BeginTransaction();
             try
             {
-                var collaboration = await _context
-                    .Collaborations
-                    .Include(c => c.CollaborationPositions)
+                var collaboration = await _context.Collaborations
                     .FirstOrDefaultAsync(c => c.Id == collaborationId);
 
                 if(collaboration is null)
@@ -160,13 +156,15 @@ namespace projectverseAPI.Services
 
                 var collaborationPosition = _mapper.Map<CollaborationPosition>(collaborationPositionDTO);
 
-                collaboration.CollaborationPositions!.Add(collaborationPosition);
-                _context.Collaborations.Update(collaboration);
+                collaborationPosition.Collaboration = collaboration;
+                collaborationPosition.CollaborationId = collaboration.Id;
+
+                var createdEntity = await _context.CollaborationPositions.AddAsync(collaborationPosition);
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return collaborationPosition.Id;
+                return createdEntity.Entity.Id;
             }
             catch (ArgumentException argE)
             {
@@ -185,23 +183,13 @@ namespace projectverseAPI.Services
             using var transaction = _context.Database.BeginTransaction();
             try
             {
-                var collaboration = await _context
-                    .Collaborations
-                    .Include(c => c.CollaborationPositions)
-                    .FirstOrDefaultAsync(c => c.Id == collaborationId);
+                var deletedRecordsCount = await _context.CollaborationPositions
+                    .Where(c => c.Id == collaborationPositionId && c.CollaborationId == collaborationId)
+                    .ExecuteDeleteAsync();
 
-                if (collaboration is null)
-                    throw new ArgumentException("Collaboration doesn't exist.");
+                if (deletedRecordsCount == 0)
+                    throw new ArgumentException("Collaboration position wasn't deleted. Make sure parameters are correct.");
 
-                var collaborationPostionToDelete = collaboration.CollaborationPositions!.FirstOrDefault(pc => pc.Id == collaborationPositionId)!;
-
-                if (collaborationPostionToDelete is null)
-                    throw new ArgumentException("Collaboration position doesn't exist.");
-
-                collaboration.CollaborationPositions!.Remove(collaborationPostionToDelete);
-                _context.Collaborations.Update(collaboration);
-
-                await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
             catch (ArgumentException argE)

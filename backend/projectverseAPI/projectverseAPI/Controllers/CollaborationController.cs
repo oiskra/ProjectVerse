@@ -70,7 +70,7 @@ namespace projectverseAPI.Controllers
                     Errors = null 
                 });
 
-            var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyNameConstants.SameAuthorPolicy);
             if (!authorizationResult.Succeeded)
                 return Forbid();
 
@@ -97,7 +97,7 @@ namespace projectverseAPI.Controllers
                     });
 
                 var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
-                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 
@@ -123,7 +123,7 @@ namespace projectverseAPI.Controllers
             try
             {
                 var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
-                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 
@@ -182,7 +182,7 @@ namespace projectverseAPI.Controllers
             try
             {
                 var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
-                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 
@@ -208,7 +208,7 @@ namespace projectverseAPI.Controllers
             try
             {
                 var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
-                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 
@@ -227,7 +227,7 @@ namespace projectverseAPI.Controllers
             }
         }
 
-        [HttpPatch]
+        [HttpPost]
         [Route("{collaborationId}/collaboration-positions/")]
         public async Task<ActionResult<CreateResponseDTO>> AddCollaborationPosition(
             [FromRoute] Guid collaborationId,
@@ -236,7 +236,7 @@ namespace projectverseAPI.Controllers
             try
             {
                 var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
-                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 
@@ -257,7 +257,7 @@ namespace projectverseAPI.Controllers
             }
         }
 
-        [HttpPatch]
+        [HttpDelete]
         [Route("{collaborationId}/collaboration-positions/{collaborationPositionId}")]
         public async Task<IActionResult> DeleteCollaborationPosition(
             [FromRoute] Guid collaborationId,
@@ -266,7 +266,7 @@ namespace projectverseAPI.Controllers
             try
             {
                 var collaboration = await _collaborationService.GetCollaborationById(collaborationId);
-                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyConstants.SameAuthorPolicy);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, collaboration, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 

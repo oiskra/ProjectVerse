@@ -27,9 +27,9 @@ namespace projectverseAPI.Controllers
         {
             try
             {
-                var created = await _authenticationService.RegisterUser(request);
+                var createdId = await _authenticationService.RegisterUser(request);
 
-                return CreatedAtAction("register", created);
+                return CreatedAtAction("register", new CreateResponseDTO { Id = createdId });
             }
             catch (ArgumentException argE)
             {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using projectverseAPI.Constants;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -69,9 +69,9 @@ namespace projectverseAPI.Services
         {
             var claims = new List<Claim>
             {
-                new Claim("id", user.Id),
-                new Claim("username", user.UserName),
-                new Claim("email", user.Email),
+                new Claim(ClaimNameConstants.Identifier, user.Id),
+                new Claim(ClaimNameConstants.Username, user.UserName),
+                new Claim(ClaimNameConstants.Email, user.Email),
                 /*new Claim("name", _user.Name),
                 new Claim("surname", _user.Surname),
                 new Claim("country", _user.Country)*/
