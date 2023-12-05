@@ -2,6 +2,6 @@
 {
     public interface ICreate<TDto, TResult>
     {
-        Task<TResult> Create(TDto entity);
+        Task<TResult> Create(TDto dto);
     }
 }

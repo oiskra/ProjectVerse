@@ -4,6 +4,7 @@ using projectverseAPI.Data;
 using projectverseAPI.DTOs.Collaboration;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
+using System;
 
 namespace projectverseAPI.Services
 {
@@ -121,18 +122,24 @@ namespace projectverseAPI.Services
             using var transaction = _context.Database.BeginTransaction();
             try
             {
-                var exists = _context.Collaborations.Any(c => c.Id == collaborationDTO.Id);
+                var collaborationToUpdate = await _context.Collaborations
+                    .Where(c => c.Id == collaborationDTO.Id)
+                    .Include(c => c.Author)
+                    .Include(c => c.CollaborationPositions)
+                    .FirstOrDefaultAsync();
 
-                if (!exists)
+                if (collaborationToUpdate is null)
                     throw new ArgumentException("Collaboration doesn't exist.");
 
-                var collaboration = _mapper.Map<Collaboration>(collaborationDTO);
-                var updated = _context.Collaborations.Update(collaboration);
+                collaborationToUpdate.Name = collaborationDTO.Name;
+                collaborationToUpdate.Description = collaborationDTO.Description;
+                collaborationToUpdate.Difficulty = (int)collaborationDTO.Difficulty!;
+                collaborationToUpdate.Technologies = collaborationDTO.Technologies;
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return updated.Entity;
+                return collaborationToUpdate;
             }
             catch (ArgumentException argE)
             {
@@ -144,67 +151,5 @@ namespace projectverseAPI.Services
                 throw new Exception(e.Message);
             }
         }
-
-        public async Task<Guid> AddCollaborationPosition(Guid collaborationId, CreateCollaborationPositionDTO collaborationPositionDTO)
-        {
-            using var transaction = _context.Database.BeginTransaction();
-            try
-            {
-                var collaboration = await _context.Collaborations
-                    .FirstOrDefaultAsync(c => c.Id == collaborationId);
-
-                if(collaboration is null)
-                    throw new ArgumentException("Collaboration doesn't exist.");
-
-                var collaborationPosition = _mapper.Map<CollaborationPosition>(collaborationPositionDTO);
-
-                collaborationPosition.Collaboration = collaboration;
-                collaborationPosition.CollaborationId = collaboration.Id;
-
-                var createdEntity = await _context.CollaborationPositions.AddAsync(collaborationPosition);
-
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-
-                return createdEntity.Entity.Id;
-            }
-            catch (ArgumentException argE)
-            {
-                await transaction.RollbackAsync();
-                throw new ArgumentException(argE.Message);
-            }
-            catch (Exception e)
-            {
-                await transaction.RollbackAsync();
-                throw new Exception(e.Message);
-            }
-        }
-
-        public async Task DeleteCollaborationPositionById(Guid collaborationId, Guid collaborationPositionId)
-        {
-            using var transaction = _context.Database.BeginTransaction();
-            try
-            {
-                var deletedRecordsCount = await _context.CollaborationPositions
-                    .Where(c => c.Id == collaborationPositionId && c.CollaborationId == collaborationId)
-                    .ExecuteDeleteAsync();
-
-                if (deletedRecordsCount == 0)
-                    throw new ArgumentException("Collaboration position wasn't deleted. Make sure parameters are correct.");
-
-                await transaction.CommitAsync();
-            }
-            catch (ArgumentException argE)
-            {
-                await transaction.RollbackAsync();
-                throw new ArgumentException(argE.Message);
-            }
-            catch (Exception e)
-            {
-                await transaction.RollbackAsync();
-                throw new Exception(e.Message);
-            }
-        }
-
     }
 }

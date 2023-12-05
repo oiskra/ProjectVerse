@@ -186,6 +186,7 @@ namespace projectverseAPI
         {
             services
                 .AddScoped<ICollaborationApplicantsService, CollaborationApplicantsService>()
+                .AddScoped<ICollaborationPositionService, CollaborationPositionService>()
                 .AddScoped<ICollaborationService, CollaborationService>()
                 .AddScoped<IAuthenticationService, AuthenticationService>()
                 .AddScoped<IProjectService, ProjectService>()
