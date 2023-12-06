@@ -70,7 +70,7 @@ namespace projectverseAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<PostResponseDTO>>> GetAllPosts()
         {
-            var posts = await _postService.GetAllPosts();
+            var posts = await _postService.GetAll();
             var postsResponse = posts.Select(p => _mapper.Map<PostResponseDTO>(p));
 
             return Ok(postsResponse);
@@ -87,7 +87,7 @@ namespace projectverseAPI.Controllers
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 
-                await _postService.DeletePost(projectId);
+                await _postService.Delete(projectId);
 
                 return NoContent();
             }

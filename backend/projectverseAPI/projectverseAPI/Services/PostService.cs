@@ -1,8 +1,5 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using projectverseAPI.Data;
-using projectverseAPI.DTOs.Post;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
 
@@ -11,16 +8,13 @@ namespace projectverseAPI.Services
     public class PostService : IPostService
     {
         private readonly ProjectVerseContext _context;
-        private readonly IMapper _mapper;
         private readonly IAuthenticationService _authenticationService;
 
         public PostService(
             ProjectVerseContext context,
-            IMapper mapper,
             IAuthenticationService authenticationService)
         {
             _context = context;
-            _mapper = mapper;
             _authenticationService = authenticationService;
         }
 
@@ -79,7 +73,7 @@ namespace projectverseAPI.Services
 
         }
 
-        public async Task DeletePost(Guid projectId)
+        public async Task Delete(Guid projectId)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
@@ -118,10 +112,7 @@ namespace projectverseAPI.Services
             }
         }
 
-
-
-
-        public async Task<List<Post>> GetAllPosts()
+        public async Task<List<Post>> GetAll()
         {
             var posts = await _context.Posts
                 .Include(p => p.PostComments
