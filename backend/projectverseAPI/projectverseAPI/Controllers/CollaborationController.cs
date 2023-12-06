@@ -221,7 +221,7 @@ namespace projectverseAPI.Controllers
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 
-                await _collaborationApplicantsService.RemoveApplicantForCollaboration(applicantId);
+                await _collaborationApplicantsService.Delete(applicantId);
 
                 return NoContent();
             }
