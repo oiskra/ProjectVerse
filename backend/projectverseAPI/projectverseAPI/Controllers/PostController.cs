@@ -79,7 +79,7 @@ namespace projectverseAPI.Controllers
         {
             try
             {
-                var project = await _projectService.GetProjectById(projectId);
+                var project = await _projectService.GetById(projectId);
                 var authorizationResult = await _authorizationService.AuthorizeAsync(User, project, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();

@@ -5,6 +5,7 @@ using projectverseAPI.DTOs.Collaboration;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
 using System;
+using System.Security.Cryptography;
 
 namespace projectverseAPI.Services
 {
@@ -117,13 +118,13 @@ namespace projectverseAPI.Services
             return collaboration;
         }
 
-        public async Task<Collaboration> Update(UpdateCollaborationRequestDTO collaborationDTO)
+        public async Task<Collaboration> Update(UpdateCollaborationRequestDTO dto)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
             {
                 var collaborationToUpdate = await _context.Collaborations
-                    .Where(c => c.Id == collaborationDTO.Id)
+                    .Where(c => c.Id == dto.Id)
                     .Include(c => c.Author)
                     .Include(c => c.CollaborationPositions)
                     .FirstOrDefaultAsync();
@@ -131,10 +132,10 @@ namespace projectverseAPI.Services
                 if (collaborationToUpdate is null)
                     throw new ArgumentException("Collaboration doesn't exist.");
 
-                collaborationToUpdate.Name = collaborationDTO.Name;
-                collaborationToUpdate.Description = collaborationDTO.Description;
-                collaborationToUpdate.Difficulty = (int)collaborationDTO.Difficulty!;
-                collaborationToUpdate.Technologies = collaborationDTO.Technologies;
+                collaborationToUpdate.Name = dto.Name;
+                collaborationToUpdate.Description = dto.Description;
+                collaborationToUpdate.Difficulty = (int)dto.Difficulty!;
+                collaborationToUpdate.Technologies = dto.Technologies;
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();

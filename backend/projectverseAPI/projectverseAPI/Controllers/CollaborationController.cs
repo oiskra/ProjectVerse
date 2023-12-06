@@ -149,6 +149,7 @@ namespace projectverseAPI.Controllers
             }
         }
 #endregion
+
         #region collaboration-applicants
         [HttpPost]
         [Route("{collaborationId}/collaboration-positions/{collaborationPositionId}/apply")]

@@ -1,15 +1,19 @@
 ﻿using projectverseAPI.DTOs.Project;
+using projectverseAPI.Interfaces.Common;
 using projectverseAPI.Models;
 
 namespace projectverseAPI.Interfaces
 {
-    public interface IProjectService
+    public interface IProjectService : 
+        IGetAll<Project>,
+        IGetAllByUserId<Project>,
+        IGetById<Project>,
+        ICreate<CreateProjectRequestDTO, Project>,
+        IUpdate<UpdateProjectRequestDTO, Project>,
+        IDelete
     {
-        Task<List<Project>> GetAllProjects();
-        Task<List<Project>> GetAllProjectsByUserID(Guid userId);
-        Task<Project?> GetProjectById(Guid projectId);
-        Task<Guid> CreateProject(CreateProjectRequestDTO project);
+       /* Task<Guid> CreateProject(CreateProjectRequestDTO project);
         Task UpdateProject(UpdateProjectRequestDTO project);
-        Task<bool> DeleteProject(Guid projectId);
+        Task<bool> DeleteProject(Guid projectId);*/
     }
 }

@@ -30,7 +30,7 @@ namespace projectverseAPI.Services
             try
             {
                 var project = await _context.Projects
-                .FirstOrDefaultAsync(p => p.Id == projectId);
+                    .FirstOrDefaultAsync(p => p.Id == projectId);
 
                 if (project is null)
                     throw new ArgumentException("Project doesn't exist.");

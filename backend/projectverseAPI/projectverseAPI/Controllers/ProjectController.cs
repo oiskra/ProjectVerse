@@ -34,7 +34,7 @@ namespace projectverseAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ProjectResponseDTO>>> GetAllProjects()
         {
-            var projects = await _projectService.GetAllProjects();
+            var projects = await _projectService.GetAll();
             var projectsResponse = projects.Select(p => _mapper.Map<ProjectResponseDTO>(p));
 
             return Ok(projectsResponse);
@@ -44,7 +44,7 @@ namespace projectverseAPI.Controllers
         [Route("user/{userId}")]
         public async Task<ActionResult<List<ProjectResponseDTO>>> GetAllProjectsByUserId([FromRoute] Guid userId)
         {
-            var usersProjects = await _projectService.GetAllProjectsByUserID(userId);
+            var usersProjects = await _projectService.GetAllByUserId(userId);
             var projectsResponse = usersProjects.Select(p => _mapper.Map<ProjectResponseDTO>(p));
 
             return Ok(projectsResponse);
@@ -54,7 +54,7 @@ namespace projectverseAPI.Controllers
         [Route("{projectId}")]
         public async Task<ActionResult<ProjectResponseDTO>> GetProjectById([FromRoute] Guid projectId)
         {
-            var project = await _projectService.GetProjectById(projectId);
+            var project = await _projectService.GetById(projectId);
             
             if(project is null)
                 return NotFound(new ErrorResponseDTO
@@ -69,11 +69,13 @@ namespace projectverseAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CreateResponseDTO>> CreateProject([FromBody] CreateProjectRequestDTO projectDTO)
+        public async Task<ActionResult<ProjectResponseDTO>> CreateProject([FromBody] CreateProjectRequestDTO projectDTO)
         {
-            var createdProjectId = await _projectService.CreateProject(projectDTO);
+            var createdProject = await _projectService.Create(projectDTO);
 
-            return CreatedAtAction("CreateProject", new CreateResponseDTO { Id = createdProjectId });
+            var mapped = _mapper.Map<ProjectResponseDTO>(createdProject);
+
+            return CreatedAtAction("CreateProject", mapped);
         }
 
         [HttpPut]
@@ -93,12 +95,12 @@ namespace projectverseAPI.Controllers
                         }
                     });
 
-                var project = await _projectService.GetProjectById(projectId);
+                var project = await _projectService.GetById(projectId);
                 var authorizationResult = await _authorizationService.AuthorizeAsync(User, project, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 
-                await _projectService.UpdateProject(updateProjectDTO);
+                await _projectService.Update(updateProjectDTO);
 
                 return NoContent();
             }
@@ -119,12 +121,12 @@ namespace projectverseAPI.Controllers
         {
             try
             {
-                var project = await _projectService.GetProjectById(projectId);
+                var project = await _projectService.GetById(projectId);
                 var authorizationResult = await _authorizationService.AuthorizeAsync(User, project, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 
-                await _projectService.DeleteProject(projectId);
+                await _projectService.Delete(projectId);
 
                 return NoContent();
             }
