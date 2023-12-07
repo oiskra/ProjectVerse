@@ -323,9 +323,11 @@ namespace projectverseAPI.Controllers
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 
-                await _collaborationPositionService.Update(dto);
+                var result = await _collaborationPositionService.Update(dto);
 
-                return Ok();
+                var mapped = _mapper.Map<CollaborationPositionDTO>(result);
+
+                return Ok(mapped);
             }
             catch (ArgumentException e)
             {

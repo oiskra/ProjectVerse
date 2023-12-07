@@ -47,6 +47,7 @@ namespace projectverseAPI.Services
         public async Task<Project> GetById(Guid projectId)
         {
             var project = await _context.Projects
+                .AsNoTracking()
                 .Where(p => p.Id == projectId)
                 .Include(p => p.Author)
                 .Include(p => p.UsedTechnologies)
@@ -106,6 +107,7 @@ namespace projectverseAPI.Services
             try
             {
                 var project = await _context.Projects
+                    .AsNoTracking()
                     .Include(p => p.UsedTechnologies)
                     .FirstOrDefaultAsync(p => p.Id == projectDTO.Id);
 
@@ -125,6 +127,7 @@ namespace projectverseAPI.Services
                 project.IsPrivate = projectDTO.IsPrivate;
                 project.IsPublished = projectDTO.IsPublished;
 
+                _context.Projects.Update(project);
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();

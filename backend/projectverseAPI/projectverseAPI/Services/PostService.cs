@@ -79,7 +79,7 @@ namespace projectverseAPI.Services
             try
             {
                 var postToDelete = await _context.Posts
-                    .Where(p => p.Id == projectId)
+                    .Where(p => p.ProjectId == projectId)
                     .Include(p => p.PostComments)
                     .FirstOrDefaultAsync();
 
