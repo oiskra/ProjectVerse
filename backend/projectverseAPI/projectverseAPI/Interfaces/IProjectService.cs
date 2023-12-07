@@ -11,9 +11,5 @@ namespace projectverseAPI.Interfaces
         ICreate<CreateProjectRequestDTO, Project>,
         IUpdate<UpdateProjectRequestDTO, Project>,
         IDelete
-    {
-       /* Task<Guid> CreateProject(CreateProjectRequestDTO project);
-        Task UpdateProject(UpdateProjectRequestDTO project);
-        Task<bool> DeleteProject(Guid projectId);*/
-    }
+    { }
 }
