@@ -4,8 +4,6 @@ using projectverseAPI.Data;
 using projectverseAPI.DTOs.Project;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace projectverseAPI.Services
 {
@@ -25,7 +23,7 @@ namespace projectverseAPI.Services
             _mapper = mapper;
         }
         
-        public async Task<List<Project>> GetAllProjects()
+        public async Task<List<Project>> GetAll()
         {
             var projects = await _context.Projects
                 .Include(p => p.UsedTechnologies)
@@ -34,8 +32,8 @@ namespace projectverseAPI.Services
 
             return projects;
         }
-        
-        public async Task<List<Project>> GetAllProjectsByUserID(Guid userId)
+
+        public async Task<List<Project>> GetAllByUserId(Guid userId)
         {
             var usersProjects = await _context.Projects
                 .Where(p => p.AuthorId == userId)
@@ -46,9 +44,10 @@ namespace projectverseAPI.Services
             return usersProjects;
         }
 
-        public async Task<Project?> GetProjectById(Guid projectId)
+        public async Task<Project> GetById(Guid projectId)
         {
             var project = await _context.Projects
+                .AsNoTracking()
                 .Where(p => p.Id == projectId)
                 .Include(p => p.Author)
                 .Include(p => p.UsedTechnologies)
@@ -57,57 +56,44 @@ namespace projectverseAPI.Services
             return project;
         }
 
-        public async Task<Guid> CreateProject(CreateProjectRequestDTO projectDTO)
+        public async Task<Project> Create(CreateProjectRequestDTO projectDTO)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
             {
                 var project = _mapper.Map<Project>(projectDTO);
                 var currentUser = await _authenticationService.GetCurrentUser();
+                
+                project.Author = currentUser;
+                project.AuthorId = Guid.Parse(currentUser.Id);
 
                 if (projectDTO.IsPublished.Equals(false))
                 {
-                    project.Author = currentUser;
-                    project.AuthorId = Guid.Parse(currentUser.Id);
-
                     var addedProject = await _context.Projects.AddAsync(project);
 
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 
-                    return addedProject.Entity.Id;
+                    return addedProject.Entity;
                 }
 
-                Guid[] createdEntitesIds = await Task.WhenAll(new Task<Guid>[]
+                var addedPublishedProject = await _context.Projects.AddAsync(project);
+                
+                var post = new Post
                 {
-                    Task.Run(async () =>
-                    {
-                        project.Author = currentUser;
-                        project.AuthorId = Guid.Parse(currentUser.Id);
+                    Id = Guid.NewGuid(),
+                    Project = project,
+                    ProjectId = project.Id,
+                    ViewsCount = 0,
+                    LikesCount = 0,
+                    PostComments = new List<PostComment>()
+                };
 
-                        var addedProject = await _context.Projects.AddAsync(project);
-                        return addedProject.Entity.Id;
-                    }),
-                    Task.Run(async () =>
-                    {
-                        var post = new Post
-                        {
-                            Id = Guid.NewGuid(),
-                            Project = project,
-                            ProjectId = project.Id,
-                            ViewsCount = 0,
-                            LikesCount = 0,
-                            PostComments = new List<PostComment>()
-                        };
-
-                        var addedPost = await _context.Posts.AddAsync(post);
-                        return addedPost.Entity.Id;
-                    })
-                });
+                await _context.Posts.AddAsync(post);
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
-                return createdEntitesIds.First();
+                return addedPublishedProject.Entity;
             }
             catch (Exception e)
             {
@@ -115,21 +101,38 @@ namespace projectverseAPI.Services
                 throw new Exception(e.Message);
             }
         }
-        public async Task UpdateProject(UpdateProjectRequestDTO projectDTO)
+        public async Task<Project> Update(UpdateProjectRequestDTO projectDTO)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
             {
-                var exists = _context.Projects.Any(c => c.Id == projectDTO.Id);
+                var project = await _context.Projects
+                    .AsNoTracking()
+                    .Include(p => p.UsedTechnologies)
+                    .FirstOrDefaultAsync(p => p.Id == projectDTO.Id);
 
-                if (!exists)
+                if (project is null)
                     throw new ArgumentException("Project doesn't exist.");
 
-                var project = _mapper.Map<Project>(projectDTO);
+                project.Name = projectDTO.Name;
+                project.Description = projectDTO.Description;
+                project.ProjectUrl = projectDTO.ProjectUrl;
+                project.UsedTechnologies = project.UsedTechnologies
+                    .Join(
+                        projectDTO.UsedTechnologies,
+                        t1 => t1.Id,
+                        t2 => t2.Id,
+                        (t1,t2) => new Technology { Name = t2.Name, Id = t1.Id})
+                    .ToList();
+                project.IsPrivate = projectDTO.IsPrivate;
+                project.IsPublished = projectDTO.IsPublished;
+
                 _context.Projects.Update(project);
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+
+                return project;
             }
             catch (ArgumentException argE)
             {
@@ -143,7 +146,7 @@ namespace projectverseAPI.Services
             }
         }
 
-        public async Task<bool> DeleteProject(Guid projectId)
+        public async Task Delete(Guid projectId)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
@@ -166,7 +169,6 @@ namespace projectverseAPI.Services
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
-                return true;
             }
             catch (ArgumentException argE)
             {
@@ -178,6 +180,8 @@ namespace projectverseAPI.Services
                 await transaction.RollbackAsync();
                 throw new Exception(e.Message);
             }
-        }       
+        }
+
+
     }
 }

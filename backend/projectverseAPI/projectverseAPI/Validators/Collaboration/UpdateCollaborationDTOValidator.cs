@@ -24,12 +24,6 @@ namespace projectverseAPI.Validators.Collaboration
                 .NotNull()
                 .Must(x => x.Count > 0)
                 .WithMessage("Collaboration must have at least one technology.");
-
-            RuleFor(x => x.CollaborationPositions)
-                .NotNull()
-                .Must(x => x.Count > 0)
-                .WithMessage("Collaboration must have at least one position offer.");
-
         }
     }
 }

@@ -125,7 +125,7 @@ namespace projectverseAPI.Services
             }
         }
 
-        public async Task RemoveApplicantForCollaboration(Guid applicantId)
+        public async Task Delete(Guid applicantId)
         {
             using var transaction = _context.Database.BeginTransaction();
             try

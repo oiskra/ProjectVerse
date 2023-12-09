@@ -1,23 +1,18 @@
 ﻿using projectverseAPI.DTOs.Post;
+using projectverseAPI.Interfaces.Common;
 using projectverseAPI.Models;
 
 namespace projectverseAPI.Interfaces
 {
-    public interface IPostService
+    public interface IPostService :
+        IGetAll<Post>,
+        IDelete
     {
-        Task<List<Post>> GetAllPosts();
         Task<Guid> CreatePost(Guid projectId);
-        Task DeletePost(Guid projectId);
 
         Task LikePost(Guid postId);
         Task UnlikePost(Guid postId);
 
         Task RecordPostView(Guid postId);
-
-        Task<Guid> CreatePostComment(Guid postId, CreatePostCommentRequestDTO createPostCommentDTO);
-        Task<List<PostComment>> GetAllPostCommentsFromPost(Guid postId);
-        Task<PostComment> GetPostCommentById(Guid commentId);
-        Task UpdatePostComment(UpdatePostCommentRequestDTO updatePostCommentDTO);
-        Task DeletePostComment(Guid commentId);
     }
 }

@@ -30,7 +30,8 @@ namespace projectverseAPI.Data
             builder.Entity<CollaborationApplicant>()
                 .HasOne(e => e.AppliedCollaboration)
                 .WithMany(e => e.CollaborationApplicants)
-                .OnDelete(DeleteBehavior.ClientCascade);               
+                .OnDelete(DeleteBehavior.ClientCascade); 
+                            
         }
 
     }

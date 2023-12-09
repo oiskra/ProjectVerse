@@ -4,6 +4,8 @@ using projectverseAPI.Data;
 using projectverseAPI.DTOs.Collaboration;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
+using System;
+using System.Security.Cryptography;
 
 namespace projectverseAPI.Services
 {
@@ -23,7 +25,7 @@ namespace projectverseAPI.Services
             _authenticationService = authenticationService;
         }
 
-        public async Task<Guid> CreateCollaboration(CreateCollaborationRequestDTO collaborationDTO)
+        public async Task<Collaboration> Create(CreateCollaborationRequestDTO collaborationDTO)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
@@ -40,7 +42,7 @@ namespace projectverseAPI.Services
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return addedCollaboration.Entity.Id;
+                return addedCollaboration.Entity;
             }
             catch (Exception e)
             {
@@ -49,7 +51,7 @@ namespace projectverseAPI.Services
             }
         }
 
-        public async Task<bool> DeleteCollaborationById(Guid collaborationId)
+        public async Task Delete(Guid collaborationId)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
@@ -67,7 +69,6 @@ namespace projectverseAPI.Services
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
-                return true;
             }
             catch (ArgumentException argE) 
             {
@@ -81,7 +82,7 @@ namespace projectverseAPI.Services
             }
         }
 
-        public async Task<List<Collaboration>> GetAllCollaborations()
+        public async Task<List<Collaboration>> GetAll()
         {
             var collaborations = await _context.Collaborations
                 .Include(c => c.Author)
@@ -91,7 +92,7 @@ namespace projectverseAPI.Services
             return collaborations;
         }
 
-        public async Task<List<Collaboration>> GetAllCollaborationsByUserId(Guid userId)
+        public async Task<List<Collaboration>> GetAllByUserId(Guid userId)
         {
             var collaborations = await _context.Collaborations
                 .Where(c => c.AuthorId == userId)
@@ -102,9 +103,10 @@ namespace projectverseAPI.Services
             return collaborations;
         }
 
-        public async Task<Collaboration?> GetCollaborationById(Guid collaborationId)
+        public async Task<Collaboration> GetById(Guid collaborationId)
         {
             var collaboration = await _context.Collaborations
+                .AsNoTracking()
                 .Where(c => c.Id.Equals(collaborationId))
                 .Include(c => c.Technologies)
                 .Include(c => c.CollaborationPositions)
@@ -116,21 +118,29 @@ namespace projectverseAPI.Services
             return collaboration;
         }
 
-        public async Task UpdateCollaboration(UpdateCollaborationRequestDTO collaborationDTO)
+        public async Task<Collaboration> Update(UpdateCollaborationRequestDTO dto)
         {
             using var transaction = _context.Database.BeginTransaction();
             try
             {
-                var exists = _context.Collaborations.Any(c => c.Id == collaborationDTO.Id);
+                var collaborationToUpdate = await _context.Collaborations
+                    .Where(c => c.Id == dto.Id)
+                    .Include(c => c.Author)
+                    .Include(c => c.CollaborationPositions)
+                    .FirstOrDefaultAsync();
 
-                if (!exists)
+                if (collaborationToUpdate is null)
                     throw new ArgumentException("Collaboration doesn't exist.");
 
-                var collaboration = _mapper.Map<Collaboration>(collaborationDTO);
-                _context.Collaborations.Update(collaboration);
+                collaborationToUpdate.Name = dto.Name;
+                collaborationToUpdate.Description = dto.Description;
+                collaborationToUpdate.Difficulty = (int)dto.Difficulty!;
+                collaborationToUpdate.Technologies = dto.Technologies;
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+
+                return collaborationToUpdate;
             }
             catch (ArgumentException argE)
             {
@@ -142,67 +152,5 @@ namespace projectverseAPI.Services
                 throw new Exception(e.Message);
             }
         }
-
-        public async Task<Guid> AddCollaborationPosition(Guid collaborationId, CreateCollaborationPositionDTO collaborationPositionDTO)
-        {
-            using var transaction = _context.Database.BeginTransaction();
-            try
-            {
-                var collaboration = await _context.Collaborations
-                    .FirstOrDefaultAsync(c => c.Id == collaborationId);
-
-                if(collaboration is null)
-                    throw new ArgumentException("Collaboration doesn't exist.");
-
-                var collaborationPosition = _mapper.Map<CollaborationPosition>(collaborationPositionDTO);
-
-                collaborationPosition.Collaboration = collaboration;
-                collaborationPosition.CollaborationId = collaboration.Id;
-
-                var createdEntity = await _context.CollaborationPositions.AddAsync(collaborationPosition);
-
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-
-                return createdEntity.Entity.Id;
-            }
-            catch (ArgumentException argE)
-            {
-                await transaction.RollbackAsync();
-                throw new ArgumentException(argE.Message);
-            }
-            catch (Exception e)
-            {
-                await transaction.RollbackAsync();
-                throw new Exception(e.Message);
-            }
-        }
-
-        public async Task DeleteCollaborationPositionById(Guid collaborationId, Guid collaborationPositionId)
-        {
-            using var transaction = _context.Database.BeginTransaction();
-            try
-            {
-                var deletedRecordsCount = await _context.CollaborationPositions
-                    .Where(c => c.Id == collaborationPositionId && c.CollaborationId == collaborationId)
-                    .ExecuteDeleteAsync();
-
-                if (deletedRecordsCount == 0)
-                    throw new ArgumentException("Collaboration position wasn't deleted. Make sure parameters are correct.");
-
-                await transaction.CommitAsync();
-            }
-            catch (ArgumentException argE)
-            {
-                await transaction.RollbackAsync();
-                throw new ArgumentException(argE.Message);
-            }
-            catch (Exception e)
-            {
-                await transaction.RollbackAsync();
-                throw new Exception(e.Message);
-            }
-        }
-
     }
 }

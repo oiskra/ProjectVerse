@@ -18,6 +18,7 @@ namespace projectverseAPI.Controllers
     {
         private readonly IAuthorizationService _authorizationService;
         private readonly IProjectService _projectService;
+        private readonly ICommentService _commentService;
         private readonly IPostService _postService;
         private readonly IMapper _mapper;
 
@@ -25,12 +26,14 @@ namespace projectverseAPI.Controllers
             IAuthorizationService authorizationService,
             IProjectService projectService,
             IPostService postService,
-            IMapper mapper)
+            IMapper mapper,
+            ICommentService commentService)
         {
             _authorizationService = authorizationService;
             _projectService = projectService;
             _postService = postService;
             _mapper = mapper;
+            _commentService = commentService;
         }
 
         [HttpPost]
@@ -67,7 +70,7 @@ namespace projectverseAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<PostResponseDTO>>> GetAllPosts()
         {
-            var posts = await _postService.GetAllPosts();
+            var posts = await _postService.GetAll();
             var postsResponse = posts.Select(p => _mapper.Map<PostResponseDTO>(p));
 
             return Ok(postsResponse);
@@ -79,12 +82,12 @@ namespace projectverseAPI.Controllers
         {
             try
             {
-                var project = await _projectService.GetProjectById(projectId);
+                var project = await _projectService.GetById(projectId);
                 var authorizationResult = await _authorizationService.AuthorizeAsync(User, project, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 
-                await _postService.DeletePost(projectId);
+                await _postService.Delete(projectId);
 
                 return NoContent();
             }
@@ -126,7 +129,7 @@ namespace projectverseAPI.Controllers
         {
             try
             {
-                var comments = await _postService.GetAllPostCommentsFromPost(postId);
+                var comments = await _commentService.GetAllPostCommentsFromPost(postId);
                 var commentsResponse = comments.Select(c => _mapper.Map<PostCommentDTO>(c));
 
                 return Ok(commentsResponse);
@@ -148,11 +151,13 @@ namespace projectverseAPI.Controllers
         {
             try
             {
-                var createdId = await _postService.CreatePostComment(postId, createPostCommentDTO);
+                var createdComment = await _commentService.CreateRelated(postId, createPostCommentDTO);
+
+                var mapped = _mapper.Map<PostCommentDTO>(createdComment);
 
                 return CreatedAtAction(
                     "CreatePostComment",
-                    new CreateResponseDTO { Id = createdId });
+                    mapped);
             }
             catch (ArgumentException e)
             {
@@ -171,12 +176,12 @@ namespace projectverseAPI.Controllers
         {
             try
             {
-                var comment = await _postService.GetPostCommentById(commentId);
+                var comment = await _commentService.GetById(commentId);
                 var authorizationResult = await _authorizationService.AuthorizeAsync(User, comment, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 
-                await _postService.DeletePostComment(commentId);
+                await _commentService.Delete(commentId);
 
                 return NoContent();
             }
@@ -208,13 +213,15 @@ namespace projectverseAPI.Controllers
                         }
                     });
 
-                var comment = await _postService.GetPostCommentById(commentId);
+                var comment = await _commentService.GetById(commentId);
                 var authorizationResult = await _authorizationService.AuthorizeAsync(User, comment, PolicyNameConstants.SameAuthorPolicy);
                 if (!authorizationResult.Succeeded)
                     return Forbid();
 
-                await _postService.UpdatePostComment(updatePostDTO);
-                return NoContent();
+                var updatedComment = await _commentService.Update(updatePostDTO);
+                var mapped = _mapper.Map<PostCommentDTO>(updatedComment);
+
+                return Ok(mapped);
             }
             catch (ArgumentException e)
             {
