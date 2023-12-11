@@ -15,6 +15,7 @@ using projectverseAPI.Validators.Authentication;
 using projectverseAPI.Validators.Collaboration;
 using projectverseAPI.Validators.Post;
 using projectverseAPI.Validators.Project;
+using projectverseAPI.Validators.User;
 using System.Text;
 
 namespace projectverseAPI
@@ -44,7 +45,8 @@ namespace projectverseAPI
                 .AddValidatorsFromAssemblyContaining<CreateProjectRequestDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<UpdateProjectRequestDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<CreatePostCommentRequestDTOValidator>()
-                .AddValidatorsFromAssemblyContaining<UpdatePostCommentRequestDTOValidator>();
+                .AddValidatorsFromAssemblyContaining<UpdatePostCommentRequestDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<UpdateUserRequestDTOValidator>();
 
             return services;
         }
