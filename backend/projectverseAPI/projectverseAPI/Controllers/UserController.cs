@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using projectverseAPI.Constants;
 using projectverseAPI.DTOs;
 using projectverseAPI.DTOs.User;
 using projectverseAPI.Interfaces;
@@ -60,6 +61,7 @@ namespace projectverseAPI.Controllers
 
         [HttpPut]
         [Route("{userId}")]
+        [Authorize(Policy = PolicyNameConstants.UpdateUserPolicy)]
         public async Task<ActionResult<UserResponseDTO>> UpdateUser([FromRoute] Guid userId, [FromBody] UpdateUserRequestDTO userDTO)
         {
             try

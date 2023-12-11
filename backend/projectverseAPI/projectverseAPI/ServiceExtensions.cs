@@ -179,6 +179,9 @@ namespace projectverseAPI
 
                 options.AddPolicy(PolicyNameConstants.SameAuthorPolicy, policy =>
                     policy.Requirements.Add(new SameAuthorRequirement()));
+
+                options.AddPolicy(PolicyNameConstants.UpdateUserPolicy, policy =>
+                    policy.Requirements.Add(new UpdateUserRequirement()));
             });
 
             return services;
@@ -197,7 +200,8 @@ namespace projectverseAPI
                 .AddScoped<IUserService, UserService>()
                 .AddTransient<ITokenService, TokenService>()
                 .AddTransient<IHttpContextAccessor, HttpContextAccessor>()
-                .AddSingleton<IAuthorizationHandler, SameAuthorAuthorizationHandler>();
+                .AddSingleton<IAuthorizationHandler, SameAuthorAuthorizationHandler>()
+                .AddSingleton<IAuthorizationHandler, UpdateUserAuthorizationHandler>();
 
             return services;
         }
