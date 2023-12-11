@@ -192,6 +192,7 @@ namespace projectverseAPI
                 .AddScoped<IProjectService, ProjectService>()
                 .AddScoped<IPostService, PostService>()
                 .AddScoped<ICommentService, CommentService>()
+                .AddScoped<IUserService, UserService>()
                 .AddTransient<ITokenService, TokenService>()
                 .AddTransient<IHttpContextAccessor, HttpContextAccessor>()
                 .AddSingleton<IAuthorizationHandler, SameAuthorAuthorizationHandler>();
