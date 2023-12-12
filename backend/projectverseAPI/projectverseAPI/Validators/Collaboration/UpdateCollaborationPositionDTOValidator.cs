@@ -20,5 +20,5 @@ namespace projectverseAPI.Validators.Collaboration
                .NotNull();
         }
     }
-    }
+    
 }
