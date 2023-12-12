@@ -51,11 +51,12 @@ namespace projectverseAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<CollaborationResponseDTO>>> GetAllCollabortions(
-            [FromQuery] Guid? userId)
+        public async Task<ActionResult<IList<CollaborationResponseDTO>>> GetAllCollaborations(
+            [FromQuery] Guid? userId,
+            [FromQuery] string? searchTerm)
         {
             var collaborations = userId is null 
-                ? await _collaborationService.GetAll()
+                ? await _collaborationService.GetAll(searchTerm)
                 : await _collaborationService.GetAllByUserId((Guid)userId);
             var collaborationsResponse = _mapper.Map<List<CollaborationResponseDTO>>(collaborations);
 

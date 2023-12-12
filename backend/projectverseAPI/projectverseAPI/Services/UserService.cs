@@ -20,9 +20,17 @@ namespace projectverseAPI.Services
             _userManager = userManager;
         }
 
-        public async Task<List<User>> GetAll()
+        public async Task<List<User>> GetAll(string? searchTerm)
         {
-            var users = await _context.Users.ToListAsync();
+            IQueryable<User> usersQuery = _context.Users;
+            
+            if (searchTerm is not null)
+            {
+                usersQuery = usersQuery.Where(
+                    u => u.UserName.Contains(searchTerm));
+            }
+
+            var users = await usersQuery.ToListAsync();
 
             return users;
         }

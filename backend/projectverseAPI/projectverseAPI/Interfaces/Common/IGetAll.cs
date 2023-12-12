@@ -3,6 +3,6 @@
     public interface IGetAll<T>
         where T : class
     {
-        Task<List<T>> GetAll();
+        Task<List<T>> GetAll(string? searchTerm);
     }
 }

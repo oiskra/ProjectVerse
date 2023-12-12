@@ -112,15 +112,23 @@ namespace projectverseAPI.Services
             }
         }
 
-        public async Task<List<Post>> GetAll()
+        public async Task<List<Post>> GetAll(string? searchTerm)
         {
-            var posts = await _context.Posts
-                .Include(p => p.PostComments
-                    .OrderByDescending(pc => pc.PostedAt))
+            IQueryable<Post> postQuery = _context.Posts
                 .Include(p => p.Project)
                     .ThenInclude(p => p.Author)
                 .Include(p => p.Project)
-                    .ThenInclude(p => p.UsedTechnologies)
+                    .ThenInclude(p => p.UsedTechnologies);
+
+            if (searchTerm is not null)
+            {
+                postQuery = postQuery.Where(
+                    p => p.Project.Name.Contains(searchTerm));
+            }
+
+            var posts = await postQuery
+                .Include(p => p.PostComments
+                    .OrderByDescending(pc => pc.PostedAt))
                 .ToListAsync();
 
             return posts;

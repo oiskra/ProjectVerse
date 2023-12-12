@@ -68,9 +68,9 @@ namespace projectverseAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<PostResponseDTO>>> GetAllPosts()
+        public async Task<ActionResult<List<PostResponseDTO>>> GetAllPosts([FromQuery] string? searchTerm)
         {
-            var posts = await _postService.GetAll();
+            var posts = await _postService.GetAll(searchTerm);
             var postsResponse = _mapper.Map<List<PostResponseDTO>>(posts);
 
             return Ok(postsResponse);
