@@ -15,6 +15,7 @@ using projectverseAPI.Validators.Authentication;
 using projectverseAPI.Validators.Collaboration;
 using projectverseAPI.Validators.Post;
 using projectverseAPI.Validators.Project;
+using projectverseAPI.Validators.User;
 using System.Text;
 
 namespace projectverseAPI
@@ -44,7 +45,8 @@ namespace projectverseAPI
                 .AddValidatorsFromAssemblyContaining<CreateProjectRequestDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<UpdateProjectRequestDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<CreatePostCommentRequestDTOValidator>()
-                .AddValidatorsFromAssemblyContaining<UpdatePostCommentRequestDTOValidator>();
+                .AddValidatorsFromAssemblyContaining<UpdatePostCommentRequestDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<UpdateUserRequestDTOValidator>();
 
             return services;
         }
@@ -177,6 +179,9 @@ namespace projectverseAPI
 
                 options.AddPolicy(PolicyNameConstants.SameAuthorPolicy, policy =>
                     policy.Requirements.Add(new SameAuthorRequirement()));
+
+                options.AddPolicy(PolicyNameConstants.UpdateUserPolicy, policy =>
+                    policy.Requirements.Add(new UpdateUserRequirement()));
             });
 
             return services;
@@ -192,9 +197,11 @@ namespace projectverseAPI
                 .AddScoped<IProjectService, ProjectService>()
                 .AddScoped<IPostService, PostService>()
                 .AddScoped<ICommentService, CommentService>()
+                .AddScoped<IUserService, UserService>()
                 .AddTransient<ITokenService, TokenService>()
                 .AddTransient<IHttpContextAccessor, HttpContextAccessor>()
-                .AddSingleton<IAuthorizationHandler, SameAuthorAuthorizationHandler>();
+                .AddSingleton<IAuthorizationHandler, SameAuthorAuthorizationHandler>()
+                .AddSingleton<IAuthorizationHandler, UpdateUserAuthorizationHandler>();
 
             return services;
         }
