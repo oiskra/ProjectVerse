@@ -9,6 +9,7 @@ namespace projectverseAPI.DTOs.Post
         public long ViewsCount { get; set; }
         public long LikesCount { get; set; }
         public bool IsLikedByCurrentUser { get; set; }
+        public int CommentsCount { get; set; }
         public IList<PostCommentDTO> PostComments { get; set; }
     }
 }

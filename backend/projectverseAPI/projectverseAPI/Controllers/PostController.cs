@@ -71,7 +71,7 @@ namespace projectverseAPI.Controllers
         public async Task<ActionResult<List<PostResponseDTO>>> GetAllPosts()
         {
             var posts = await _postService.GetAll();
-            var postsResponse = posts.Select(p => _mapper.Map<PostResponseDTO>(p));
+            var postsResponse = _mapper.Map<List<PostResponseDTO>>(posts);
 
             return Ok(postsResponse);
         }

@@ -116,8 +116,7 @@ namespace projectverseAPI.Services
         {
             var posts = await _context.Posts
                 .Include(p => p.PostComments
-                    .OrderByDescending(pc => pc.PostedAt)
-                    .Take(3))
+                    .OrderByDescending(pc => pc.PostedAt))
                 .Include(p => p.Project)
                     .ThenInclude(p => p.Author)
                 .Include(p => p.Project)
