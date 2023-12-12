@@ -4,8 +4,6 @@ using projectverseAPI.Data;
 using projectverseAPI.DTOs.Collaboration;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
-using System;
-using System.Security.Cryptography;
 
 namespace projectverseAPI.Services
 {
@@ -82,9 +80,17 @@ namespace projectverseAPI.Services
             }
         }
 
-        public async Task<List<Collaboration>> GetAll()
+        public async Task<List<Collaboration>> GetAll(string? searchTerm)
         {
-            var collaborations = await _context.Collaborations
+            IQueryable<Collaboration> collaborationQuery = _context.Collaborations;
+
+            if (searchTerm is not null)
+            {
+                collaborationQuery = collaborationQuery.Where(
+                    c => c.Name.Contains(searchTerm));
+            }
+
+            var collaborations = await collaborationQuery
                 .Include(c => c.Author)
                 .Include(c => c.CollaborationPositions)
                 .Include(c => c.Technologies)

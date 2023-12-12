@@ -32,9 +32,9 @@ namespace projectverseAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ProjectResponseDTO>>> GetAllProjects()
+        public async Task<ActionResult<List<ProjectResponseDTO>>> GetAllProjects([FromQuery] string? searchTerm)
         {
-            var projects = await _projectService.GetAll();
+            var projects = await _projectService.GetAll(searchTerm);
             var projectsResponse = projects.Select(p => _mapper.Map<ProjectResponseDTO>(p));
 
             return Ok(projectsResponse);

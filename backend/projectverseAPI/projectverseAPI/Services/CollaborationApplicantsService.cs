@@ -62,6 +62,7 @@ namespace projectverseAPI.Services
             using var transaction = _context.Database.BeginTransaction();
             try
             {
+                var currUser = await _authenticationService.GetCurrentUser();
                 var collaboration = await _context.Collaborations
                    .Where(c => c.Id == collaborationId)
                    .Include(c => c.CollaborationPositions)
@@ -71,15 +72,16 @@ namespace projectverseAPI.Services
                 if (collaboration is null)
                     throw new ArgumentException("Collaboration doesn't exist.");
 
-                var position = collaboration.CollaborationPositions
+                if(Guid.Parse(currUser.Id) == collaboration.AuthorId)
+                    throw new InvalidOperationException("You can't apply to your own collaboration.");
+
+                var position = collaboration.CollaborationPositions!
                     .FirstOrDefault(c => c.Id == collaborationPositionId);
 
                 if (position is null)
                     throw new ArgumentException("Collaboration position doesn't exist.");
 
-                var currUser = await _authenticationService.GetCurrentUser();
-
-                if (collaboration.CollaborationApplicants.Any(ca =>
+                if (collaboration.CollaborationApplicants!.Any(ca =>
                     ca.AppliedPositionId == collaborationPositionId && ca.ApplicantUserId == Guid.Parse(currUser.Id)))
                     throw new InvalidOperationException("User already applied for this position.");
 

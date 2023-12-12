@@ -31,10 +31,10 @@ namespace projectverseAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<UserResponseDTO>>> GetAllUsers([FromQuery] string? searchTerm)
         {
-            var users = await _userService.GetAll();
-            var mapped = _mapper.Map<List<UserResponseDTO>>(users);
+            var users = await _userService.GetAll(searchTerm);
+            var usersResponse = _mapper.Map<List<UserResponseDTO>>(users);
 
-            return Ok(mapped);
+            return Ok(usersResponse);
         }
 
         [HttpGet]
@@ -44,9 +44,9 @@ namespace projectverseAPI.Controllers
             try
             {
                 var user = await _userService.GetById(userId);
-                var mapped = _mapper.Map<UserResponseDTO>(user);
+                var userResponse = _mapper.Map<UserResponseDTO>(user);
 
-                return Ok(mapped);
+                return Ok(userResponse);
             }
             catch (ArgumentException)
             {
@@ -78,9 +78,9 @@ namespace projectverseAPI.Controllers
                     });
 
                 var updatedUser = await _userService.Update(userDTO);
-                var mapped = _mapper.Map<UserResponseDTO>(updatedUser);
+                var userResponse = _mapper.Map<UserResponseDTO>(updatedUser);
 
-                return Ok(mapped);
+                return Ok(userResponse);
             }
             catch (ArgumentException)
             {

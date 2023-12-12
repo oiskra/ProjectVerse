@@ -11,6 +11,7 @@ using projectverseAPI.Handlers;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
 using projectverseAPI.Services;
+using projectverseAPI.Services.Utility;
 using projectverseAPI.Validators.Authentication;
 using projectverseAPI.Validators.Collaboration;
 using projectverseAPI.Validators.Post;
@@ -39,6 +40,7 @@ namespace projectverseAPI
                 .AddValidatorsFromAssemblyContaining<CreateCollaborationDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<CreateCollaborationPositionDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<UpdateCollaborationDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<UpdateCollaborationPositionDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<UserRegisterDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<UserLoginDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<RefreshRequestDTOValidator>()
