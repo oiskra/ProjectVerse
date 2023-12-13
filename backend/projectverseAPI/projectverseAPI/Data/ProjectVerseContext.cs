@@ -7,7 +7,7 @@ namespace projectverseAPI.Data
     public class ProjectVerseContext : IdentityDbContext<User>
     {
         public DbSet<Project> Projects { get; set; }
-        public DbSet<Profile> Profiles { get; set; }
+        public DbSet<UserProfileData> Profiles { get; set; }
         public DbSet<ProfileComponent> ProfileComponents { get; set; }
         public DbSet<ComponentTheme> ComponentThemes { get; set; }
         public DbSet<ComponentType> ComponentTypes { get; set; }
@@ -30,8 +30,8 @@ namespace projectverseAPI.Data
             builder.Entity<CollaborationApplicant>()
                 .HasOne(e => e.AppliedCollaboration)
                 .WithMany(e => e.CollaborationApplicants)
-                .OnDelete(DeleteBehavior.ClientCascade); 
-                            
+                .OnDelete(DeleteBehavior.ClientCascade);
+
         }
 
     }
