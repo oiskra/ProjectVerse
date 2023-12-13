@@ -73,7 +73,7 @@ const CollabCard: React.FC<{ collab: Collaboration }> = ({ collab }) => {
         <div className='flex gap-5 justify-center'>
 
           {collab.technologies.slice(0, 2).map((tech: Technology) =>
-            <span className='neo text-center rounded-xl flex-grow text-white p-3'>{tech.name}</span>
+            <span key={tech.id} className='neo text-center rounded-xl flex-grow text-white p-3'>{tech.name}</span>
           )}
 
         </div>

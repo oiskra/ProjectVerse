@@ -29,7 +29,7 @@ export const CollabDescCard: React.FC<{ collab: Collaboration }> = ({ collab }) 
   return <Loader />  
 
   return (
-    <div key={collab.id} className='m-auto w-full h-full flex flex-col gap-4 items-center text-white p-3 relative animate-fadeIn max-w-[800px] bg-background rounded-xl'>
+    <div key={collab.id} className='m-auto w-full h-full flex flex-col gap-4 items-center text-white p-3 relative animate-fadeIn max-w-[800px] bg-glassMorph rounded-xl'>
       <div className='absolute w-full -top-1 h-1/6 z-20'>
         <img src={ribbon} alt="" />
         {/* TODO RIBBON HERE */}
@@ -49,7 +49,7 @@ export const CollabDescCard: React.FC<{ collab: Collaboration }> = ({ collab }) 
         </div>
 
       </div>
-      <div className='neo text-xl w-full p-5 pt-20 rounded-xl'>
+      <div className='neo text-xl w-full p-5 pt-20 rounded-xl bg-background'>
 
         <h2>
           About the <span className='text-accent'>Project</span>
@@ -61,7 +61,7 @@ export const CollabDescCard: React.FC<{ collab: Collaboration }> = ({ collab }) 
 
 
       </div>
-      <div className='neo text-xl w-full py-5 px-5 rounded-xl'>
+      <div className='neo text-xl w-full py-5 px-5 rounded-xl bg-background'>
 
         <h2 className=' pb-4'>
           <span className='text-accent'>Technologies</span> we use
@@ -75,7 +75,7 @@ export const CollabDescCard: React.FC<{ collab: Collaboration }> = ({ collab }) 
 
 
       </div>
-      <div className='neo text-xl w-full p-5 rounded-xl h-2/5 flex flex-wrap gap-10'>
+      <div className='neo text-xl w-full p-5 rounded-xl h-2/5 flex flex-wrap gap-10 bg-background'>
 
         <div className='w-3/5 text-justify justify-between'>
           <h2 className='w-full'>

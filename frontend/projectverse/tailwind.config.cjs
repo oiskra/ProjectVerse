@@ -11,6 +11,8 @@ module.exports = {
       }
     },
     colors:{
+      glassMorph:"rgba(0,0,0,0.5)",
+      blackO:"rgba(0,0,0,0.95)",
       black:"#000000",
       white:"#E3E3E3",
       highlight:"#00F9F9",

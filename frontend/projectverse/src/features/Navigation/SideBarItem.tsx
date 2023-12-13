@@ -6,10 +6,8 @@ const SideBarItem:React.FC<{name:string,expanded:boolean,href:string|null,Icon?:
   const navigate = useNavigate();
 
   const handleRedirect = () =>{
-    console.log("redirect triggered");
-    console.log(`${href}`);
-    if(href !== null ){
-      console.log("redirect successfull")
+
+    if(href !== null ){   
       navigate(href)
     }
       
@@ -18,7 +16,7 @@ const SideBarItem:React.FC<{name:string,expanded:boolean,href:string|null,Icon?:
   return( 
     <ListItemButton onClick={handleRedirect}>
       <ListItemIcon sx={{display:"flex",alignItems:"center",gap:1}}>
-            {Icon &&
+            {Icon &&            
             <Icon sx={{color:"white"}}/>
             }
               

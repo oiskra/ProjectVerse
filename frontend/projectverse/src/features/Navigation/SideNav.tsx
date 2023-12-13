@@ -18,11 +18,13 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useGetUserCollabsMutation } from '../Collaborations/colabApiSlice';
 import SideBarMutationList from './SideBarMutationList';
 import Collaboration from '../../data/Collaboration';
+import CodeIcon from '@mui/icons-material/Code';
+
 
 
 export const SideNav = () => {
   
-  const [expanded,setExpanded] = useState(false);
+  const [expanded,setExpanded] = useState(true);
   const [data,setData] = useState({} as Collaboration)
 
   const [userCollabMutation] = useGetUserCollabsMutation()
@@ -30,9 +32,6 @@ export const SideNav = () => {
   const handleExpand = () =>{
     setExpanded(!expanded);
   }
-
-  const handleMouseOver = () =>{ setExpanded(true)}
-  const handleMouseOut = () =>{ setExpanded(false)}
 
   const user:User  = useSelector((state:any) => state.auth.user)
 
@@ -46,20 +45,20 @@ export const SideNav = () => {
 
   return (
 
-    <aside onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}
+    <aside
     className={`h-screen w-fit bg-background neo transition-all flex flex-col justify-between items-center" ${expanded ? 'w-60' : 'w-[50px]'}`}
     >
-      <div className='flex flex-col py-4 gap-4 items-center'>
-        <img src={logo} width={expanded ? 100 : 50} className='rounded-xl' alt="" />
+      <div className='flex flex-col items-center'>
+        <img src={logo} width={expanded ? 150 : 50} className='rounded-xl' alt="" />
 
         {expanded && 
-          <h2 className='text-white text-2xl p-5 font-bold'>
+          <h2 className='text-white text-2xl p-2 font-bold'>
             Project<span className='text-accent'>verse</span></h2>
         }
 
       </div>
       
-      <nav className="h-fit">
+      <nav className="h-fit overflow-scroll overflow-x-hidden">
         <List>
 
           <SideBarItem name="Home" href="/home" Icon={HomeIcon} expanded = {expanded}/>
@@ -80,6 +79,11 @@ export const SideNav = () => {
             
           </SideBarLabelTab>
 
+          <SideBarLabelTab name="Portfolio" sideBarExpanded={expanded}  headerIcon={CodeIcon} >
+            <SideBarItem name="Add new" href="/portfolio/AddProject"  expanded = {expanded} />
+            <SideBarItem name="Portfolio" href="/portfolio"  expanded = {expanded} />
+          </SideBarLabelTab>
+
         </List>
       </nav>
 
@@ -89,6 +93,7 @@ export const SideNav = () => {
         <SideBarItem name="Account" href={null} expanded = {expanded} Icon={PersonIcon} />
         <SideBarItem name="Profile" href={null} expanded = {expanded} Icon={ContactPageIcon}/>
         <SideBarItem name="Logout" href={null} expanded = {expanded} Icon={LogoutIcon}/>
+        
 
         <div className=' bg-black flex gap-6 py-3 p-5  justify-center text-white items-center'>
 

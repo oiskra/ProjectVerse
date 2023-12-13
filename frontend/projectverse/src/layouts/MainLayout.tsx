@@ -9,9 +9,13 @@ export const MainLayout = () => {
 
   return (
     <>
-      
+      <div className='absolute page-background w-full h-full z-[-1]'>
+        <div className="background-blur w-full h-full"></div>
+      </div>
         
       <main className='flex h-screen m0 overflow-hidden' id="contentWrapper">
+
+        
 
         {displaySideBar && 
         <SideNav />  
