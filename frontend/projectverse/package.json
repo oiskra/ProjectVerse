@@ -2,7 +2,7 @@
   "name": "projectverse",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -12,6 +12,10 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-brands-svg-icons": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/icons-material": "^5.14.16",
     "@mui/material": "^5.14.17",
     "@mui/x-data-grid": "^6.17.0",
@@ -19,6 +23,7 @@
     "@types/joi": "^17.2.3",
     "@types/yup": "^0.32.0",
     "@vitejs/plugin-basic-ssl": "^1.0.1",
+    "babel-plugin-macros": "^3.1.0",
     "formik": "^2.4.2",
     "joi": "^17.9.2",
     "localforage": "^1.10.0",
@@ -45,6 +50,7 @@
     "postcss": "^8.4.24",
     "tailwindcss": "^3.3.2",
     "typescript": "^5.0.2",
-    "vite": "^4.3.9"
+    "vite": "^4.3.9",
+    "vite-plugin-babel-macros": "^1.0.6"
   }
 }

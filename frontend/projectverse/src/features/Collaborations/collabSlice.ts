@@ -17,7 +17,6 @@ export const fetchCollabs = createAsyncThunk('collab/fetchCollabs', async (mutat
 
 export const fetchSingle = createAsyncThunk('collab/fetchSingle',async (data) =>{
 
-
   try {
     const {colabMutation,id} = data;
     const response = await colabMutation(id).unwrap();
@@ -31,14 +30,15 @@ export const fetchSingle = createAsyncThunk('collab/fetchSingle',async (data) =>
 
 const collabSlice = createSlice({
   name:'collab',
+
   initialState:{
     collabs:[] as Collaboration[],
     currentCollab:null as Collaboration | null
   },
+
   reducers:{
 
     addCollab:(state,action) =>{
-      action.payload;
       state.collabs.push(action.payload);
     },
     
@@ -59,6 +59,7 @@ const collabSlice = createSlice({
     }
 
   },
+  
   extraReducers: (builder) => {   
 
     builder.addCase(fetchCollabs.fulfilled, (state, action) => {    

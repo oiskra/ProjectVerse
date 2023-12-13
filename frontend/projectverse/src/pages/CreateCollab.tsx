@@ -27,13 +27,12 @@ export const CreateCollab = () => {
         setSubmitting(true);
         
         try {
-          console.log(data);
+          
           fetchAddColab(data).unwrap()
           .then((response: Collaboration)=>{
             dispatch(addCollab(response));
             navigate(`/collab_dashboard/${response.id}`);
-          })
-         
+          })         
           
         }
         catch (err) {

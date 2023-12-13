@@ -17,7 +17,6 @@ const CollaborationPage = () => {
   useEffect(()=>{
     //@ts-ignore
     dispatch(fetchCollabs(collabMutation));
-    console.log(collabs);
   },[dispatch])
 
   if(collabs == undefined)
@@ -32,7 +31,7 @@ const CollaborationPage = () => {
 
  
     <div className="py-5">
-      {collabs.map((collab:Collaboration) =><CollabCard collab = {collab} />)}
+      {collabs.map((collab:Collaboration) =><CollabCard key={collab.id} collab = {collab} />)}
     </div>
 
 

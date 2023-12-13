@@ -1,6 +1,6 @@
 import Collaboration from "../../data/Collaboration"
 import Technology from "../../data/Technology"
-import { Difficulty } from "./Difficulty"
+import { Difficulty } from "./CollaborationsPage/Difficulty"
 
 export const ColabListing : React.FC<{colab:Collaboration ,switchDetails:Function, selected:boolean }>  = ({colab,switchDetails,selected}) => {
 
