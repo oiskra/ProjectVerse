@@ -28,7 +28,7 @@ namespace projectverseAPI.Services
                     UserId = Guid.Parse(user.Id)
                 };
 
-                var createdEntity = await _context.Profiles.AddAsync(newProfileData);
+                var createdEntity = await _context.UserProfileData.AddAsync(newProfileData);
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -44,9 +44,10 @@ namespace projectverseAPI.Services
 
         public async Task<UserProfileData> GetById(Guid id)
         {
-            var profileData = await _context.Profiles
+            var profileData = await _context.UserProfileData
                 .AsNoTracking()
                 .Where(p => p.Id == id)
+                .Include(p => p.User)
                 .Include(p => p.Certificates)
                 .Include(p => p.Educations)
                 .Include(p => p.Socials)
@@ -65,7 +66,7 @@ namespace projectverseAPI.Services
             using var transaction = _context.Database.BeginTransaction();
             try
             {
-                var profileData = await _context.Profiles
+                var profileData = await _context.UserProfileData
                     .Where(p => p.Id == entity.Id)
                     .FirstOrDefaultAsync();
 
