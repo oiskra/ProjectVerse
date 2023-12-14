@@ -32,12 +32,12 @@ namespace projectverseAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{profileId}")]
-        public async Task<IActionResult> GetUserProfileData([FromRoute] Guid profileId)
+        [Route("{userId}")]
+        public async Task<IActionResult> GetUserProfileData([FromRoute] Guid userId)
         {
             try
             {
-                var profileData = await _profileDataService.GetById(profileId);
+                var profileData = await _profileDataService.GetById(userId);
                 var profileDataResponse = _mapper.Map<UserProfileDataResponseDTO>(profileData);
                 
                 return Ok(profileDataResponse);

@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using projectverseAPI.Data;
 using projectverseAPI.DTOs.UserProfileData;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
+using System;
+using System.Data;
 
 namespace projectverseAPI.Services
 {
@@ -42,17 +45,18 @@ namespace projectverseAPI.Services
             }
         }
 
-        public async Task<UserProfileData> GetById(Guid id)
+        public async Task<UserProfileData> GetById(Guid userId)
         {
             var profileData = await _context.UserProfileData
                 .AsNoTracking()
-                .Where(p => p.Id == id)
+                .Where(p => p.UserId == userId)
                 .Include(p => p.User)
                 .Include(p => p.Certificates)
                 .Include(p => p.Educations)
                 .Include(p => p.Socials)
                 .Include(p => p.KnownTechnologies)
                 .Include(p => p.Interests)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync();
 
             if (profileData is null)
@@ -63,11 +67,12 @@ namespace projectverseAPI.Services
 
         public async Task<UserProfileData> Update(UpdateUserProfileDataRequestDTO entity)
         {
-            using var transaction = _context.Database.BeginTransaction();
+            using var transaction = _context.Database.BeginTransaction(IsolationLevel.Serializable);
             try
             {
                 var profileData = await _context.UserProfileData
                     .Where(p => p.Id == entity.Id)
+                    .Include(p => p.Interests)
                     .FirstOrDefaultAsync();
 
                 if (profileData is null)
@@ -77,10 +82,15 @@ namespace projectverseAPI.Services
                 profileData.Achievements = entity.Achievements;
                 profileData.PrimaryTechnology = entity.PrimaryTechnology;
                 profileData.Interests = entity.Interests;
-                profileData.Certificates = entity.Certificates;
-                profileData.Educations = entity.Educations;
-                profileData.KnownTechnologies = entity.KnownTechnologies;
-                profileData.Socials = entity.Socials;
+                /* profileData.Certificates = entity.Certificates;
+                 profileData.Educations = entity.Educations;
+                 profileData.KnownTechnologies = entity.KnownTechnologies;
+                 profileData.Socials = entity.Socials;*/
+
+                foreach (var item in profileData.Interests)
+                {
+                    _context.Entry(item).State = EntityState.Added;
+                }
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();

@@ -182,7 +182,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasIndex("UserProfileDataId");
 
-                    b.ToTable("Certificate");
+                    b.ToTable("Certificate", (string)null);
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.Collaboration", b =>
@@ -216,7 +216,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasIndex("AuthorId1");
 
-                    b.ToTable("Collaborations");
+                    b.ToTable("Collaborations", (string)null);
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.CollaborationApplicant", b =>
@@ -251,7 +251,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasIndex("AppliedPositionId");
 
-                    b.ToTable("CollaborationApplicants");
+                    b.ToTable("CollaborationApplicants", (string)null);
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.CollaborationPosition", b =>
@@ -275,7 +275,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasIndex("CollaborationId");
 
-                    b.ToTable("CollaborationPositions");
+                    b.ToTable("CollaborationPositions", (string)null);
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.ComponentTheme", b =>
@@ -290,7 +290,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ComponentThemes");
+                    b.ToTable("ComponentThemes", (string)null);
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.ComponentType", b =>
@@ -305,7 +305,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ComponentTypes");
+                    b.ToTable("ComponentTypes", (string)null);
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.Education", b =>
@@ -347,7 +347,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasIndex("UserProfileDataId");
 
-                    b.ToTable("Education");
+                    b.ToTable("Education", (string)null);
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.Interest", b =>
@@ -367,7 +367,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasIndex("UserProfileDataId");
 
-                    b.ToTable("Interest");
+                    b.ToTable("Interest", (string)null);
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.Like", b =>
@@ -388,7 +388,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Likes");
+                    b.ToTable("Likes", (string)null);
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.Post", b =>
@@ -410,7 +410,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.PostComment", b =>
@@ -441,7 +441,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("PostComments");
+                    b.ToTable("PostComments", (string)null);
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.ProfileComponent", b =>
@@ -468,7 +468,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasIndex("ThemeId");
 
-                    b.ToTable("ProfileComponents");
+                    b.ToTable("ProfileComponents", (string)null);
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.Project", b =>
@@ -508,7 +508,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasIndex("AuthorId1");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.SocialMedia", b =>
@@ -532,7 +532,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasIndex("UserProfileDataId");
 
-                    b.ToTable("SocialMedia");
+                    b.ToTable("SocialMedia", (string)null);
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.Technology", b =>
@@ -557,7 +557,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Technologies");
+                    b.ToTable("Technologies", (string)null);
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.User", b =>
@@ -665,7 +665,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasIndex("UserId1");
 
-                    b.ToTable("UserProfileData");
+                    b.ToTable("UserProfileData", (string)null);
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.UserTechnologyStack", b =>
@@ -688,7 +688,7 @@ namespace projectverseAPI.Migrations
 
                     b.HasIndex("UserProfileDataId");
 
-                    b.ToTable("UserTechnologyStack");
+                    b.ToTable("UserTechnologyStack", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
