@@ -1,10 +1,11 @@
-﻿using projectverseAPI.Interfaces.Common;
+﻿using projectverseAPI.DTOs.UserProfileData;
+using projectverseAPI.Interfaces.Common;
 using projectverseAPI.Models;
 
 namespace projectverseAPI.Interfaces
 {
     public interface IUserProfileDataService :
         IGetById<UserProfileData>,
-        IUpdate<UpdateUserProfileData, UserProfileData>
+        IUpdate<UpdateUserProfileDataRequestDTO, UserProfileData>
     { }
 }

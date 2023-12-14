@@ -1,4 +1,5 @@
 ﻿using projectverseAPI.Data;
+using projectverseAPI.DTOs.UserProfileData;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
 
@@ -19,7 +20,7 @@ namespace projectverseAPI.Services
             throw new NotImplementedException();
         }
 
-        public Task<UserProfileData> Update(UpdateUserProfileData entity)
+        public Task<UserProfileData> Update(UpdateUserProfileDataRequestDTO entity)
         {
             throw new NotImplementedException();
         }
