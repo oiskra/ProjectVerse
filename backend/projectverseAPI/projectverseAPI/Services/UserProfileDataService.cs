@@ -54,6 +54,7 @@ namespace projectverseAPI.Services
         {
             var profileData = await _context.UserProfileData
                 .AsNoTracking()
+                .AsSplitQuery()
                 .Where(p => p.UserId == userId)
                 .Include(p => p.User)
                 .Include(p => p.Certificates)
@@ -61,7 +62,6 @@ namespace projectverseAPI.Services
                 .Include(p => p.Socials)
                 .Include(p => p.KnownTechnologies)
                 .Include(p => p.Interests)
-                .AsSplitQuery()
                 .FirstOrDefaultAsync();
 
             if (profileData is null)

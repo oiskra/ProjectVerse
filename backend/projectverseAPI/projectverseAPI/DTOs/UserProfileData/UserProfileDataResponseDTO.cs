@@ -1,4 +1,5 @@
-﻿using projectverseAPI.DTOs.User;
+﻿using projectverseAPI.DTOs.Projects;
+using projectverseAPI.DTOs.User;
 using projectverseAPI.Models;
 
 namespace projectverseAPI.DTOs.UserProfileData
@@ -15,6 +16,6 @@ namespace projectverseAPI.DTOs.UserProfileData
         public IList<Education> Educations { get; set; }
         public IList<Certificate> Certificates { get; set; }
         public IList<SocialMedia> Socials { get; set; }
-        public IList<Project> Projects { get; set; }
+        public IList<ProjectResponseDTO> Projects { get; set; }
     }
 }

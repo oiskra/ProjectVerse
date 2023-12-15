@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using projectverseAPI.DTOs;
+using projectverseAPI.DTOs.Projects;
 using projectverseAPI.DTOs.UserProfileData;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
@@ -19,15 +20,18 @@ namespace projectverseAPI.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IProjectService _projectService;
         private readonly IUserProfileDataService _profileDataService;
 
         public UserProfileController(
             IMapper mapper,
             IAuthenticationService authenticationService,
+            IProjectService projectService,
             IUserProfileDataService profileDataService)
         {
             _mapper = mapper;
             _authenticationService = authenticationService;
+            _projectService = projectService;
             _profileDataService = profileDataService;
         }
 
@@ -37,8 +41,13 @@ namespace projectverseAPI.Controllers
         {
             try
             {
+                var usersProjects = await _projectService.GetAllByUserId(userId);
+                var projectsResponse = _mapper.Map<List<ProjectResponseDTO>>(usersProjects);
+
                 var profileData = await _profileDataService.GetById(userId);
-                var profileDataResponse = _mapper.Map<UserProfileDataResponseDTO>(profileData);
+                var profileDataResponse = _mapper.Map<UserProfileData, UserProfileDataResponseDTO>(
+                    profileData,
+                    opt => opt.AfterMap((src, dest) => dest.Projects = projectsResponse));
                 
                 return Ok(profileDataResponse);
             }
