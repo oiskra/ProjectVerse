@@ -1,4 +1,6 @@
-﻿namespace projectverseAPI.Models
+﻿using projectverseAPI.Interfaces.Marker;
+
+namespace projectverseAPI.Models
 {
     public class Technology
     {
@@ -6,9 +8,9 @@
         public string Name { get; set; }
     }
 
-    public class UserTechnologyStack
+    public class UserTechnologyStack : IIdentifiable
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public string Name { get; set; }
         public LevelOfAdvancement Level { get; set; }
     }

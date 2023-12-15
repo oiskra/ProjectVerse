@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using projectverseAPI.DTOs.Project;
+using projectverseAPI.DTOs.Projects;
 
 namespace projectverseAPI.Validators.Project
 {

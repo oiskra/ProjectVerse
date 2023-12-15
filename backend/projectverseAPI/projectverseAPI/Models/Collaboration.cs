@@ -1,4 +1,4 @@
-﻿using projectverseAPI.Interfaces;
+﻿using projectverseAPI.Interfaces.Marker;
 
 namespace projectverseAPI.Models
 {

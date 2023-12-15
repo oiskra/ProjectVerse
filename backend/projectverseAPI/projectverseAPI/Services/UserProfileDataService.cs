@@ -1,22 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using projectverseAPI.Data;
 using projectverseAPI.DTOs.UserProfileData;
 using projectverseAPI.Interfaces;
+using projectverseAPI.Interfaces.Marker;
 using projectverseAPI.Models;
-using System;
 using System.Data;
+using System.Reflection;
 
 namespace projectverseAPI.Services
 {
     public class UserProfileDataService : IUserProfileDataService
     {
         private readonly ProjectVerseContext _context;
+        private readonly IMapper _mapper;
 
         public UserProfileDataService(
-            ProjectVerseContext context)
+            ProjectVerseContext context,
+            IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<UserProfileData> Create(User user)
@@ -65,32 +70,34 @@ namespace projectverseAPI.Services
             return profileData;
         }
 
-        public async Task<UserProfileData> Update(UpdateUserProfileDataRequestDTO entity)
+        public async Task<UserProfileData> Update(UpdateUserProfileDataRequestDTO dto)
         {
             using var transaction = _context.Database.BeginTransaction(IsolationLevel.Serializable);
             try
             {
                 var profileData = await _context.UserProfileData
-                    .Where(p => p.Id == entity.Id)
+                    .AsSplitQuery()
+                    .Where(p => p.Id == dto.Id)
                     .Include(p => p.Interests)
+                    .Include(p => p.Certificates)
+                    .Include(p => p.Educations)
+                    .Include(p => p.Socials)
+                    .Include(p => p.KnownTechnologies)
                     .FirstOrDefaultAsync();
 
                 if (profileData is null)
                     throw new ArgumentException("Profile doesn't exist.");
 
-                profileData.AboutMe = entity.AboutMe;
-                profileData.Achievements = entity.Achievements;
-                profileData.PrimaryTechnology = entity.PrimaryTechnology;
-                profileData.Interests = entity.Interests;
-                /* profileData.Certificates = entity.Certificates;
-                 profileData.Educations = entity.Educations;
-                 profileData.KnownTechnologies = entity.KnownTechnologies;
-                 profileData.Socials = entity.Socials;*/
+                profileData.AboutMe = dto.AboutMe;
+                profileData.Achievements = dto.Achievements;
+                profileData.PrimaryTechnology = dto.PrimaryTechnology;
 
-                foreach (var item in profileData.Interests)
-                {
-                    _context.Entry(item).State = EntityState.Added;
-                }
+                await Task.WhenAll(
+                    ProcessUserProfileDataItems(dto.Interests, profileData.Interests!),
+                    ProcessUserProfileDataItems(dto.Certificates, profileData.Certificates!),
+                    ProcessUserProfileDataItems(dto.Educations, profileData.Educations!),
+                    ProcessUserProfileDataItems(dto.KnownTechnologies, profileData.KnownTechnologies!),
+                    ProcessUserProfileDataItems(dto.Socials, profileData.Socials!));
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -108,6 +115,54 @@ namespace projectverseAPI.Services
                 throw;
             }
 
+        }
+
+        private Task ProcessUserProfileDataItems<TDto, TEntity>(
+            IEnumerable<TDto> dtos, //ex. dto.Interests
+            ICollection<TEntity> entities) //ex. dbProfileData.Interests
+        where TDto : IIdentifiable
+        where TEntity : class, IIdentifiable
+        {
+            foreach (var dto in dtos)
+            {
+               TEntity entity;
+
+                if (dto.Id is null)
+                {
+                    dto.Id = Guid.NewGuid();
+                    entity = _mapper.Map<TEntity>(dto);
+                    entities.Add(entity);
+                    _context.Entry(entity).State = EntityState.Added;
+                }
+                else
+                {
+                    entity = entities.FirstOrDefault(e => e.Id == dto.Id);
+
+                    if (entity != null)
+                    {
+                        UpdateEntityFromDto(dto, entity);
+                        _context.Entry(entity).State = EntityState.Modified;
+                    }
+                }
+            }
+            return Task.CompletedTask;
+        }
+
+        private static void UpdateEntityFromDto<TDto, TEntity>(TDto dto, TEntity entity)
+        {
+            var dtoType = typeof(TDto);
+            var entityType = typeof(TEntity);
+
+            foreach (var item in dtoType.GetProperties())
+            {
+                if (!item.Name.Equals("Id"))
+                {
+                    PropertyInfo? propertyToAssignTo = entityType.GetProperty(item.Name);
+                    object? updatedValue = item.GetValue(dto);
+                    if (updatedValue is not null && propertyToAssignTo is not null)
+                        propertyToAssignTo.SetValue(entity, updatedValue);
+                }
+            }
         }
     }
 }

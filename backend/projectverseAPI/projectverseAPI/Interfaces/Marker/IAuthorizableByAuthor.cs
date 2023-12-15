@@ -1,6 +1,6 @@
 ﻿using projectverseAPI.Models;
 
-namespace projectverseAPI.Interfaces
+namespace projectverseAPI.Interfaces.Marker
 {
     public interface IAuthorizableByAuthor
     {

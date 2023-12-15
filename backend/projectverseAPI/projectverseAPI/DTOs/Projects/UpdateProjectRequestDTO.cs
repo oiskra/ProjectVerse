@@ -1,6 +1,6 @@
 ﻿using projectverseAPI.Models;
 
-namespace projectverseAPI.DTOs.Project
+namespace projectverseAPI.DTOs.Projects
 {
     public class UpdateProjectRequestDTO
     {

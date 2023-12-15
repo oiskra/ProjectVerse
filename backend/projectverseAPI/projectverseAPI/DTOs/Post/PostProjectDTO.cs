@@ -1,4 +1,4 @@
-﻿using projectverseAPI.DTOs.Project;
+﻿using projectverseAPI.DTOs.Projects;
 using projectverseAPI.Models;
 
 namespace projectverseAPI.DTOs.Post

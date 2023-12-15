@@ -1,4 +1,4 @@
-﻿namespace projectverseAPI.DTOs.Project
+﻿namespace projectverseAPI.DTOs.Projects
 {
     public class CreateProjectRequestDTO
     {

@@ -1,8 +1,8 @@
 ﻿using projectverseAPI.Interfaces.Marker;
 
-namespace projectverseAPI.Models
+namespace projectverseAPI.DTOs.UserProfileData
 {
-    public class Education : IIdentifiable
+    public class UpsertEducationDTO : IIdentifiable
     {
         public Guid? Id { get; set; }
         public string University { get; set; }
@@ -12,6 +12,5 @@ namespace projectverseAPI.Models
         public string AcademicTitle { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-
     }
 }

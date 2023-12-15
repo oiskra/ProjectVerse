@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Identity.Client;
 using Microsoft.OpenApi.Models;
-using projectverseAPI.DTOs.Project;
+using projectverseAPI.DTOs.Projects;
 
 namespace projectverseAPI.Validators.Project
 {

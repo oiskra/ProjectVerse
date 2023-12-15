@@ -1,9 +1,11 @@
-﻿namespace projectverseAPI.Models
+﻿using projectverseAPI.Interfaces.Marker;
+
+namespace projectverseAPI.Models
 {
 
-    public class Interest
+    public class Interest : IIdentifiable
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public string Name { get; set; }
     }
 }

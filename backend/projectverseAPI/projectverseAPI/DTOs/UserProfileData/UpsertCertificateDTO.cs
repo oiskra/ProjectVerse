@@ -1,8 +1,8 @@
 ﻿using projectverseAPI.Interfaces.Marker;
 
-namespace projectverseAPI.Models
+namespace projectverseAPI.DTOs.UserProfileData
 {
-    public class Certificate : IIdentifiable
+    public class UpsertCertificateDTO : IIdentifiable
     {
         public Guid? Id { get; set; }
         public string Name { get; set; }

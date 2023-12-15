@@ -10,6 +10,12 @@ namespace projectverseAPI.Mapping
         public UserProfileDataMappingProfile()
         {
             CreateMap<UserProfileData, UserProfileDataResponseDTO>();
+
+            CreateMap<UpsertInterestDTO, Interest>();
+            CreateMap<UpsertCertificateDTO, Certificate>();
+            CreateMap<UpsertEducationDTO, Education>();
+            CreateMap<UpsertSocialMediaDTO, SocialMedia>();
+            CreateMap<UpsertUserTechnologyStackDTO, UserTechnologyStack>();
         }
     }
 }

@@ -8,10 +8,10 @@ namespace projectverseAPI.DTOs.UserProfileData
         public string AboutMe { get; set; }
         public string Achievements { get; set; }
         public string PrimaryTechnology { get; set; }
-        public IList<UserTechnologyStack> KnownTechnologies { get; set; }
-        public IList<Interest> Interests { get; set; }
-        public IList<Education> Educations { get; set; }
-        public IList<Certificate> Certificates { get; set; }
-        public IList<SocialMedia> Socials { get; set; }
+        public IList<UpsertUserTechnologyStackDTO> KnownTechnologies { get; set; }
+        public IList<UpsertInterestDTO> Interests { get; set; }
+        public IList<UpsertEducationDTO> Educations { get; set; }
+        public IList<UpsertCertificateDTO> Certificates { get; set; }
+        public IList<UpsertSocialMediaDTO> Socials { get; set; }
     }
 }
