@@ -118,15 +118,15 @@ namespace projectverseAPI.Services
         }
 
         private Task ProcessUserProfileDataItems<TDto, TEntity>(
-            IEnumerable<TDto> dtos, //ex. dto.Interests
-            ICollection<TEntity> entities) //ex. dbProfileData.Interests
-        where TDto : IIdentifiable
+            IEnumerable<TDto> dtos, 
+            ICollection<TEntity> entities) 
+        where TDto : IIdentifiableUpsert
         where TEntity : class, IIdentifiable
         {
             foreach (var dto in dtos)
             {
-               TEntity entity;
-
+                TEntity? entity;
+                
                 if (dto.Id is null)
                 {
                     dto.Id = Guid.NewGuid();

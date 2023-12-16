@@ -2,7 +2,7 @@
 
 namespace projectverseAPI.DTOs.UserProfileData
 {
-    public class UpsertSocialMediaDTO : IIdentifiable
+    public class UpsertSocialMediaDTO : IIdentifiableUpsert
     {
         public Guid? Id { get; set; }
         public string? Name { get; set; }

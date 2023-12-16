@@ -4,7 +4,7 @@ namespace projectverseAPI.Models
 {
     public class Education : IIdentifiable
     {
-        public Guid? Id { get; set; }
+        public Guid Id { get; set; }
         public string University { get; set; }
         public string Department { get; set; }
         public string Course { get; set; }

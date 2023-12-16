@@ -3,7 +3,7 @@ using projectverseAPI.Models;
 
 namespace projectverseAPI.DTOs.UserProfileData
 {
-    public class UpsertUserTechnologyStackDTO : IIdentifiable
+    public class UpsertUserTechnologyStackDTO : IIdentifiableUpsert
     {
         public Guid? Id { get; set; }
         public string? Name { get; set; }

@@ -10,7 +10,7 @@ namespace projectverseAPI.Models
 
     public class UserTechnologyStack : IIdentifiable
     {
-        public Guid? Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public LevelOfAdvancement Level { get; set; }
     }

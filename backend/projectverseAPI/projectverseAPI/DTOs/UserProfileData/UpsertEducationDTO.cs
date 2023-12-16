@@ -2,7 +2,7 @@
 
 namespace projectverseAPI.DTOs.UserProfileData
 {
-    public class UpsertEducationDTO : IIdentifiable
+    public class UpsertEducationDTO : IIdentifiableUpsert
     {
         public Guid? Id { get; set; }
         public string? University { get; set; }
