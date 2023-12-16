@@ -1,4 +1,5 @@
 ﻿using projectverseAPI.DTOs.Authentication;
+using projectverseAPI.DTOs.User;
 using projectverseAPI.Models;
 
 namespace projectverseAPI.Mapping
@@ -14,6 +15,8 @@ namespace projectverseAPI.Mapping
                 .ForMember(
                     x => x.SecurityStamp,
                     cfg => cfg.MapFrom(src => Guid.NewGuid().ToString()));
+
+            CreateMap<User, UserResponseDTO>();
         }
     }
 }

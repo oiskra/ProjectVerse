@@ -13,6 +13,12 @@ namespace projectverseAPI.Mapping
         public PostMappingProfile()
         {
             CreateMap<Post, PostResponseDTO>()
+                .ForMember(
+                    x => x.CommentsCount,
+                    opt => opt.MapFrom(src => src.PostComments.Count))
+                .ForMember(
+                    x => x.PostComments,
+                    opt => opt.MapFrom(src => src.PostComments.Take(3)))
                 .AfterMap<SetIsLikedByCurrentUserAction>();
             CreateMap<Project, PostProjectDTO>();
             CreateMap<PostComment, PostCommentDTO>();

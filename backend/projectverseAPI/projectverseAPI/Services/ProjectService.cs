@@ -23,9 +23,17 @@ namespace projectverseAPI.Services
             _mapper = mapper;
         }
         
-        public async Task<List<Project>> GetAll()
+        public async Task<List<Project>> GetAll(string? searchTerm)
         {
-            var projects = await _context.Projects
+            IQueryable<Project> projectQuery = _context.Projects;
+
+            if (searchTerm is not null)
+            {
+                projectQuery = projectQuery.Where(
+                    p => p.Name.Contains(searchTerm));
+            }
+
+            var projects = await projectQuery
                 .Include(p => p.UsedTechnologies)
                 .Include(p => p.Author)
                 .ToListAsync();

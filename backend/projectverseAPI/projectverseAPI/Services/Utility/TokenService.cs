@@ -8,7 +8,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace projectverseAPI.Services
+namespace projectverseAPI.Services.Utility
 {
     public class TokenService : ITokenService
     {
@@ -23,7 +23,7 @@ namespace projectverseAPI.Services
             _configuration = configuration;
         }
 
-        public async Task<string>GenerateAccessToken(User user)
+        public async Task<string> GenerateAccessToken(User user)
         {
             var signingCredentials = GetSigningCredentials();
             var claims = await GetClaims(user);
@@ -43,11 +43,11 @@ namespace projectverseAPI.Services
         {
             var tokenValidationParameters = new TokenValidationParameters
             {
-                ValidateAudience = false, 
+                ValidateAudience = false,
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("jwtConfig")["secret"]!)),
-                ValidateLifetime = false 
+                ValidateLifetime = false
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
