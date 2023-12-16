@@ -6,7 +6,7 @@ namespace projectverseAPI.DTOs.UserProfileData
     public class UpsertUserTechnologyStackDTO : IIdentifiable
     {
         public Guid? Id { get; set; }
-        public string Name { get; set; }
-        public LevelOfAdvancement Level { get; set; }
+        public string? Name { get; set; }
+        public LevelOfAdvancement? Level { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using projectverseAPI.Constants;
 using projectverseAPI.Data;
+using projectverseAPI.DTOs.UserProfileData;
 using projectverseAPI.Handlers;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
@@ -17,6 +18,8 @@ using projectverseAPI.Validators.Collaboration;
 using projectverseAPI.Validators.Post;
 using projectverseAPI.Validators.Project;
 using projectverseAPI.Validators.User;
+using projectverseAPI.Validators.UserProfile;
+using projectverseAPI.Validators.UserProfileData;
 using System.Text;
 
 namespace projectverseAPI
@@ -37,18 +40,30 @@ namespace projectverseAPI
 
             services
                 .AddFluentValidationAutoValidation()
+                //Collaboration
                 .AddValidatorsFromAssemblyContaining<CreateCollaborationDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<CreateCollaborationPositionDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<UpdateCollaborationDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<UpdateCollaborationPositionDTOValidator>()
+                //Authentication
                 .AddValidatorsFromAssemblyContaining<UserRegisterDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<UserLoginDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<RefreshRequestDTOValidator>()
+                //Project
                 .AddValidatorsFromAssemblyContaining<CreateProjectRequestDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<UpdateProjectRequestDTOValidator>()
+                //PostComments
                 .AddValidatorsFromAssemblyContaining<CreatePostCommentRequestDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<UpdatePostCommentRequestDTOValidator>()
-                .AddValidatorsFromAssemblyContaining<UpdateUserRequestDTOValidator>();
+                //User
+                .AddValidatorsFromAssemblyContaining<UpdateUserRequestDTOValidator>()
+                //UserProfileData
+                .AddValidatorsFromAssemblyContaining<UpdateUserProfileDataRequestDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<UpsertCeritficateDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<UpsertInterestDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<UpsertEducationDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<UpsertSocialMediaDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<UpsertUserTechnologyStackDTOValidator>();
 
             return services;
         }
