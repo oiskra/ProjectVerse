@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Amazon.S3;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -194,6 +195,7 @@ namespace projectverseAPI
                 .AddScoped<ICommentService, CommentService>()
                 .AddTransient<ITokenService, TokenService>()
                 .AddTransient<IHttpContextAccessor, HttpContextAccessor>()
+                .AddSingleton<IImageService, ImageService>()
                 .AddSingleton<IAuthorizationHandler, SameAuthorAuthorizationHandler>();
 
             return services;

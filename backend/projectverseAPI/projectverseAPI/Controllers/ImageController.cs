@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Runtime.CompilerServices;
-using System;
 using projectverseAPI.Interfaces;
+using System.Net;
+using System.Net.Mime;
 
 namespace projectverseAPI.Controllers
 {
     [ApiController]
-    [Route("api/images")]
+    [Route("api/")]
     public class ImageController : ControllerBase
     {
         private readonly IImageService _imageService;
@@ -18,11 +18,25 @@ namespace projectverseAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadUsersAvatar(IFormFile file)
+        [Route("users/{userId}/profile-image")]
+        public async Task<IActionResult> UploadUsersProfileImage(
+            [FromRoute] Guid userId,
+            IFormFile file)
         {
-            var createdAvatar = await _imageService.UploadUsersAvatar(file);
+            await _imageService.UploadUsersProfileImage(userId, file);
 
-            return File(createdAvatar, file.ContentType);
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("users/{userId}/profile-image")]
+        public async Task<IActionResult> GetUsersProfileImage([FromRoute] Guid userId)
+        {
+            var response = await _imageService.GetUsersProfileImage(userId);
+
+            return File(
+                response.ResponseStream, 
+                response.Headers.ContentType);
         }
 
     }

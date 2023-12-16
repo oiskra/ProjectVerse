@@ -1,55 +1,73 @@
-﻿using Microsoft.EntityFrameworkCore;
-using projectverseAPI.Data;
+﻿using Amazon;
+using Amazon.Runtime;
+using Amazon.S3;
+using Amazon.S3.Model;
+using Amazon.S3.Transfer;
 using projectverseAPI.Interfaces;
 
 namespace projectverseAPI.Services
 {
     public class ImageService : IImageService
     {
-        private readonly ProjectVerseContext _context;
+        private readonly IConfiguration _configuration;
 
         public ImageService(
-            ProjectVerseContext context)
+            IConfiguration configuration)
         {
-            _context = context;
+            _configuration = configuration;
         }
 
-        public async Task<byte[]> UploadUsersAvatar(Guid usersId, IFormFile file)
+        public async Task<GetObjectResponse> GetUsersProfileImage(Guid userId)
         {
-            using var transaction = _context.Database.BeginTransaction();
+            var credentials = new BasicAWSCredentials(
+                _configuration.GetSection("S3")["accessKey"],
+                _configuration.GetSection("S3")["secret"]);
+
             try
             {
-                byte[] avatar = await ParseToByteArray(file);
+                using var client = new AmazonS3Client(credentials, RegionEndpoint.EUCentral1);
 
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == usersId.ToString());
+                var profileImage = await client.GetObjectAsync(
+                    _configuration.GetSection("S3")["bucketName"],
+                    $"profile_images/{userId}");
 
-                if (user is null)
-                    throw new ArgumentException("User doesnt exist.");
-
-                user.Avatar = avatar;
-
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-                return avatar;
+                return profileImage;
             }
             catch (Exception)
             {
-                await transaction.RollbackAsync();
                 throw;
             }
         }
 
-        private async Task<byte[]> ParseToByteArray(IFormFile file)
+        public async Task UploadUsersProfileImage(Guid userId, IFormFile file)
         {
-            byte[] pgmFileContent = null;
-            if (file?.Length > 0)
+            var credentials = new BasicAWSCredentials(
+                _configuration.GetSection("S3")["accessKey"],
+                _configuration.GetSection("S3")["secret"]);
+            
+            try
             {
-                using var ms = new MemoryStream();
-                await file.CopyToAsync(ms);
-                pgmFileContent = ms.ToArray();
+                var putObjectRequest = new TransferUtilityUploadRequest()
+                {
+                    BucketName = _configuration.GetSection("S3")["bucketName"],
+                    Key = $"profile_images/{userId}",
+                    ContentType = file.ContentType,
+                    InputStream = file.OpenReadStream(),
+                    CannedACL = S3CannedACL.NoACL
+                };
+               
+                using var client = new AmazonS3Client(credentials, RegionEndpoint.EUCentral1);
+
+                var transferUtility = new TransferUtility(client);
+
+                await transferUtility.UploadAsync(putObjectRequest);
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
-            return pgmFileContent;
+            
         }
     }
 }
