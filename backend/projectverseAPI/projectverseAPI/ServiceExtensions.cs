@@ -216,6 +216,7 @@ namespace projectverseAPI
                 .AddScoped<ICommentService, CommentService>()
                 .AddScoped<IUserService, UserService>()
                 .AddScoped<IUserProfileDataService, UserProfileDataService>()
+                .AddScoped<IComponentService, ComponentService>()
                 .AddTransient<ITokenService, TokenService>()
                 .AddTransient<IHttpContextAccessor, HttpContextAccessor>()
                 .AddSingleton<IAuthorizationHandler, SameAuthorAuthorizationHandler>()

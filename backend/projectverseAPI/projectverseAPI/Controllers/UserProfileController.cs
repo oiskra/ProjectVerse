@@ -22,17 +22,20 @@ namespace projectverseAPI.Controllers
         private readonly IAuthenticationService _authenticationService;
         private readonly IProjectService _projectService;
         private readonly IUserProfileDataService _profileDataService;
+        private readonly IComponentService _componentService;
 
         public UserProfileController(
             IMapper mapper,
             IAuthenticationService authenticationService,
             IProjectService projectService,
-            IUserProfileDataService profileDataService)
+            IUserProfileDataService profileDataService,
+            IComponentService componentService)
         {
             _mapper = mapper;
             _authenticationService = authenticationService;
             _projectService = projectService;
             _profileDataService = profileDataService;
+            _componentService = componentService;
         }
 
         [HttpGet]
@@ -60,6 +63,21 @@ namespace projectverseAPI.Controllers
                     Errors = argE
                 });
             }
+        }
+
+        [HttpGet]
+        [Route("{profileId}/components")]
+        public async Task<IActionResult> GetProfileComponents([FromRoute] Guid profileId)
+        {
+        }
+
+        [HttpPut]
+        [Route("{profileId}/components")]
+        public async Task<IActionResult> UpsertProfileComponents(
+            [FromRoute] Guid profileId,
+            [FromBody] UpsertProfileComponentsRequestDTO dto)
+        {
+
         }
 
         [HttpPut]
