@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using projectverseAPI.DTOs;
 using projectverseAPI.DTOs.Authentication;
 using projectverseAPI.Interfaces;
+using System.Collections.Specialized;
 
 namespace projectverseAPI.Controllers
 {
@@ -29,7 +30,9 @@ namespace projectverseAPI.Controllers
             {
                 var createdId = await _authenticationService.RegisterUser(request);
 
-                return CreatedAtAction("register", new CreateResponseDTO { Id = createdId });
+                return CreatedAtAction(
+                    nameof(Register), 
+                    new CreateResponseDTO { Id = createdId });
             }
             catch (ArgumentException argE)
             {

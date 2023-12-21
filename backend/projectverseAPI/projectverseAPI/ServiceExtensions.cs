@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using projectverseAPI.Constants;
 using projectverseAPI.Data;
+using projectverseAPI.DTOs.Designer;
 using projectverseAPI.DTOs.UserProfileData;
 using projectverseAPI.Handlers;
 using projectverseAPI.Interfaces;
@@ -16,6 +17,7 @@ using projectverseAPI.Services.Utility;
 using projectverseAPI.Validators.Authentication;
 using projectverseAPI.Validators.Collaboration;
 using projectverseAPI.Validators.Post;
+using projectverseAPI.Validators.ProfileDesigner;
 using projectverseAPI.Validators.Project;
 using projectverseAPI.Validators.User;
 using projectverseAPI.Validators.UserProfile;
@@ -63,7 +65,10 @@ namespace projectverseAPI
                 .AddValidatorsFromAssemblyContaining<UpsertInterestDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<UpsertEducationDTOValidator>()
                 .AddValidatorsFromAssemblyContaining<UpsertSocialMediaDTOValidator>()
-                .AddValidatorsFromAssemblyContaining<UpsertUserTechnologyStackDTOValidator>();
+                .AddValidatorsFromAssemblyContaining<UpsertUserTechnologyStackDTOValidator>()
+                //ProfileDesigner
+                .AddValidatorsFromAssemblyContaining<UpdateProfileDesignerRequestDTOValidator>()
+                .AddValidatorsFromAssemblyContaining<UpsertProfileComponentDTOValidator>();
 
             return services;
         }
@@ -188,17 +193,11 @@ namespace projectverseAPI
         {
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Test",
-                    policy => {
-                        policy.RequireAuthenticatedUser();
-                        policy.RequireRole(UserRoles.User);
-                    });
-
                 options.AddPolicy(PolicyNameConstants.SameAuthorPolicy, policy =>
                     policy.Requirements.Add(new SameAuthorRequirement()));
 
-                options.AddPolicy(PolicyNameConstants.UpdateUserPolicy, policy =>
-                    policy.Requirements.Add(new UpdateUserRequirement()));
+                options.AddPolicy(PolicyNameConstants.UserPersonalAccessPolicy, policy =>
+                    policy.Requirements.Add(new UserPersonalAccessRequirement()));
             });
 
             return services;
@@ -216,11 +215,11 @@ namespace projectverseAPI
                 .AddScoped<ICommentService, CommentService>()
                 .AddScoped<IUserService, UserService>()
                 .AddScoped<IUserProfileDataService, UserProfileDataService>()
-                .AddScoped<IComponentService, ComponentService>()
+                .AddScoped<IProfileDesignerService, ProfileDesignerService>()
                 .AddTransient<ITokenService, TokenService>()
                 .AddTransient<IHttpContextAccessor, HttpContextAccessor>()
                 .AddSingleton<IAuthorizationHandler, SameAuthorAuthorizationHandler>()
-                .AddSingleton<IAuthorizationHandler, UpdateUserAuthorizationHandler>();
+                .AddSingleton<IAuthorizationHandler, UserPersonalAccessAuthorizationHandler>();
 
             return services;
         }

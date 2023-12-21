@@ -6,7 +6,6 @@ using projectverseAPI.Constants;
 using projectverseAPI.DTOs;
 using projectverseAPI.DTOs.User;
 using projectverseAPI.Interfaces;
-using projectverseAPI.Models;
 
 namespace projectverseAPI.Controllers
 {
@@ -29,6 +28,7 @@ namespace projectverseAPI.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<UserResponseDTO>>> GetAllUsers([FromQuery] string? searchTerm)
         {
             var users = await _userService.GetAll(searchTerm);
@@ -61,7 +61,7 @@ namespace projectverseAPI.Controllers
 
         [HttpPut]
         [Route("{userId}")]
-        [Authorize(Policy = PolicyNameConstants.UpdateUserPolicy)]
+        [Authorize(Policy = PolicyNameConstants.UserPersonalAccessPolicy)]
         public async Task<ActionResult<UserResponseDTO>> UpdateUser([FromRoute] Guid userId, [FromBody] UpdateUserRequestDTO userDTO)
         {
             try
