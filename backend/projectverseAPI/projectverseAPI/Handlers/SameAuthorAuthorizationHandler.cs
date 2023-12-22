@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using projectverseAPI.Constants;
-using projectverseAPI.Interfaces;
+using projectverseAPI.Interfaces.Marker;
 
 namespace projectverseAPI.Handlers
 {

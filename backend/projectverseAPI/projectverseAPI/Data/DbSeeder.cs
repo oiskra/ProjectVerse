@@ -39,38 +39,6 @@ namespace projectverseAPI.Data
 
             context.Technologies.AddRangeAsync(technologies);
             context.SaveChanges();
-
-            if (context.ComponentTypes.Any()) return;
-
-            var components = new ComponentType[]
-            {
-                new ComponentType() {Id=new Guid(), Name="About Me"},
-                new ComponentType() {Id=new Guid(), Name="Achievements"},
-                new ComponentType() {Id=new Guid(), Name="Primary Technology"},
-                new ComponentType() {Id=new Guid(), Name="Secondary Technology"},
-                new ComponentType() {Id=new Guid(), Name="Known Technologies"},
-                new ComponentType() {Id=new Guid(), Name="Interests"},
-                new ComponentType() {Id=new Guid(), Name="Education"},
-                new ComponentType() {Id=new Guid(), Name="Certificates"}
-            };
-            context.ComponentTypes.AddRangeAsync(components);
-            context.SaveChanges();
-
-            if (context.ComponentThemes.Any()) return;
-
-            var themes = new ComponentTheme[]
-            {
-                new ComponentTheme() {Id=new Guid(), Name="Default"},
-                new ComponentTheme() {Id=new Guid(), Name="Modern"},
-                new ComponentTheme() {Id=new Guid(), Name="Simplistic"},
-                new ComponentTheme() {Id=new Guid(), Name="Antique"},
-                new ComponentTheme() {Id=new Guid(), Name="Cartoony"},
-                new ComponentTheme() {Id=new Guid(), Name="Mono"},
-                new ComponentTheme() {Id=new Guid(), Name="Retro"},
-            };
-
-            context.ComponentThemes.AddRangeAsync(themes);
-            context.SaveChanges();
         }
     }
 }

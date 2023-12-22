@@ -3,20 +3,20 @@ using projectverseAPI.Constants;
 
 namespace projectverseAPI.Handlers
 {
-    public class UpdateUserRequirement : IAuthorizationRequirement
+    public class UserPersonalAccessRequirement : IAuthorizationRequirement
     { }
 
-    public class UpdateUserAuthorizationHandler : AuthorizationHandler<UpdateUserRequirement>
+    public class UserPersonalAccessAuthorizationHandler : AuthorizationHandler<UserPersonalAccessRequirement>
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UpdateUserAuthorizationHandler(
+        public UserPersonalAccessAuthorizationHandler(
             IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
 
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, UpdateUserRequirement requirement)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, UserPersonalAccessRequirement requirement)
         {
             RouteValueDictionary? routeValues = _httpContextAccessor.HttpContext?.Request.RouteValues;
 

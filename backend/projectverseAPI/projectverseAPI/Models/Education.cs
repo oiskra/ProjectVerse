@@ -1,6 +1,8 @@
-﻿namespace projectverseAPI.Models
+﻿using projectverseAPI.Interfaces.Marker;
+
+namespace projectverseAPI.Models
 {
-    public class Education
+    public class Education : IIdentifiable
     {
         public Guid Id { get; set; }
         public string University { get; set; }

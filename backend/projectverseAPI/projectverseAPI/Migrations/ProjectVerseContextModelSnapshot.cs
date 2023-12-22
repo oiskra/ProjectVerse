@@ -175,12 +175,12 @@ namespace projectverseAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ProfileId")
+                    b.Property<Guid?>("UserProfileDataId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("UserProfileDataId");
 
                     b.ToTable("Certificate");
                 });
@@ -278,36 +278,6 @@ namespace projectverseAPI.Migrations
                     b.ToTable("CollaborationPositions");
                 });
 
-            modelBuilder.Entity("projectverseAPI.Models.ComponentTheme", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ComponentThemes");
-                });
-
-            modelBuilder.Entity("projectverseAPI.Models.ComponentType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ComponentTypes");
-                });
-
             modelBuilder.Entity("projectverseAPI.Models.Education", b =>
                 {
                     b.Property<Guid>("Id")
@@ -333,9 +303,6 @@ namespace projectverseAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ProfileId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -343,9 +310,12 @@ namespace projectverseAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("UserProfileDataId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("UserProfileDataId");
 
                     b.ToTable("Education");
                 });
@@ -360,12 +330,12 @@ namespace projectverseAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ProfileId")
+                    b.Property<Guid?>("UserProfileDataId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("UserProfileDataId");
 
                     b.ToTable("Interest");
                 });
@@ -444,66 +414,61 @@ namespace projectverseAPI.Migrations
                     b.ToTable("PostComments");
                 });
 
-            modelBuilder.Entity("projectverseAPI.Models.Profile", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AboutMe")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Achievements")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PrimaryTechnology")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SecondaryTechnology")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("Profiles");
-                });
-
             modelBuilder.Entity("projectverseAPI.Models.ProfileComponent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ComponentId")
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ColumnEnd")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ColumnStart")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Data")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProfileDesignerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("PositionX")
+                    b.Property<int>("RowEnd")
                         .HasColumnType("int");
 
-                    b.Property<int>("PositionY")
+                    b.Property<int>("RowStart")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("ThemeId")
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfileDesignerId");
+
+                    b.ToTable("ProfileComponents");
+                });
+
+            modelBuilder.Entity("projectverseAPI.Models.ProfileDesigner", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Theme")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ComponentId");
-
-                    b.HasIndex("ThemeId");
-
-                    b.ToTable("ProfileComponents");
+                    b.ToTable("ProfileDesigners");
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.Project", b =>
@@ -544,6 +509,30 @@ namespace projectverseAPI.Migrations
                     b.HasIndex("AuthorId1");
 
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("projectverseAPI.Models.SocialMedia", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Link")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UserProfileDataId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserProfileDataId");
+
+                    b.ToTable("SocialMedia");
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.Technology", b =>
@@ -651,6 +640,34 @@ namespace projectverseAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("projectverseAPI.Models.UserProfileData", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AboutMe")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Achievements")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PrimaryTechnology")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("UserProfileData");
+                });
+
             modelBuilder.Entity("projectverseAPI.Models.UserTechnologyStack", b =>
                 {
                     b.Property<Guid>("Id")
@@ -664,12 +681,12 @@ namespace projectverseAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ProfileId")
+                    b.Property<Guid?>("UserProfileDataId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("UserProfileDataId");
 
                     b.ToTable("UserTechnologyStack");
                 });
@@ -727,9 +744,9 @@ namespace projectverseAPI.Migrations
 
             modelBuilder.Entity("projectverseAPI.Models.Certificate", b =>
                 {
-                    b.HasOne("projectverseAPI.Models.Profile", null)
+                    b.HasOne("projectverseAPI.Models.UserProfileData", null)
                         .WithMany("Certificates")
-                        .HasForeignKey("ProfileId");
+                        .HasForeignKey("UserProfileDataId");
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.Collaboration", b =>
@@ -779,16 +796,16 @@ namespace projectverseAPI.Migrations
 
             modelBuilder.Entity("projectverseAPI.Models.Education", b =>
                 {
-                    b.HasOne("projectverseAPI.Models.Profile", null)
+                    b.HasOne("projectverseAPI.Models.UserProfileData", null)
                         .WithMany("Educations")
-                        .HasForeignKey("ProfileId");
+                        .HasForeignKey("UserProfileDataId");
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.Interest", b =>
                 {
-                    b.HasOne("projectverseAPI.Models.Profile", null)
+                    b.HasOne("projectverseAPI.Models.UserProfileData", null)
                         .WithMany("Interests")
-                        .HasForeignKey("ProfileId");
+                        .HasForeignKey("UserProfileDataId");
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.Like", b =>
@@ -834,32 +851,13 @@ namespace projectverseAPI.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("projectverseAPI.Models.Profile", b =>
-                {
-                    b.HasOne("projectverseAPI.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("projectverseAPI.Models.ProfileComponent", b =>
                 {
-                    b.HasOne("projectverseAPI.Models.ComponentType", "Component")
-                        .WithMany()
-                        .HasForeignKey("ComponentId")
+                    b.HasOne("projectverseAPI.Models.ProfileDesigner", null)
+                        .WithMany("Components")
+                        .HasForeignKey("ProfileDesignerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("projectverseAPI.Models.ComponentTheme", "Theme")
-                        .WithMany()
-                        .HasForeignKey("ThemeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Component");
-
-                    b.Navigation("Theme");
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.Project", b =>
@@ -869,6 +867,13 @@ namespace projectverseAPI.Migrations
                         .HasForeignKey("AuthorId1");
 
                     b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("projectverseAPI.Models.SocialMedia", b =>
+                {
+                    b.HasOne("projectverseAPI.Models.UserProfileData", null)
+                        .WithMany("Socials")
+                        .HasForeignKey("UserProfileDataId");
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.Technology", b =>
@@ -882,11 +887,20 @@ namespace projectverseAPI.Migrations
                         .HasForeignKey("ProjectId");
                 });
 
+            modelBuilder.Entity("projectverseAPI.Models.UserProfileData", b =>
+                {
+                    b.HasOne("projectverseAPI.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("projectverseAPI.Models.UserTechnologyStack", b =>
                 {
-                    b.HasOne("projectverseAPI.Models.Profile", null)
+                    b.HasOne("projectverseAPI.Models.UserProfileData", null)
                         .WithMany("KnownTechnologies")
-                        .HasForeignKey("ProfileId");
+                        .HasForeignKey("UserProfileDataId");
                 });
 
             modelBuilder.Entity("projectverseAPI.Models.Collaboration", b =>
@@ -905,7 +919,17 @@ namespace projectverseAPI.Migrations
                     b.Navigation("PostComments");
                 });
 
-            modelBuilder.Entity("projectverseAPI.Models.Profile", b =>
+            modelBuilder.Entity("projectverseAPI.Models.ProfileDesigner", b =>
+                {
+                    b.Navigation("Components");
+                });
+
+            modelBuilder.Entity("projectverseAPI.Models.Project", b =>
+                {
+                    b.Navigation("UsedTechnologies");
+                });
+
+            modelBuilder.Entity("projectverseAPI.Models.UserProfileData", b =>
                 {
                     b.Navigation("Certificates");
 
@@ -914,11 +938,8 @@ namespace projectverseAPI.Migrations
                     b.Navigation("Interests");
 
                     b.Navigation("KnownTechnologies");
-                });
 
-            modelBuilder.Entity("projectverseAPI.Models.Project", b =>
-                {
-                    b.Navigation("UsedTechnologies");
+                    b.Navigation("Socials");
                 });
 #pragma warning restore 612, 618
         }

@@ -5,6 +5,7 @@ using projectverseAPI.Constants;
 using projectverseAPI.DTOs.Authentication;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
+using System.Runtime.InteropServices;
 
 namespace projectverseAPI.Services
 {
@@ -12,6 +13,8 @@ namespace projectverseAPI.Services
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IUserProfileDataService _userProfileDataService;
+        private readonly IProfileDesignerService _profileDesignerService;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
@@ -19,12 +22,16 @@ namespace projectverseAPI.Services
         public AuthenticationService(
             UserManager<User> userManager,
             RoleManager<IdentityRole> roleManager,
-            IMapper mapper,
+            IUserProfileDataService userProfileDataService,
+            IProfileDesignerService profileDesignerService,
             IHttpContextAccessor contextAccessor,
-            ITokenService tokenService)
+            ITokenService tokenService,
+            IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _userProfileDataService = userProfileDataService;
+            _profileDesignerService = profileDesignerService;
             _mapper = mapper;
             _contextAccessor = contextAccessor;
             _tokenService = tokenService;
@@ -98,13 +105,20 @@ namespace projectverseAPI.Services
                 throw new ArgumentException("User with that email already exists.", "username");
 
             var user = _mapper.Map<User>(userRegisterDTO);
+            var userId = Guid.Parse(user.Id);
 
             var result = await _userManager.CreateAsync(user, userRegisterDTO.Password);
-            
+
+            if (result.Succeeded)
+            {
+                await _userProfileDataService.Create(user);
+                await _profileDesignerService.Create(userId);
+            }
+
             if (await _roleManager.RoleExistsAsync(UserRoles.User))
                 await _userManager.AddToRoleAsync(user, UserRoles.User);
-            
-            return Guid.Parse(user.Id);
+
+            return userId;
         }
 
         public async Task<User> GetCurrentUser()

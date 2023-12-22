@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using projectverseAPI.Constants;
 using projectverseAPI.DTOs;
-using projectverseAPI.DTOs.Project;
+using projectverseAPI.DTOs.Projects;
 using projectverseAPI.Interfaces;
 
 

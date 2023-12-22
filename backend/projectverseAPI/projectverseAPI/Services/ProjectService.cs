@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using projectverseAPI.Data;
-using projectverseAPI.DTOs.Project;
+using projectverseAPI.DTOs.Projects;
 using projectverseAPI.Interfaces;
 using projectverseAPI.Models;
 
