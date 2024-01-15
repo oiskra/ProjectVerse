@@ -38,10 +38,10 @@ namespace projectverseAPI.Services
                             Id = Guid.NewGuid(),
                             ProfileDesignerId = newDesignerId,
                             Type = "Header",
-                            Category = "Header",//<======
-                            ColumnStart = 0,
-                            ColumnEnd = 12,
-                            RowStart = 0,
+                            Category = "Header",
+                            ColumnStart = 1,
+                            ColumnEnd = 13,
+                            RowStart = 1,
                             RowEnd = 4,
                             Data = null
                         }
