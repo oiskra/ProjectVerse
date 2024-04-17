@@ -5,4 +5,9 @@ for collaboration and creative presentation of one's brand will be centralized i
 project implementation was based on widely used technologies such as TypeScript, React, C#, 
 and ASP.NET. 
 
+Application is consisted of:
+*Collaboration
+*Posts and projects
+*Custom profile page designer
+
 ### This Repo only contains backend application for the ProjectVerse WebApp 
