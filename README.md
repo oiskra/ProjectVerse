@@ -6,8 +6,8 @@ project implementation was based on widely used technologies such as TypeScript,
 and ASP.NET. 
 
 Application is consisted of:
--Collaboration API
--Posts and projects API
--Custom profile page designer API
+- Collaboration API
+- Posts and projects API
+- Custom profile page designer API
 
 ### This Repo only contains backend application for the ProjectVerse WebApp 
